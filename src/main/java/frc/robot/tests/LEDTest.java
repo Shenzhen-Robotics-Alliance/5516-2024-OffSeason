@@ -10,7 +10,6 @@ public class LEDTest extends SequentialCommandGroup {
     public LEDTest() {
         this.statusLight = new LEDStatusLight(0, 155);
 
-        super.addCommands(Commands.runOnce(statusLight::onReset));
         super.addCommands(statusLight.playAnimation(
                 new LEDAnimation.Charging(255, 140, 50, 1.5)
         ));

@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -27,6 +28,7 @@ import frc.robot.subsystems.drive.IO.GyroIOSim;
 import frc.robot.subsystems.drive.IO.ModuleIOSim;
 import frc.robot.subsystems.drive.IO.ModuleIOTalonFX;
 import frc.robot.subsystems.led.LEDStatusLight;
+import frc.robot.subsystems.shooter.ShooterVisualizer;
 import frc.robot.subsystems.vision.apriltags.AprilTagVision;
 import frc.robot.subsystems.vision.apriltags.AprilTagVisionIOReal;
 import frc.robot.subsystems.vision.apriltags.ApriltagVisionIOSim;
@@ -37,6 +39,7 @@ import frc.robot.utils.CompetitionFieldUtils.Simulation.*;
 import frc.robot.utils.Config.MapleConfigFile;
 import frc.robot.utils.Config.PhotonCameraProperties;
 import frc.robot.utils.MapleJoystickDriveInput;
+import frc.robot.utils.MapleTimeUtils;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import java.io.IOException;
@@ -258,6 +261,12 @@ public class RobotContainer {
             driverController.rightTrigger(0.5).onTrue(Commands.runOnce(() -> fieldSimulation.getCompetitionField().addGamePieceOnFly(new Crescendo2024FieldObjects.NoteOnFly(
                     new Translation3d(drive.getPose().getX(), drive.getPose().getY(), 0.3), 0.5
             ))));
+
+        CommandScheduler.getInstance().schedule(Commands.run(() -> {
+            ShooterVisualizer.showResultsToDashboard(competitionFieldVisualizer.mainRobot.getPose3d());
+            ShooterVisualizer.setNoteInShooter(ShooterVisualizer.NotePositionInShooter.GONE);
+            ShooterVisualizer.setPitchAngle(Math.toRadians(15 + 15 * Math.sin(MapleTimeUtils.getLogTimeSeconds())));
+        }));
     }
 
     /**

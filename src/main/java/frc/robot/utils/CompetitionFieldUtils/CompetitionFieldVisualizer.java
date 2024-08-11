@@ -35,7 +35,7 @@ public class CompetitionFieldVisualizer {
 
     private final Map<String, Set<ObjectOnFieldDisplay>> objectsOnFieldWithGivenType;
     private final Map<String, Set<GamePieceOnFlyDisplay>> gamePiecesOnFlyDisplayWithGivenType;
-    private final RobotOnFieldDisplay mainRobot;
+    public final RobotOnFieldDisplay mainRobot;
     private final Field2d dashboardField2d;
     public CompetitionFieldVisualizer(RobotOnFieldDisplay mainRobot) {
         this.mainRobot = mainRobot;
