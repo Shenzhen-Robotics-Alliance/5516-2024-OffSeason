@@ -27,7 +27,13 @@ import frc.robot.subsystems.drive.IO.GyroIOPigeon2;
 import frc.robot.subsystems.drive.IO.GyroIOSim;
 import frc.robot.subsystems.drive.IO.ModuleIOSim;
 import frc.robot.subsystems.drive.IO.ModuleIOTalonFX;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeIOReal;
+import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.led.LEDStatusLight;
+import frc.robot.subsystems.shooter.Pitch;
+import frc.robot.subsystems.shooter.PitchIOReal;
+import frc.robot.subsystems.shooter.PitchIOSim;
 import frc.robot.subsystems.shooter.ShooterVisualizer;
 import frc.robot.subsystems.vision.apriltags.AprilTagVision;
 import frc.robot.subsystems.vision.apriltags.AprilTagVisionIOReal;
@@ -39,7 +45,6 @@ import frc.robot.utils.CompetitionFieldUtils.Simulation.*;
 import frc.robot.utils.Config.MapleConfigFile;
 import frc.robot.utils.Config.PhotonCameraProperties;
 import frc.robot.utils.MapleJoystickDriveInput;
-import frc.robot.utils.MapleTimeUtils;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import java.io.IOException;
@@ -58,6 +63,8 @@ public class RobotContainer {
     public final SwerveDrive drive;
     public final AprilTagVision aprilTagVision;
     private final LEDStatusLight ledStatusLight;
+    private final Intake intake;
+    private final Pitch pitch;
 
     // Controller
     private final CommandXboxController driverController = new CommandXboxController(0),
@@ -120,6 +127,9 @@ public class RobotContainer {
                  );
 
                 this.competitionFieldVisualizer = new CompetitionFieldVisualizer(drive::getPose);
+
+                this.intake = new Intake(new IntakeIOReal());
+                this.pitch = new Pitch(new PitchIOReal());
             }
 
             case SIM -> {
@@ -162,6 +172,11 @@ public class RobotContainer {
                 fieldSimulation.addRobot(new OpponentRobotSimulation(0));
                 fieldSimulation.addRobot(new OpponentRobotSimulation(1));
                 fieldSimulation.addRobot(new OpponentRobotSimulation(2));
+
+                final IntakeIOSim intakeIOSim = new IntakeIOSim();
+                fieldSimulation.registerIntake(intakeIOSim);
+                this.intake = new Intake(intakeIOSim);
+                this.pitch = new Pitch(new PitchIOSim());
             }
 
             default -> {
@@ -183,9 +198,15 @@ public class RobotContainer {
                 );
 
                 this.competitionFieldVisualizer = new CompetitionFieldVisualizer(drive::getPose);
+
+                this.intake = new Intake((inputs) -> {});
+                this.pitch = new Pitch((inputs) -> {});
             }
         }
         this.ledStatusLight = new LEDStatusLight(0, 155);
+        CommandScheduler.getInstance().schedule(Commands.run(
+                () -> ShooterVisualizer.showResultsToDashboard(competitionFieldVisualizer.mainRobot.getPose3d())
+        ).ignoringDisable(true));
 
         SmartDashboard.putData("Select Test", testChooser = TestBuilder.buildTestsChooser());
         autoChooser = AutoBuilder.buildAutoChooser(this);
@@ -227,14 +248,6 @@ public class RobotContainer {
                 drive
         ));
 
-        driverController.rightBumper().whileTrue(new JoystickDriveAndAimAtTarget(
-                driveInput,
-                drive,
-                () -> Constants.toCurrentAllianceTranslation(new Translation2d(0.15, 5.55)),
-                () -> 0.4,
-                1
-        ));
-
         driverController.x().whileTrue(Commands.run(drive::lockChassisWithXFormation, drive));
         driverController.start().onTrue(Commands.runOnce(
                 () -> drive.setPose(new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
@@ -256,17 +269,14 @@ public class RobotContainer {
                 0.75
         ));
 
+        driverController.leftBumper().whileTrue(intake.executeIntakeNote());
+        driverController.b().whileTrue(Commands.run(() -> pitch.runSetPointProfiled(Math.toRadians(80)), pitch));
+
         // for testing only
         if (Robot.CURRENT_ROBOT_MODE == Constants.RobotMode.SIM)
             driverController.rightTrigger(0.5).onTrue(Commands.runOnce(() -> fieldSimulation.getCompetitionField().addGamePieceOnFly(new Crescendo2024FieldObjects.NoteOnFly(
                     new Translation3d(drive.getPose().getX(), drive.getPose().getY(), 0.3), 0.5
             ))));
-
-        CommandScheduler.getInstance().schedule(Commands.run(() -> {
-            ShooterVisualizer.showResultsToDashboard(competitionFieldVisualizer.mainRobot.getPose3d());
-            ShooterVisualizer.setNoteInShooter(ShooterVisualizer.NotePositionInShooter.GONE);
-            ShooterVisualizer.setPitchAngle(Math.toRadians(15 + 15 * Math.sin(MapleTimeUtils.getLogTimeSeconds())));
-        }));
     }
 
     /**

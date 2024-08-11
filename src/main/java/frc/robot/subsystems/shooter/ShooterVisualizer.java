@@ -16,7 +16,7 @@ public class ShooterVisualizer {
     public static double pitchAngleRad = Constants.PitchConfigs.PITCH_LOWEST_ROTATION_RAD;
     public enum NotePositionInShooter {
         GONE,
-        AT_BUTTON,
+        AT_BOTTOM,
         AT_TOP
     }
     public static NotePositionInShooter notePositionInShooter = NotePositionInShooter.GONE;
@@ -40,13 +40,13 @@ public class ShooterVisualizer {
         );
         final Transform3d noteTranslationInPitchDirection = new Transform3d(
                 switch (notePositionInShooter) {
-                    case GONE, AT_BUTTON -> new Translation3d();
+                    case GONE, AT_BOTTOM -> new Translation3d();
                     case AT_TOP -> NOTE_TRANSLATION_AT_PITCH_DIRECTION_TO_AXLE;
                 },
                 new Rotation3d()
         );
         final Pose3d notePose = switch (notePositionInShooter) {
-            case AT_TOP, AT_BUTTON -> robotPose.plus(robotToNote).plus(noteTranslationInPitchDirection);
+            case AT_TOP, AT_BOTTOM -> robotPose.plus(robotToNote).plus(noteTranslationInPitchDirection);
             case GONE -> new Pose3d(0, 0, -1, new Rotation3d());
         };
         Logger.recordOutput(Constants.LogConfigs.SHOOTER_PATH + "NoteInShooter", notePose);

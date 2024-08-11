@@ -52,7 +52,6 @@ public final class Constants {
         public static final String
                 SYSTEM_PERFORMANCE_PATH = "SystemPerformance/",
                 PHYSICS_SIMULATION_PATH = "MaplePhysicsSimulation/",
-                APRIL_TAGS_VISION_PATH = "Vision/AprilTags/";
                 APRIL_TAGS_VISION_PATH = "Vision/AprilTags/",
                 SHOOTER_PATH = "Shooter/";
     }
@@ -197,6 +196,31 @@ public final class Constants {
                 TRANSLATIONAL_STANDARD_ERROR_METERS_ODOMETRY = 0.05,
                 // we trust the IMU very much (recommend 0.1 for Pigeon2, 0.5 for NavX)
                 ROTATIONAL_STANDARD_ERROR_RADIANS_ODOMETRY = Math.toRadians(0.1);
+    }
+
+    public static final class PitchConfigs {
+        public static final double GEAR_RATIO = 166.66;
+        public static final double PITCH_LOWEST_ROTATION_RAD = Math.toRadians(24);
+        public static final double PITCH_HIGHER_LIMIT_RAD = Math.toRadians(94);
+
+        public static final double PITCH_KS = 0.1;
+        public static final double PITCH_KG = 0.17;
+        public static final double PITCH_KV = 2.99;
+        public static final double PITCH_KA = 0.01;
+
+        public static final MaplePIDController.MaplePIDConfig PITCH_PID = new MaplePIDController.MaplePIDConfig(
+                12,
+                Math.toRadians(22),
+                0,
+                Math.toRadians(2),
+                0.08,
+                false,
+                0
+        );
+
+        public static final TrapezoidProfile.Constraints PITCH_PROFILE_CONSTRAIN = new TrapezoidProfile.Constraints(
+                Math.toRadians(360), Math.toRadians(540)
+        );
     }
 
     public static Rotation2d toCurrentAllianceRotation(Rotation2d rotationAtBlueSide) {
