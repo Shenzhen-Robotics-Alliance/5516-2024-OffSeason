@@ -30,15 +30,11 @@ public class LEDStatusLight extends MapleSubsystem {
         this.bufferForDashboard = new AddressableLEDBuffer(DASHBOARD_DISPLAY_LENGTH);
 
         super.setDefaultCommand(playAnimation(new LEDAnimation.ShowColor(0, 0, 0)));
-    }
 
-    @Override
-    public void onReset() {
         t.start();
         if (led != null) led.start();
         this.animation = new LEDAnimation.ShowColor(0, 0, 0); // turn off
     }
-
 
     @Override
     public void periodic(double dt, boolean enabled) {}

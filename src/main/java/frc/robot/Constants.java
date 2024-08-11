@@ -53,6 +53,8 @@ public final class Constants {
                 SYSTEM_PERFORMANCE_PATH = "SystemPerformance/",
                 PHYSICS_SIMULATION_PATH = "MaplePhysicsSimulation/",
                 APRIL_TAGS_VISION_PATH = "Vision/AprilTags/";
+                APRIL_TAGS_VISION_PATH = "Vision/AprilTags/",
+                SHOOTER_PATH = "Shooter/";
     }
 
     public static final class CrescendoField2024Constants {

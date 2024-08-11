@@ -3,7 +3,6 @@ package frc.robot.utils.CompetitionFieldUtils.FieldObjects;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
-import frc.robot.utils.CompetitionFieldUtils.MapleCompetitionField;
 import org.dyn4j.geometry.Geometry;
 
 /**

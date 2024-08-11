@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.path.GoalEndState;
-import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -34,12 +32,11 @@ import frc.robot.subsystems.vision.apriltags.AprilTagVisionIOReal;
 import frc.robot.subsystems.vision.apriltags.ApriltagVisionIOSim;
 import frc.robot.tests.*;
 import frc.robot.utils.CompetitionFieldUtils.FieldObjects.Crescendo2024FieldObjects;
-import frc.robot.utils.CompetitionFieldUtils.FieldObjects.GamePieceOnFlyDisplay;
+import frc.robot.utils.CompetitionFieldUtils.CompetitionFieldVisualizer;
 import frc.robot.utils.CompetitionFieldUtils.Simulation.*;
 import frc.robot.utils.Config.MapleConfigFile;
 import frc.robot.utils.Config.PhotonCameraProperties;
 import frc.robot.utils.MapleJoystickDriveInput;
-import frc.robot.utils.MaplePathPlannerLoader;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import java.io.IOException;
@@ -73,6 +70,7 @@ public class RobotContainer {
     private final SendableChooser<Supplier<Command>> testChooser;
 
     // Simulation
+    private final CompetitionFieldVisualizer competitionFieldVisualizer;
     private CompetitionFieldSimulation fieldSimulation = null;
 
     /**
@@ -117,6 +115,8 @@ public class RobotContainer {
                          camerasProperties,
                          drive
                  );
+
+                this.competitionFieldVisualizer = new CompetitionFieldVisualizer(drive::getPose);
             }
 
             case SIM -> {
@@ -142,6 +142,7 @@ public class RobotContainer {
                         drive::setPose
                 );
                 fieldSimulation = new Crescendo2024FieldSimulation(driveSimulation);
+                this.competitionFieldVisualizer = fieldSimulation.getCompetitionField();
 
                 aprilTagVision = new AprilTagVision(
                         new ApriltagVisionIOSim(
@@ -158,12 +159,6 @@ public class RobotContainer {
                 fieldSimulation.addRobot(new OpponentRobotSimulation(0));
                 fieldSimulation.addRobot(new OpponentRobotSimulation(1));
                 fieldSimulation.addRobot(new OpponentRobotSimulation(2));
-
-                fieldSimulation.registerIntake(new IntakeSimulation(
-                        new Translation2d(-0.876/2, 0.35), new Translation2d(-0.876/2, -0.35),
-                        10,
-                        () -> driverController.leftBumper().getAsBoolean()
-                ));
             }
 
             default -> {
@@ -183,6 +178,8 @@ public class RobotContainer {
                         camerasProperties,
                         drive
                 );
+
+                this.competitionFieldVisualizer = new CompetitionFieldVisualizer(drive::getPose);
             }
         }
         this.ledStatusLight = new LEDStatusLight(0, 155);

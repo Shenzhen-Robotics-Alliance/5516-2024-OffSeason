@@ -27,11 +27,6 @@ public abstract class MapleSubsystem extends SubsystemBase {
         instances.remove(instance);
     }
 
-    public static void subsystemsInit() {
-        for (MapleSubsystem instance:instances)
-            instance.onReset();
-    }
-
     private static boolean wasEnabled = false;
     public static void checkForOnDisableAndEnable() {
         // periodic() is called from CommandScheduler, we only need to check for enable/disable
@@ -58,7 +53,6 @@ public abstract class MapleSubsystem extends SubsystemBase {
 
     public void onEnable() {}
     public void onDisable() {}
-    public abstract void onReset();
     public abstract void periodic(double dt, boolean enabled);
 
     @Override

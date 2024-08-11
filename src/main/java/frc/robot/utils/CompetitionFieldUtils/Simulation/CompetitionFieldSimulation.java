@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 
 import frc.robot.Robot;
 import frc.robot.utils.CompetitionFieldUtils.FieldObjects.GamePieceInSimulation;
-import frc.robot.utils.CompetitionFieldUtils.MapleCompetitionField;
+import frc.robot.utils.CompetitionFieldUtils.CompetitionFieldVisualizer;
 import frc.robot.utils.MapleMaths.GeometryConvertor;
 import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.BodyFixture;
@@ -28,7 +28,7 @@ import static frc.robot.Constants.RobotPhysicsSimulationConfigs.*;
  * */
 public abstract class CompetitionFieldSimulation {
     private final World<Body> physicsWorld;
-    private final MapleCompetitionField competitionField;
+    private final CompetitionFieldVisualizer competitionField;
     private final Set<HolonomicChassisSimulation> robotSimulations = new HashSet<>();
     private final HolonomicChassisSimulation mainRobot;
     private final Set<GamePieceInSimulation> gamePieces;
@@ -36,7 +36,7 @@ public abstract class CompetitionFieldSimulation {
     private List<IntakeSimulation> intakeSimulations = new ArrayList<>();
 
     public CompetitionFieldSimulation(HolonomicChassisSimulation mainRobot, FieldObstaclesMap obstaclesMap) {
-        this.competitionField = new MapleCompetitionField(mainRobot);
+        this.competitionField = new CompetitionFieldVisualizer(mainRobot);
         this.mainRobot = mainRobot;
         this.physicsWorld = new World<>();
         this.physicsWorld.setGravity(PhysicsWorld.ZERO_GRAVITY);
@@ -86,7 +86,7 @@ public abstract class CompetitionFieldSimulation {
         this.competitionField.deleteObject(gamePieceInSimulation);
     }
 
-    public MapleCompetitionField getCompetitionField() {return competitionField;}
+    public CompetitionFieldVisualizer getCompetitionField() {return competitionField;}
     public HolonomicChassisSimulation getMainRobot() {return mainRobot;}
 
     public void clearGamePieces() {

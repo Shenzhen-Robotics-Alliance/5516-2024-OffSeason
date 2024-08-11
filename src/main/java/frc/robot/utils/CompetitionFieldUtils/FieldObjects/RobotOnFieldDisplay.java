@@ -1,6 +1,6 @@
 package frc.robot.utils.CompetitionFieldUtils.FieldObjects;
 
-import frc.robot.utils.CompetitionFieldUtils.MapleCompetitionField;
+import frc.robot.utils.CompetitionFieldUtils.CompetitionFieldVisualizer;
 
 /**
  * displays a robot on field
@@ -8,7 +8,7 @@ import frc.robot.utils.CompetitionFieldUtils.MapleCompetitionField;
  * but it will not be displayed in "Robots" Pose3d array
  * it will be displayed as "Robot" and with a single Pose2d
  * */
-public interface RobotOnFieldDisplay extends MapleCompetitionField.Object2dOnFieldDisplay {
+public interface RobotOnFieldDisplay extends CompetitionFieldVisualizer.Object2dOnFieldDisplay {
     @Override
     default String getTypeName() {return "Robots";}
 }

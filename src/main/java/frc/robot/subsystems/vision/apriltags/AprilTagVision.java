@@ -44,11 +44,6 @@ public class AprilTagVision extends MapleSubsystem {
     }
 
     @Override
-    public void onReset() {
-
-    }
-
-    @Override
     public void periodic(double dt, boolean enabled) {
         io.updateInputs(inputs);
         Logger.processInputs(APRIL_TAGS_VISION_PATH + "Inputs", inputs);

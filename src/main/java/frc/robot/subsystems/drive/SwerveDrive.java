@@ -87,11 +87,6 @@ public class SwerveDrive extends MapleSubsystem implements HolonomicDriveSubsyst
     }
 
     @Override
-    public void onReset() {
-
-    }
-
-    @Override
     public void periodic(double dt, boolean enabled) {
         final double t0 = MapleTimeUtils.getRealTimeSeconds();
         fetchOdometryInputs();

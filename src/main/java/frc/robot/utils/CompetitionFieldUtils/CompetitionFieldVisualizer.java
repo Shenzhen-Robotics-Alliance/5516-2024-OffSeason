@@ -17,7 +17,7 @@ import java.util.*;
  * it does not update the field status
  * the field should be updated either by the vision system during a real competition or by the Maple Physics Simulation during a simulated competition
  * */
-public class MapleCompetitionField {
+public class CompetitionFieldVisualizer {
     public interface ObjectOnFieldDisplay {
         String getTypeName();
         Pose3d getPose3d();
@@ -37,7 +37,7 @@ public class MapleCompetitionField {
     private final Map<String, Set<GamePieceOnFlyDisplay>> gamePiecesOnFlyDisplayWithGivenType;
     private final RobotOnFieldDisplay mainRobot;
     private final Field2d dashboardField2d;
-    public MapleCompetitionField(RobotOnFieldDisplay mainRobot) {
+    public CompetitionFieldVisualizer(RobotOnFieldDisplay mainRobot) {
         this.mainRobot = mainRobot;
         this.objectsOnFieldWithGivenType = new HashMap<>();
         this.gamePiecesOnFlyDisplayWithGivenType = new HashMap<>();

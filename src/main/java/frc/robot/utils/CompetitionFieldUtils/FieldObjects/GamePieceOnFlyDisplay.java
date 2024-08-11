@@ -1,10 +1,10 @@
 package frc.robot.utils.CompetitionFieldUtils.FieldObjects;
 
 import edu.wpi.first.math.geometry.*;
-import frc.robot.utils.CompetitionFieldUtils.MapleCompetitionField;
+import frc.robot.utils.CompetitionFieldUtils.CompetitionFieldVisualizer;
 import frc.robot.utils.MapleTimeUtils;
 
-public abstract class GamePieceOnFlyDisplay implements MapleCompetitionField.ObjectOnFieldDisplay {
+public abstract class GamePieceOnFlyDisplay implements CompetitionFieldVisualizer.ObjectOnFieldDisplay {
     private final Translation3d shooterPosition, targetedPosition;
     private final double flightTimeSeconds, startTimeSeconds;
     private final Rotation3d gamePieceRotation;
