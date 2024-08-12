@@ -38,12 +38,25 @@ public class Pitch extends MapleSubsystem {
     }
 
     @Override
+    public void onEnable() {
+        io.setPitchLock(true);
+    }
+
+    @Override
+    public void onDisable() {
+        io.runPitchVoltage(0);
+        io.setPitchLock(false);
+    }
+
+    @Override
     public void periodic(double dt, boolean enabled) {
         io.updateInputs(inputs);
         Logger.processInputs("Pitch", inputs);
 
         notCalibratedAlert.setActivated(!inputs.calibrated);
         ShooterVisualizer.setPitchAngle(inputs.pitchAngleRad);
+
+        Logger.recordOutput("Shooter/Pitch Actual Position (Deg)", Math.toDegrees(inputs.pitchAngleRad));
     }
 
     private double previousStateVelocity = 0;
@@ -60,7 +73,7 @@ public class Pitch extends MapleSubsystem {
                 currentState,
                 new TrapezoidProfile.State(setPointRad, 0)
         );
-        final double stateAcceleration = previousStateVelocity / Robot.defaultPeriodSecs;
+        final double stateAcceleration = (currentState.velocity - previousStateVelocity) / Robot.defaultPeriodSecs;
         runControlLoops(currentState.position, currentState.velocity, stateAcceleration);
         this.previousStateVelocity = currentState.velocity;
     }
@@ -99,8 +112,8 @@ public class Pitch extends MapleSubsystem {
                 pitchVoltage = MathUtil.clamp(
                         feedForwardVoltage + feedBackVoltage, safetyConstrainLow, safetyConstrainHigh
                 );
-
-        Logger.recordOutput("Shooter/Pitch Actual Position (Deg)", Math.toDegrees(inputs.pitchAngleRad));
+        Logger.recordOutput("Shooter/Pitch Control Loop SetPoint (Deg)", Math.toDegrees(currentPositionSetPointRad));
+        Logger.recordOutput("Shooter/Pitch Control Loop Velocity SetPoint (Deg per Sec)", Math.toDegrees(currentVelocitySetPointRadPerSec));
         Logger.recordOutput("Shooter/Pitch Control Voltage", pitchVoltage);
         io.runPitchVoltage(pitchVoltage);
     }

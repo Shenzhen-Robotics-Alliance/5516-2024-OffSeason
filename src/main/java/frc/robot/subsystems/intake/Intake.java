@@ -26,6 +26,11 @@ public class Intake extends MapleSubsystem {
     }
 
     @Override
+    public void onDisable() {
+        runIdle();
+    }
+
+    @Override
     public void periodic(double dt, boolean enabled) {
         io.updateInputs(inputs);
         Logger.processInputs("Intake", inputs);

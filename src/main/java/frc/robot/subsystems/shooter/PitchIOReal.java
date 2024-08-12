@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -28,6 +29,14 @@ public class PitchIOReal implements PitchIO {
                 100,
                 pitchMotor1SuppliedAmps, pitchMotor2SuppliedAmps, pitchRelativeEncoderPositionRev, pitchEncoderVelocityRevPerSec
         );
+
+        final CurrentLimitsConfigs currentLimitsConfigs = new CurrentLimitsConfigs();
+        currentLimitsConfigs.SupplyCurrentLimitEnable = true;
+        currentLimitsConfigs.SupplyCurrentLimit = 20;
+        pitchFalcon1.getConfigurator().apply(currentLimitsConfigs);
+        pitchFalcon2.getConfigurator().apply(currentLimitsConfigs);
+        pitchFalcon1.optimizeBusUtilization();
+        pitchFalcon2.optimizeBusUtilization();
     }
     @Override
     public void updateInputs(PitchInputs pitchInputs) {
