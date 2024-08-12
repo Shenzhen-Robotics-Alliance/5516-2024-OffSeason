@@ -36,11 +36,9 @@ public class LEDStatusLight extends MapleSubsystem {
         if (led != null) led.start();
     }
 
-    @Override
-    public void periodic(double dt, boolean enabled) {}
-
     final String[] colors = new String[DASHBOARD_DISPLAY_LENGTH/2];
-    private void updateAnimation() {
+    @Override
+    public void periodic(double dt, boolean enabled) {
         animation.play(buffer, t.get());
         animation.play(bufferForDashboard, t.get());
         for (int i = 0; i < DASHBOARD_DISPLAY_LENGTH/2; i++)

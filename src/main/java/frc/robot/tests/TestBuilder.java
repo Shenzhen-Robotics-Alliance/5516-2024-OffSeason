@@ -15,7 +15,7 @@ public class TestBuilder {
         testsChooser.addOption("Wheels Calibration", WheelsCalibrationCTRE::new);
         testsChooser.addOption("Field Display Test", FieldDisplayTest::new);
         testsChooser.addOption("Robot Simulation Test", PhysicsSimulationTest::new);
-        testsChooser.addOption("LED Test", LEDTest::new);
+        testsChooser.addOption("LED Test", () -> new LEDTest(robotContainer.ledStatusLight));
         testsChooser.addOption("Shooter Test", ShooterTest::new);
 
         testsChooser.addOption(

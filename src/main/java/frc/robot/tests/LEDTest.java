@@ -5,14 +5,7 @@ import frc.robot.subsystems.led.LEDStatusLight;
 import frc.robot.utils.LEDAnimation;
 
 public class LEDTest extends SequentialCommandGroup {
-    private final LEDStatusLight statusLight;
-    public LEDTest() {
-        this.statusLight = new LEDStatusLight(0, 155);
-
-//        super.addCommands(statusLight.playAnimation(
-//                new LEDAnimation.Charging(255, 140, 50, 1.5)
-//        ));
-
+    public LEDTest(LEDStatusLight statusLight) {
         super.addCommands(statusLight.playAnimationAndStop(
                 new LEDAnimation.SlideBackAndForth(0,200, 255, 1, 0.8),
                 3
