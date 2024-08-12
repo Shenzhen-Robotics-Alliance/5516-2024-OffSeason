@@ -18,8 +18,10 @@ public class LEDStatusLight extends MapleSubsystem {
     private final AddressableLEDBuffer buffer;
     private final AddressableLEDBuffer bufferForDashboard;
     private final Timer t = new Timer();
-
     private LEDAnimation animation;
+
+    private static final LEDAnimation DEFAULT_ANIMATION = new LEDAnimation.ShowColor(0, 0, 0);
+
     public LEDStatusLight(int port, int length) {
         super("LED");
         if (led != null) led.close();
@@ -29,18 +31,16 @@ public class LEDStatusLight extends MapleSubsystem {
         this.buffer = new AddressableLEDBuffer(length);
         this.bufferForDashboard = new AddressableLEDBuffer(DASHBOARD_DISPLAY_LENGTH);
 
-        super.setDefaultCommand(playAnimation(new LEDAnimation.ShowColor(0, 0, 0)));
-
+        this.animation = DEFAULT_ANIMATION;
         t.start();
         if (led != null) led.start();
-        this.animation = new LEDAnimation.ShowColor(0, 0, 0); // turn off
     }
 
     @Override
     public void periodic(double dt, boolean enabled) {}
 
     final String[] colors = new String[DASHBOARD_DISPLAY_LENGTH/2];
-    private void updateAnimation(LEDAnimation animation) {
+    private void updateAnimation() {
         animation.play(buffer, t.get());
         animation.play(bufferForDashboard, t.get());
         for (int i = 0; i < DASHBOARD_DISPLAY_LENGTH/2; i++)
@@ -53,13 +53,13 @@ public class LEDStatusLight extends MapleSubsystem {
             SmartDashboard.putStringArray("Status Light", colors);
     }
 
-    public Command playAnimation(LEDAnimation animation) {
-        return Commands.run(() -> updateAnimation(animation), this)
-                .beforeStarting(t::reset);
+    public void setAnimation(LEDAnimation animation) {
+        this.animation = animation;
     }
 
-    public Command playAnimation(LEDAnimation animation, double timeSeconds) {
-        return playAnimation(animation)
-                .withTimeout(timeSeconds);
+    public Command playAnimationAndStop(LEDAnimation animation, double durationSeconds) {
+        return Commands.runOnce(() -> setAnimation(animation))
+                .andThen(Commands.waitSeconds(durationSeconds))
+                .andThen(Commands.runOnce(() -> setAnimation(DEFAULT_ANIMATION)));
     }
 }
