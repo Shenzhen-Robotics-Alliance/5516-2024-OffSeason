@@ -6,7 +6,7 @@ public interface FlyWheelIO {
     @AutoLog
     class FlyWheelsInputs {
         double flyWheelPositionRevs = 0.0;
-        double flyWheelVelocityRevs = 0.0;
+        double flyWheelVelocityRevsPerSec = 0.0;
         double supplyCurrentAmps = 0.0;
     }
 

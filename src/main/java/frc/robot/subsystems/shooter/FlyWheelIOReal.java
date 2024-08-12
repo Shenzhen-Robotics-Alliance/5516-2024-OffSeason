@@ -27,7 +27,7 @@ public class FlyWheelIOReal implements FlyWheelIO {
         BaseStatusSignal.refreshAll(positionRevolutions, velocityRevolutions, supplyCurrentAmps);
 
         inputs.flyWheelPositionRevs = positionRevolutions.getValue();
-        inputs.flyWheelVelocityRevs = velocityRevolutions.getValue();
+        inputs.flyWheelVelocityRevsPerSec = velocityRevolutions.getValue();
         inputs.supplyCurrentAmps = supplyCurrentAmps.getValue();
     }
 

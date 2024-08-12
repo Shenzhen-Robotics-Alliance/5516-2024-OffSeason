@@ -6,7 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -22,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.autos.Auto;
 import frc.robot.autos.AutoBuilder;
 import frc.robot.commands.drive.*;
+import frc.robot.commands.shooter.AimAndShootSequence;
 import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.drive.IO.GyroIOPigeon2;
 import frc.robot.subsystems.drive.IO.GyroIOSim;
@@ -42,6 +42,7 @@ import frc.robot.utils.CompetitionFieldUtils.Simulation.*;
 import frc.robot.utils.Config.MapleConfigFile;
 import frc.robot.utils.Config.PhotonCameraProperties;
 import frc.robot.utils.MapleJoystickDriveInput;
+import frc.robot.utils.MapleShooterOptimization;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import java.io.IOException;
@@ -248,12 +249,12 @@ public class RobotContainer {
                 MapleJoystickDriveInput.rightHandedJoystick(driverController)
                 : MapleJoystickDriveInput.leftHandedJoystick(driverController);
 
+        /* drive commands */
         drive.setDefaultCommand(new JoystickDrive(
                 driveInput,
                 () -> true,
                 drive
         ));
-
         driverController.x().whileTrue(Commands.run(drive::lockChassisWithXFormation, drive));
         driverController.start().onTrue(Commands.runOnce(
                 () -> drive.setPose(new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
@@ -261,32 +262,49 @@ public class RobotContainer {
                 ).ignoringDisable(true)
         );
 
-        driverController.y().whileTrue(new AutoAlignment(
-                drive,
-                () -> Constants.toCurrentAlliancePose(new Pose2d(
-                        1.85, 7,
-                        Rotation2d.fromDegrees(-90)
-                )),
-                () -> Constants.toCurrentAlliancePose(new Pose2d(
-                        1.85, 7.7,
-                        Rotation2d.fromDegrees(-90)
-                )),
-                new Pose2d(0.1, 0.1, Rotation2d.fromDegrees(3)),
-                0.75
-        ));
-
+        /* intake commands */
         driverController.leftBumper().whileTrue(intake.executeIntakeNote());
-        driverController.b().whileTrue(Commands.run(() -> {
-            pitch.runSetPointProfiled(Math.toRadians(80));
-            flyWheels.runRPMProfiled(4000);
-        }, pitch, flyWheels));
         driverController.a().whileTrue(Commands.run(intake::runInvertVoltage));
 
-        // for testing only
-        if (Robot.CURRENT_ROBOT_MODE == Constants.RobotMode.SIM)
-            driverController.rightTrigger(0.5).onTrue(Commands.runOnce(() -> fieldSimulation.getCompetitionField().addGamePieceOnFly(new Crescendo2024FieldObjects.NoteOnFly(
-                    new Translation3d(drive.getPose().getX(), drive.getPose().getY(), 0.3), 0.5
-            ))));
+        /* shooter commands */
+        final MapleShooterOptimization shooterOptimization = new MapleShooterOptimization(
+                "MainShooter",
+                new double[] {1.35, 2, 3, 4, 4.5, 5},
+                new double[] {60, 50, 40, 35, 30, 25},
+                new double[] {3000, 4000, 5000, 5500, 6000, 6000},
+                new double[] {0.15, 0.2, 0.25, 0.3, 0.35, 0.4}
+        );
+
+        final JoystickDriveAndAimAtTarget faceTargetWhileDrivingLowSpeed = new JoystickDriveAndAimAtTarget(
+                driveInput, drive,
+                Constants.CrescendoField2024Constants.SPEAKER_POSITION_SUPPLIER,
+                shooterOptimization,
+                0.6
+        );
+        final Command semiAutoAimAndShoot = new AimAndShootSequence(
+                pitch, flyWheels, intake, shooterOptimization, drive,
+                Constants.CrescendoField2024Constants.SPEAKER_POSITION_SUPPLIER,
+                faceTargetWhileDrivingLowSpeed::chassisRotationInPosition
+        );
+        driverController.rightBumper().whileTrue(faceTargetWhileDrivingLowSpeed.alongWith(semiAutoAimAndShoot));
+
+        final JoystickDriveAndAimAtTarget faceTargetWhileDrivingFullSpeed  = new JoystickDriveAndAimAtTarget(
+                driveInput, drive,
+                Constants.CrescendoField2024Constants.SPEAKER_POSITION_SUPPLIER,
+                shooterOptimization,
+                1
+        );
+        driverController.rightTrigger(0.5).whileTrue(faceTargetWhileDrivingFullSpeed.alongWith(new AimAndShootSequence(
+                pitch, flyWheels, intake, shooterOptimization, drive,
+                Constants.CrescendoField2024Constants.SPEAKER_POSITION_SUPPLIER,
+                () -> false // never shoot
+        )));
+
+        // simulation testing commands
+//        if (Robot.CURRENT_ROBOT_MODE == Constants.RobotMode.SIM)
+//            driverController.rightTrigger(0.5).onTrue(Commands.runOnce(() -> fieldSimulation.getCompetitionField().addGamePieceOnFly(new Crescendo2024FieldObjects.NoteOnFly(
+//                    new Translation3d(drive.getPose().getX(), drive.getPose().getY(), 0.3), 0.5
+//            ))));
     }
 
     /**

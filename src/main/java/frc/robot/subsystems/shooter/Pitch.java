@@ -10,6 +10,7 @@ import frc.robot.Robot;
 import frc.robot.subsystems.MapleSubsystem;
 import frc.robot.utils.Alert;
 import frc.robot.utils.MechanismControl.MaplePIDController;
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import static frc.robot.Constants.PitchConfigs.*;
@@ -78,7 +79,7 @@ public class Pitch extends MapleSubsystem {
         this.previousStateVelocity = currentState.velocity;
     }
 
-    public void forceSetPoint(double setPointRad, double velocitySetPointRadPerSec) {
+    public void runStaticSetPoint(double setPointRad, double velocitySetPointRadPerSec) {
         if (checkSetPointOutOfRange(setPointRad) || !inputs.calibrated) {
             io.runPitchVoltage(0);
             return;
@@ -118,6 +119,7 @@ public class Pitch extends MapleSubsystem {
         io.runPitchVoltage(pitchVoltage);
     }
 
+    @AutoLogOutput(key = "Shooter/PitchInPosition")
     public boolean inPosition() {
         return Math.abs(inputs.pitchAngleRad - setPointRad) < PITCH_PID.errorTolerance;
     }

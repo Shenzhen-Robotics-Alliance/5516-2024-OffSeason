@@ -18,6 +18,7 @@ import frc.robot.utils.MechanismControl.MaplePIDController;
 import org.photonvision.PhotonPoseEstimator;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -61,6 +62,8 @@ public final class Constants {
         public static final double FIELD_HEIGHT = 8.21;
 
         public static final Translation3d SPEAKER_POSE_BLUE = new Translation3d(0, 5.55, 2.2);
+
+        public static final Supplier<Translation2d> SPEAKER_POSITION_SUPPLIER = () -> toCurrentAllianceTranslation(SPEAKER_POSE_BLUE.toTranslation2d());
     }
 
     public static final class DriveConfigs {
@@ -226,7 +229,7 @@ public final class Constants {
     public static final class ShooterConfigs {
         public static final double ks = 0.05;
         public static final double kv = 0.11856;
-        public static final double kv_sim = 0.22;
+        public static final double kv_sim = 0.17;
         public static final double ka = 0.021026;
 
         public static final TrapezoidProfile.Constraints SPEED_RPM_CONSTRAINS = new TrapezoidProfile.Constraints(

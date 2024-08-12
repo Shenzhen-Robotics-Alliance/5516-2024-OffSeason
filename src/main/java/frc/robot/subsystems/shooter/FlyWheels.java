@@ -13,6 +13,7 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.subsystems.MapleSubsystem;
 import frc.robot.utils.MechanismControl.MaplePIDController;
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.function.Consumer;
@@ -30,6 +31,7 @@ public class FlyWheels extends MapleSubsystem {
     private final SimpleMotorFeedforward feedForwardRevPerSec;
     private final PIDController feedBackRevPerSec;
     private TrapezoidProfile.State currentStateRPM;
+    private double goalRPM;
     public FlyWheels(FlyWheelIO[] IOs) {
         super("FlyWheels");
         this.IOs = IOs;
@@ -49,6 +51,7 @@ public class FlyWheels extends MapleSubsystem {
         }
         this.speedRPMProfile = new TrapezoidProfile(SPEED_RPM_CONSTRAINS);
         this.currentStateRPM = new TrapezoidProfile.State(0, 0);
+        this.goalRPM = 0;
 
         setDefaultCommand(Commands.run(() -> runRPMProfiled(0), this));
     }
@@ -62,7 +65,7 @@ public class FlyWheels extends MapleSubsystem {
     private void flyWheelPeriodic(int index) {
         this.IOs[index].updateInputs(inputs[index]);
         Logger.processInputs("FlyWheels/" + index, inputs[index]);
-        Logger.recordOutput("Shooter/FlyWheel"+index + " Measured RPM", inputs[index].flyWheelVelocityRevs * 60);
+        Logger.recordOutput("Shooter/FlyWheel"+index + " Measured RPM", inputs[index].flyWheelVelocityRevsPerSec * 60);
     }
 
     @Override
@@ -90,11 +93,13 @@ public class FlyWheels extends MapleSubsystem {
                 currentStateRPM,
                 new TrapezoidProfile.State(rpm, 0)
         );
+        this.goalRPM = rpm;
         runControlLoops();
     }
 
-    public void forceRunRPM(double rpm, double rateOfChangePerSec) {
+    public void runStaticRPMSetPoint(double rpm, double rateOfChangePerSec) {
         this.currentStateRPM = new TrapezoidProfile.State(rpm, rateOfChangePerSec);
+        this.goalRPM = rpm;
         runControlLoops();
     }
 
@@ -109,16 +114,17 @@ public class FlyWheels extends MapleSubsystem {
 
         for (int i = 0; i < IOs.length; i++) {
             final double feedBackVoltage = feedBackRevPerSec.calculate(
-                    inputs[i].flyWheelVelocityRevs,
+                    inputs[i].flyWheelVelocityRevsPerSec,
                     flyWheelVelocityRevPerSec
             );
             runVolts(i, feedBackVoltage + feedForwardVoltage);
         }
     }
 
+    @AutoLogOutput(key = "Shooter/FlyWheelsReady")
     public boolean flyWheelsReady() {
         for (FlyWheelIO.FlyWheelsInputs input:inputs)
-            if (Math.abs(input.flyWheelVelocityRevs- currentStateRPM.position) > TOLERANCE_RPM)
+            if (Math.abs(input.flyWheelVelocityRevsPerSec *60 - goalRPM) > TOLERANCE_RPM)
                 return false;
         return true;
     }
