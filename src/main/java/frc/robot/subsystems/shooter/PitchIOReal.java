@@ -13,13 +13,17 @@ import org.littletonrobotics.junction.Logger;
 import static frc.robot.Constants.PitchConfigs.*;
 
 public class PitchIOReal implements PitchIO {
-    private final TalonFX pitchFalcon1 = new TalonFX(17), pitchFalcon2 = new TalonFX(18);
+    private final TalonFX pitchFalcon1, pitchFalcon2;
     private final StatusSignal<Double> pitchMotor1SuppliedAmps, pitchMotor2SuppliedAmps, pitchRelativeEncoderPositionRev, pitchEncoderVelocityRevPerSec;
     private final DigitalInput limitSwitch = new DigitalInput(0);
 
     private double encoderPositionAtLowestPoint;
-    public PitchIOReal() {
-        pitchFalcon1.setInverted(true);
+    public PitchIOReal(int pitch1TalonFXID, boolean pitch1Inverted, int pitch2TalonFXID, boolean pitch2Inverted) {
+        this.pitchFalcon1 = new TalonFX(pitch1TalonFXID);
+        this.pitchFalcon2 = new TalonFX(pitch2TalonFXID);
+        pitchFalcon1.setInverted(pitch1Inverted);
+        pitchFalcon2.setInverted(pitch2Inverted);
+
         pitchMotor1SuppliedAmps = pitchFalcon1.getSupplyCurrent();
         pitchMotor2SuppliedAmps = pitchFalcon2.getSupplyCurrent();
         pitchRelativeEncoderPositionRev = pitchFalcon1.getPosition();

@@ -31,10 +31,7 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIOReal;
 import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.led.LEDStatusLight;
-import frc.robot.subsystems.shooter.Pitch;
-import frc.robot.subsystems.shooter.PitchIOReal;
-import frc.robot.subsystems.shooter.PitchIOSim;
-import frc.robot.subsystems.shooter.ShooterVisualizer;
+import frc.robot.subsystems.shooter.*;
 import frc.robot.subsystems.vision.apriltags.AprilTagVision;
 import frc.robot.subsystems.vision.apriltags.AprilTagVisionIOReal;
 import frc.robot.subsystems.vision.apriltags.ApriltagVisionIOSim;
@@ -62,9 +59,10 @@ public class RobotContainer {
     // Subsystems
     public final SwerveDrive drive;
     public final AprilTagVision aprilTagVision;
-    private final LEDStatusLight ledStatusLight;
-    private final Intake intake;
-    private final Pitch pitch;
+    public final LEDStatusLight ledStatusLight;
+    public final Intake intake;
+    public final Pitch pitch;
+    public final FlyWheels flyWheels;
 
     // Controller
     private final CommandXboxController driverController = new CommandXboxController(0),
@@ -104,13 +102,6 @@ public class RobotContainer {
             case REAL -> {
                 // Real robot, instantiate hardware IO implementations
                 powerDistribution = new PowerDistribution(0, PowerDistribution.ModuleType.kCTRE);
-//                drive = new SwerveDrive(
-//                        new GyroIOPigeon2(),
-//                        new ModuleIOSparkMax(0),
-//                        new ModuleIOSparkMax(1),
-//                        new ModuleIOSparkMax(2),
-//                        new ModuleIOSparkMax(3)
-//                );
                  drive = new SwerveDrive(
                          new GyroIOPigeon2(),
                          new ModuleIOTalonFX(chassisCalibrationFile.getBlock("FrontLeft"), chassisGeneralConfigBlock),
@@ -128,8 +119,15 @@ public class RobotContainer {
 
                 this.competitionFieldVisualizer = new CompetitionFieldVisualizer(drive::getPose);
 
-                this.intake = new Intake(new IntakeIOReal());
-                this.pitch = new Pitch(new PitchIOReal());
+                this.intake = new Intake(new IntakeIOReal(16, 2, 1));
+                this.pitch = new Pitch(new PitchIOReal(
+                        17, true,
+                        18, false
+                ));
+                this.flyWheels = new FlyWheels(new FlyWheelIO[]{
+                        new FlyWheelIOReal(21, true),
+                        new FlyWheelIOReal(22, true)
+                });
             }
 
             case SIM -> {
@@ -177,6 +175,10 @@ public class RobotContainer {
                 fieldSimulation.registerIntake(intakeIOSim);
                 this.intake = new Intake(intakeIOSim);
                 this.pitch = new Pitch(new PitchIOSim());
+                this.flyWheels = new FlyWheels(new FlyWheelIO[]{
+                        new FlyWheelIOSim(),
+                        new FlyWheelIOSim()
+                });
             }
 
             default -> {
@@ -201,6 +203,10 @@ public class RobotContainer {
 
                 this.intake = new Intake((inputs) -> {});
                 this.pitch = new Pitch((inputs) -> {});
+                this.flyWheels = new FlyWheels(new FlyWheelIO[]{
+                        (inputs) -> {},
+                        (inputs) -> {}
+                });
             }
         }
         this.ledStatusLight = new LEDStatusLight(0, 155);
@@ -208,7 +214,7 @@ public class RobotContainer {
                 () -> ShooterVisualizer.showResultsToDashboard(competitionFieldVisualizer.mainRobot.getPose3d())
         ).ignoringDisable(true));
 
-        SmartDashboard.putData("Select Test", testChooser = TestBuilder.buildTestsChooser());
+        SmartDashboard.putData("Select Test", testChooser = TestBuilder.buildTestsChooser(this));
         autoChooser = AutoBuilder.buildAutoChooser(this);
 
         driverModeChooser = new LoggedDashboardChooser<>("Driver Mode", new SendableChooser<>());
@@ -270,7 +276,11 @@ public class RobotContainer {
         ));
 
         driverController.leftBumper().whileTrue(intake.executeIntakeNote());
-        driverController.b().whileTrue(Commands.run(() -> pitch.runSetPointProfiled(Math.toRadians(80)), pitch));
+        driverController.b().whileTrue(Commands.run(() -> {
+            pitch.runSetPointProfiled(Math.toRadians(80));
+            flyWheels.runRPMProfiled(4000);
+        }, pitch, flyWheels));
+        driverController.a().whileTrue(Commands.run(intake::runInvertVoltage));
 
         // for testing only
         if (Robot.CURRENT_ROBOT_MODE == Constants.RobotMode.SIM)

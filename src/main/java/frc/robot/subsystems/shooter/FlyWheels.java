@@ -1,0 +1,125 @@
+package frc.robot.subsystems.shooter;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants;
+import frc.robot.Robot;
+import frc.robot.subsystems.MapleSubsystem;
+import frc.robot.utils.MechanismControl.MaplePIDController;
+import org.littletonrobotics.junction.Logger;
+
+import java.util.function.Consumer;
+
+import static frc.robot.Constants.ShooterConfigs.*;
+
+public class FlyWheels extends MapleSubsystem {
+    private final FlyWheelIO[] IOs;
+    private final FlyWheelsInputsAutoLogged[] inputs;
+
+    public final SysIdRoutine[] sysIdRoutines;
+
+    /* velocity RPM of the shooter is the position of the trapezoid profile */
+    private final TrapezoidProfile speedRPMProfile;
+    private final SimpleMotorFeedforward feedForwardRevPerSec;
+    private final PIDController feedBackRevPerSec;
+    private TrapezoidProfile.State currentStateRPM;
+    public FlyWheels(FlyWheelIO[] IOs) {
+        super("FlyWheels");
+        this.IOs = IOs;
+
+        final double kv = Robot.CURRENT_ROBOT_MODE == Constants.RobotMode.SIM
+                ? kv_sim : Constants.ShooterConfigs.kv;
+        this.feedForwardRevPerSec = new SimpleMotorFeedforward(ks, kv, ka);
+        this.feedBackRevPerSec = new MaplePIDController(FLYWHEEL_PID_CONFIG);
+        this.inputs = new FlyWheelsInputsAutoLogged[IOs.length];
+        this.sysIdRoutines = new SysIdRoutine[IOs.length];
+        for (int i = 0; i < inputs.length; i++) {
+            this.inputs[i] = new FlyWheelsInputsAutoLogged();
+            this.sysIdRoutines[i] = new SysIdRoutine(
+                    new SysIdRoutine.Config(null,null,null, this::logState),
+                    new SysIdRoutine.Mechanism(voltageMeasureRunner(i), null, this)
+            );
+        }
+        this.speedRPMProfile = new TrapezoidProfile(SPEED_RPM_CONSTRAINS);
+        this.currentStateRPM = new TrapezoidProfile.State(0, 0);
+
+        setDefaultCommand(Commands.run(() -> runRPMProfiled(0), this));
+    }
+
+    @Override
+    public void periodic(double dt, boolean enabled) {
+        for (int i = 0; i < IOs.length; i++)
+            flyWheelPeriodic(i);
+    }
+
+    private void flyWheelPeriodic(int index) {
+        this.IOs[index].updateInputs(inputs[index]);
+        Logger.processInputs("FlyWheels/" + index, inputs[index]);
+        Logger.recordOutput("Shooter/FlyWheel"+index + " Measured RPM", inputs[index].flyWheelVelocityRevs * 60);
+    }
+
+    @Override
+    public void onDisable() {
+        for (FlyWheelIO io:IOs)
+            io.runVoltage(0);
+    }
+
+    private void logState(SysIdRoutineLog.State state) {
+        Logger.recordOutput("Shooter/FlyWheelsSysIdState", state.toString());
+    }
+
+    private Consumer<Measure<Voltage>> voltageMeasureRunner(int index) {
+        return (voltageMeasure -> runVolts(index, voltageMeasure.in(Units.Volt)));
+    }
+
+    public void runVolts(int index, double volts) {
+        Logger.recordOutput("Shooter/FlyWheel" + index + "AppliedVolts", volts);
+        IOs[index].runVoltage(volts);
+    }
+
+    public void runRPMProfiled(double rpm) {
+        this.currentStateRPM = speedRPMProfile.calculate(
+                Robot.defaultPeriodSecs,
+                currentStateRPM,
+                new TrapezoidProfile.State(rpm, 0)
+        );
+        runControlLoops();
+    }
+
+    public void forceRunRPM(double rpm, double rateOfChangePerSec) {
+        this.currentStateRPM = new TrapezoidProfile.State(rpm, rateOfChangePerSec);
+        runControlLoops();
+    }
+
+    private void runControlLoops() {
+        Logger.recordOutput("Shooter/Control Loop Setpoint (RPM)", currentStateRPM.position);
+        final double flyWheelVelocityRevPerSec = currentStateRPM.position / 60,
+                flyWheelAccelerationRevPerSec = currentStateRPM.velocity / 60,
+                feedForwardVoltage = feedForwardRevPerSec.calculate(
+                        flyWheelVelocityRevPerSec,
+                        flyWheelAccelerationRevPerSec
+                );
+
+        for (int i = 0; i < IOs.length; i++) {
+            final double feedBackVoltage = feedBackRevPerSec.calculate(
+                    inputs[i].flyWheelVelocityRevs,
+                    flyWheelVelocityRevPerSec
+            );
+            runVolts(i, feedBackVoltage + feedForwardVoltage);
+        }
+    }
+
+    public boolean flyWheelsReady() {
+        for (FlyWheelIO.FlyWheelsInputs input:inputs)
+            if (Math.abs(input.flyWheelVelocityRevs- currentStateRPM.position) > TOLERANCE_RPM)
+                return false;
+        return true;
+    }
+}

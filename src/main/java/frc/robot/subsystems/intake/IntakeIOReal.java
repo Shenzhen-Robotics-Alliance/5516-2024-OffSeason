@@ -7,11 +7,14 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 public class IntakeIOReal implements IntakeIO {
-    private final TalonFX intakeFalcon = new TalonFX(16);
-    private final DigitalInput lowerBeamBreaker = new DigitalInput(2), upperBeamBreaker = new DigitalInput(1);
+    private final TalonFX intakeFalcon;
+    private final DigitalInput lowerBeamBreaker, upperBeamBreaker;
     private final StatusSignal<Double> intakeCurrent;
-    public IntakeIOReal() {
+    public IntakeIOReal(int intakeTalonFXID, int lowerBeamBreakerChannel, int upperBeamBreakerChannel) {
+        this.intakeFalcon = new TalonFX(intakeTalonFXID);
         this.intakeCurrent = intakeFalcon.getSupplyCurrent();
+        this.lowerBeamBreaker = new DigitalInput(lowerBeamBreakerChannel);
+        this.upperBeamBreaker = new DigitalInput(upperBeamBreakerChannel);
         BaseStatusSignal.setUpdateFrequencyForAll(50, intakeCurrent);
         intakeFalcon.optimizeBusUtilization();
     }

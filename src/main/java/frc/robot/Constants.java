@@ -223,6 +223,26 @@ public final class Constants {
         );
     }
 
+    public static final class ShooterConfigs {
+        public static final double ks = 0.05;
+        public static final double kv = 0.11856;
+        public static final double kv_sim = 0.22;
+        public static final double ka = 0.021026;
+
+        public static final TrapezoidProfile.Constraints SPEED_RPM_CONSTRAINS = new TrapezoidProfile.Constraints(
+                6000/0.8, 6000/0.2
+        );
+
+        public static final double TOLERANCE_RPM = 50;
+        public static final MaplePIDController.MaplePIDConfig FLYWHEEL_PID_CONFIG = new MaplePIDController.MaplePIDConfig(
+                7,
+                25.526,
+                0,
+                5,
+                0, false, 0
+        );
+    }
+
     public static Rotation2d toCurrentAllianceRotation(Rotation2d rotationAtBlueSide) {
         final Rotation2d
                 yAxis = Rotation2d.fromDegrees(90),
