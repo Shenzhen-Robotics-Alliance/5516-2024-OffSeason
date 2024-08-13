@@ -56,7 +56,7 @@ import java.util.function.Supplier;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-    private final PowerDistribution powerDistribution;
+    public final PowerDistribution powerDistribution;
     // Subsystems
     public final SwerveDrive drive;
     public final AprilTagVision aprilTagVision;
@@ -286,7 +286,7 @@ public class RobotContainer {
                 Constants.CrescendoField2024Constants.SPEAKER_POSITION_SUPPLIER,
                 faceTargetWhileDrivingLowSpeed::chassisRotationInPosition
         );
-        driverController.rightBumper().whileTrue(faceTargetWhileDrivingLowSpeed.alongWith(semiAutoAimAndShoot));
+        driverController.rightBumper().whileTrue(faceTargetWhileDrivingLowSpeed.raceWith(semiAutoAimAndShoot));
 
         final JoystickDriveAndAimAtTarget faceTargetWhileDrivingFullSpeed  = new JoystickDriveAndAimAtTarget(
                 driveInput, drive,

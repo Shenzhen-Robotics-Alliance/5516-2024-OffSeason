@@ -4,9 +4,13 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.MapleSubsystem;
+import frc.robot.utils.MapleTimeUtils;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -42,12 +46,10 @@ public class Robot extends LoggedRobot {
 
         // Set up data receivers & replay source
         switch (CURRENT_ROBOT_MODE) {
-            case REAL, SIM -> {
-                // Running on a real robot, log to a USB stick ("/U/logs")
-                // Running a physics simulator, log to $PROJECT_FOLDER/logs
+            case REAL -> // Running on a real robot, log to a USB stick ("/U/logs")
                 Logger.addDataReceiver(new WPILOGWriter());
+            case SIM -> // Running a physics simulator, send everything to networktables
                 Logger.addDataReceiver(new NT4Publisher());
-            }
             case REPLAY -> {
                 // Replaying a log, set up replay source
                 setUseTiming(false); // Run as fast as possible
@@ -73,7 +75,19 @@ public class Robot extends LoggedRobot {
         if (CURRENT_ROBOT_MODE == Constants.RobotMode.SIM)
             robotContainer.updateSimulationWorld();
         MapleSubsystem.checkForOnDisableAndEnable();
+
         CommandScheduler.getInstance().run();
+
+        dashboardInfoDisplay();
+    }
+
+    private double previousTime = 0;
+    private void dashboardInfoDisplay() {
+        SmartDashboard.putNumber("Battery Voltage (V)", robotContainer.powerDistribution.getVoltage());
+        SmartDashboard.putNumber("Total Current (A)", robotContainer.powerDistribution.getTotalCurrent());
+        SmartDashboard.putNumber("Period Time (MS)", (MapleTimeUtils.getRealTimeSeconds() - previousTime) * 1000);
+        SmartDashboard.putNumber("Match Time (s)", DriverStation.getMatchTime());
+        previousTime = MapleTimeUtils.getRealTimeSeconds();
     }
 
     /**

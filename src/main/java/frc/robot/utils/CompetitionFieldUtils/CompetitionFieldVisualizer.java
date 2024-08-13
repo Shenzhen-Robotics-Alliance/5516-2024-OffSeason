@@ -80,7 +80,6 @@ public class CompetitionFieldVisualizer {
         removeGamePiecesOnFlyIfReachedTarget();
         for (String typeName: objectsOnFieldWithGivenType.keySet()) {
             final Set<ObjectOnFieldDisplay> objects = objectsOnFieldWithGivenType.get(typeName);
-            dashboardField2d.getObject(typeName).setPoses(getPose2ds(objects));
             Logger.recordOutput("/Field/" + typeName, getPose3ds(objects));
         }
 

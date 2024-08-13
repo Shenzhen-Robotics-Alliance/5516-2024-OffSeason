@@ -84,7 +84,8 @@ public class Intake extends MapleSubsystem {
 
     public Command executeLaunch() {
         return Commands.run(this::runFullIntakeVoltage, this)
-                .until(() -> !isNotePresent());
+                .until(() -> !isNotePresent())
+                .finallyDo(this::runIdle);
     }
 
     public void runIdle() {

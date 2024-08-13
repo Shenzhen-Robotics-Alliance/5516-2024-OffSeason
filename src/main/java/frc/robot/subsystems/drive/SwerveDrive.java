@@ -17,6 +17,9 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.subsystems.MapleSubsystem;
 import frc.robot.subsystems.drive.IO.*;
@@ -84,6 +87,8 @@ public class SwerveDrive extends MapleSubsystem implements HolonomicDriveSubsyst
 
         gyroDisconnectedAlert.setActivated(false);
         visionNoResultAlert.setActivated(false);
+
+        startDashboardDisplay();
     }
 
     @Override
@@ -263,5 +268,25 @@ public class SwerveDrive extends MapleSubsystem implements HolonomicDriveSubsyst
     @Override
     public double getPreviousVisionMeasurementTimeStamp() {
         return previousMeasurementTimeStamp;
+    }
+    
+    private void startDashboardDisplay() {
+        SmartDashboard.putData("Swerve Drive", builder -> {
+            builder.setSmartDashboardType("SwerveDrive");
+
+            builder.addDoubleProperty("Front Left Angle", () -> swerveModules[0].getSteerFacing().getRadians(), null);
+            builder.addDoubleProperty("Front Left Velocity", () -> swerveModules[0].getDriveVelocityMetersPerSec(), null);
+
+            builder.addDoubleProperty("Front Right Angle", () -> swerveModules[0].getSteerFacing().getRadians(), null);
+            builder.addDoubleProperty("Front Right Velocity", () -> swerveModules[0].getDriveVelocityMetersPerSec(), null);
+
+            builder.addDoubleProperty("Back Left Angle", () -> swerveModules[0].getSteerFacing().getRadians(), null);
+            builder.addDoubleProperty("Back Left Velocity", () -> swerveModules[0].getDriveVelocityMetersPerSec(), null);
+
+            builder.addDoubleProperty("Back Right Angle", () -> swerveModules[0].getSteerFacing().getRadians(), null);
+            builder.addDoubleProperty("Back Right Velocity", () -> swerveModules[0].getDriveVelocityMetersPerSec(), null);
+
+            builder.addDoubleProperty("Robot Angle", () -> gyroInputs.yawPosition.minus(Constants.getDriverStationFacing()).getRadians(), null);
+        });
     }
 }

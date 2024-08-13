@@ -98,10 +98,10 @@ public final class Constants {
 
         public static final MaplePIDController.MaplePIDConfig chassisRotationalPIDConfig = new MaplePIDController.MaplePIDConfig(
                 Math.toRadians(ChassisDefaultConfigs.DEFAULT_MAX_ANGULAR_VELOCITY_DEGREES_PER_SECOND),
-                Math.toRadians(60),
+                Math.toRadians(90),
                 0.02,
                 Math.toRadians(3),
-                0.05,
+                0.08,
                 true,
                 0
         );
@@ -133,7 +133,7 @@ public final class Constants {
     public static final class SwerveModuleConfigs {
         public static final MaplePIDController.MaplePIDConfig steerHeadingCloseLoopConfig = new MaplePIDController.MaplePIDConfig(
                 0.7,
-                Math.toRadians(90),
+                Math.toRadians(45),
                 0.01,
                 Math.toRadians(1.5),
                 0,
@@ -284,5 +284,12 @@ public final class Constants {
     public static boolean isSidePresentedAsRed() {
         final Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
         return alliance.isPresent() && alliance.get().equals(DriverStation.Alliance.Red);
+    }
+
+    public static Rotation2d getDriverStationFacing() {
+        return switch (DriverStation.getAlliance().orElse(DriverStation.Alliance.Red)) {
+            case Red -> new Rotation2d(Math.PI);
+            case Blue -> new Rotation2d(0);
+        };
     }
 }
