@@ -5,6 +5,7 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Robot;
 import frc.robot.subsystems.MapleSubsystem;
@@ -58,6 +59,9 @@ public class Pitch extends MapleSubsystem {
         ShooterVisualizer.setPitchAngle(inputs.pitchAngleRad);
 
         Logger.recordOutput("Shooter/Pitch Actual Position (Deg)", Math.toDegrees(inputs.pitchAngleRad));
+
+        SmartDashboard.putNumber("Pitch Actual Angle (Deg)", Math.toDegrees(inputs.pitchAngleRad));
+        SmartDashboard.putBoolean("Pitch In Position", inPosition());
     }
 
     private double previousStateVelocity = 0;

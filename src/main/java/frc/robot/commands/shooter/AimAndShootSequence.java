@@ -55,9 +55,10 @@ public class AimAndShootSequence extends SequentialCommandGroup  {
         final AimAtSpeakerContinuously aimAtSpeakerContinuously = new AimAtSpeakerContinuously(
                 flyWheels, pitch, shooterOptimization, drive, targetPositionSupplier
         );
-        final Command waitForRightTimingAndShoot = Commands.waitUntil(aimAtSpeakerContinuously::readyToShoot)
-                .andThen(Commands.waitUntil(externalShootCondition))
+        final Command waitForRightTimingAndShoot = Commands.waitUntil(
+                () -> aimAtSpeakerContinuously.readyToShoot()
+                        && externalShootCondition.getAsBoolean())
                 .andThen(intake.executeLaunch());
-        super.addCommands(aimAtSpeakerContinuously.alongWith(waitForRightTimingAndShoot));
+        super.addCommands(aimAtSpeakerContinuously.raceWith(waitForRightTimingAndShoot));
     }
 }

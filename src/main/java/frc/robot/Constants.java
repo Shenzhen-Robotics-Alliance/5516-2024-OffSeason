@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -99,9 +100,9 @@ public final class Constants {
         public static final MaplePIDController.MaplePIDConfig chassisRotationalPIDConfig = new MaplePIDController.MaplePIDConfig(
                 Math.toRadians(ChassisDefaultConfigs.DEFAULT_MAX_ANGULAR_VELOCITY_DEGREES_PER_SECOND),
                 Math.toRadians(90),
-                0.02,
+                0.04,
                 Math.toRadians(3),
-                0.08,
+                0.06,
                 true,
                 0
         );
@@ -143,6 +144,8 @@ public final class Constants {
         public static final double STEERING_CURRENT_LIMIT = 20;
         public static final double DRIVING_CURRENT_LIMIT = 50;
         public static final double WHEEL_RADIUS = Units.inchesToMeters(2.0);
+
+        public static final SimpleMotorFeedforward DRIVE_OPEN_LOOP = new SimpleMotorFeedforward(0.01, 2.03);
     }
 
     public static final class RobotPhysicsSimulationConfigs {
@@ -236,7 +239,7 @@ public final class Constants {
                 6000/0.8, 6000/0.2
         );
 
-        public static final double TOLERANCE_RPM = 50;
+        public static final double TOLERANCE_RPM = 100;
         public static final MaplePIDController.MaplePIDConfig FLYWHEEL_PID_CONFIG = new MaplePIDController.MaplePIDConfig(
                 7,
                 25.526,

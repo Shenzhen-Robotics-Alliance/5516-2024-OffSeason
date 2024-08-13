@@ -6,6 +6,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -60,6 +61,9 @@ public class FlyWheels extends MapleSubsystem {
     public void periodic(double dt, boolean enabled) {
         for (int i = 0; i < IOs.length; i++)
             flyWheelPeriodic(i);
+
+        SmartDashboard.putBoolean("FlyWheels Ready", flyWheelsReady());
+        SmartDashboard.putNumber("FlyWheels Actual RPM", inputs[0].flyWheelVelocityRevsPerSec * 60);
     }
 
     private void flyWheelPeriodic(int index) {

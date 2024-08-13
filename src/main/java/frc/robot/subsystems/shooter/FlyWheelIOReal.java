@@ -1,7 +1,9 @@
 package frc.robot.subsystems.shooter;
 
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -17,6 +19,10 @@ public class FlyWheelIOReal implements FlyWheelIO {
         this.velocityRevolutions = flyWheelFalcon.getVelocity();
         this.supplyCurrentAmps = flyWheelFalcon.getSupplyCurrent();
 
+        final CurrentLimitsConfigs currentLimitConfiguration = new CurrentLimitsConfigs();
+        currentLimitConfiguration.SupplyCurrentLimitEnable = true;
+        currentLimitConfiguration.SupplyCurrentLimit = 40;
+        flyWheelFalcon.getConfigurator().apply(currentLimitConfiguration);
         BaseStatusSignal.setUpdateFrequencyForAll(100,
                 positionRevolutions, velocityRevolutions, supplyCurrentAmps);
         flyWheelFalcon.optimizeBusUtilization();

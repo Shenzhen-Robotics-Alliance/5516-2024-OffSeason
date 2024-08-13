@@ -1,11 +1,13 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.HolonomicDriveSubsystem;
 import frc.robot.subsystems.shooter.FlyWheels;
 import frc.robot.subsystems.shooter.Pitch;
 import frc.robot.utils.MapleShooterOptimization;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.function.Supplier;
 
@@ -41,6 +43,7 @@ public class AimAtSpeakerContinuously extends Command {
 
     @Override
     public void execute() {
+        shooterOptimizationRunning = true;
         final MapleShooterOptimization.ShooterState state = shooterOptimization.getOptimizedShootingState(
                 targetPositionSupplier.get(),
                 drive.getPose().getTranslation(),

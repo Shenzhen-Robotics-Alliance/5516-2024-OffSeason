@@ -5,7 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -21,6 +20,9 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 public class Robot extends LoggedRobot {
     private static final Constants.RobotMode JAVA_SIM_MODE = Constants.RobotMode.SIM;
     public static final Constants.RobotMode CURRENT_ROBOT_MODE = isReal() ? Constants.RobotMode.REAL : JAVA_SIM_MODE;
+    public static final boolean IS_COMPETITION = false;
+
+
     private Command autonomousCommand;
     private RobotContainer robotContainer;
 
@@ -46,8 +48,10 @@ public class Robot extends LoggedRobot {
 
         // Set up data receivers & replay source
         switch (CURRENT_ROBOT_MODE) {
-            case REAL -> // Running on a real robot, log to a USB stick ("/U/logs")
+            case REAL -> { // Running on a real robot, log to a USB stick ("/U/logs")
                 Logger.addDataReceiver(new WPILOGWriter());
+                if (!IS_COMPETITION) Logger.addDataReceiver(new NT4Publisher());
+            }
             case SIM -> // Running a physics simulator, send everything to networktables
                 Logger.addDataReceiver(new NT4Publisher());
             case REPLAY -> {
@@ -72,8 +76,7 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void robotPeriodic() {
-        if (CURRENT_ROBOT_MODE == Constants.RobotMode.SIM)
-            robotContainer.updateSimulationWorld();
+        robotContainer.updateFieldSimOrDisplay();
         MapleSubsystem.checkForOnDisableAndEnable();
 
         CommandScheduler.getInstance().run();

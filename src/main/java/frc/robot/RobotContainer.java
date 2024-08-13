@@ -6,7 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -36,7 +35,6 @@ import frc.robot.subsystems.vision.apriltags.AprilTagVision;
 import frc.robot.subsystems.vision.apriltags.AprilTagVisionIOReal;
 import frc.robot.subsystems.vision.apriltags.ApriltagVisionIOSim;
 import frc.robot.tests.*;
-import frc.robot.utils.CompetitionFieldUtils.FieldObjects.Crescendo2024FieldObjects;
 import frc.robot.utils.CompetitionFieldUtils.CompetitionFieldVisualizer;
 import frc.robot.utils.CompetitionFieldUtils.Simulation.*;
 import frc.robot.utils.Config.MapleConfigFile;
@@ -343,8 +341,10 @@ public class RobotContainer {
       return testChooser.getSelected().get();
     }
 
-    public void updateSimulationWorld() {
+    public void updateFieldSimOrDisplay() {
         if (fieldSimulation != null)
             fieldSimulation.updateSimulationWorld();
+        else
+            competitionFieldVisualizer.updateObjectsToDashboardAndTelemetry();
     }
 }
