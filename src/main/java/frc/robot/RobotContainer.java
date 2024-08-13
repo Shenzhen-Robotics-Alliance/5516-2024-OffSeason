@@ -214,9 +214,6 @@ public class RobotContainer {
         this.drive.configHolonomicPathPlannerAutoBuilder(competitionFieldVisualizer);
 
         this.ledStatusLight = new LEDStatusLight(0, 155);
-        CommandScheduler.getInstance().schedule(Commands.run(
-                () -> ShooterVisualizer.showResultsToDashboard(competitionFieldVisualizer.mainRobot.getPose3d())
-        ).ignoringDisable(true));
 
         SmartDashboard.putData("Select Test", testChooser = TestBuilder.buildTestsChooser(this));
         autoChooser = AutoBuilder.buildAutoChooser(this);
@@ -264,25 +261,28 @@ public class RobotContainer {
                 drive
                 ).ignoringDisable(true)
         );
-        driverController.y().whileTrue(new AutoAlignment(
-                drive,
-                () -> Constants.toCurrentAlliancePose(new Pose2d(
-                        1.85, 7,
-                        Rotation2d.fromDegrees(-90)
-                )),
-                () -> Constants.toCurrentAlliancePose(new Pose2d(
-                        1.85, 7.7,
-                        Rotation2d.fromDegrees(-90)
-                )),
-                new Pose2d(0.1, 0.1, Rotation2d.fromDegrees(3)),
-                0.75
-        ));
+//        driverController.y().whileTrue(new AutoAlignment(
+//                drive,
+//                () -> Constants.toCurrentAlliancePose(new Pose2d(
+//                        1.85, 7,
+//                        Rotation2d.fromDegrees(-90)
+//                )),
+//                () -> Constants.toCurrentAlliancePose(new Pose2d(
+//                        1.85, 7.7,
+//                        Rotation2d.fromDegrees(-90)
+//                )),
+//                new Pose2d(0.1, 0.1, Rotation2d.fromDegrees(3)),
+//                0.75
+//        ));
 
         /* intake commands */
         driverController.leftBumper().whileTrue(intake.executeIntakeNote());
         driverController.a().whileTrue(Commands.run(intake::runInvertVoltage));
 
-        /* shooter commands */
+        /* amp command */
+        driverController.y().onTrue(new PrepareToAmp(pitch, flyWheels)).onFalse(new ScoreAmp(intake, pitch, flyWheels));
+
+        /* shoot commands */
         final MapleShooterOptimization shooterOptimization = new MapleShooterOptimization(
                 "MainShooter",
                 new double[] {1.35, 2, 3, 4, 4.5, 5},
