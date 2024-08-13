@@ -13,7 +13,7 @@ import frc.robot.utils.LEDAnimation;
 import org.littletonrobotics.junction.Logger;
 
 public class LEDStatusLight extends MapleSubsystem {
-    private static final int DASHBOARD_DISPLAY_LENGTH = 41;
+    private static final int DASHBOARD_DISPLAY_LENGTH = 16;
     private static AddressableLED led = null;
     private final AddressableLEDBuffer buffer;
     private final AddressableLEDBuffer bufferForDashboard;
