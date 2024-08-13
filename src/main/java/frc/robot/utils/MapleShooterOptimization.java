@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Robot;
 import frc.robot.utils.Config.MapleConfigFile;
 import frc.robot.utils.Config.MapleInterpolationTable;
 import org.littletonrobotics.junction.Logger;
@@ -74,6 +75,16 @@ public class MapleShooterOptimization {
     public double getFlightTimeSeconds(Translation2d targetPosition, Translation2d robotPosition) {
         final double distanceToTargetMeters = targetPosition.getDistance(robotPosition);
         return table.interpolateVariable("Flight-Time", distanceToTargetMeters);
+    }
+
+    public Rotation2d getShooterFacing(Translation2d targetPosition, Translation2d robotPosition, ChassisSpeeds robotVelocityFieldRelative) {
+        final double flightTime = getFlightTimeSeconds(targetPosition, robotPosition);
+        final Translation2d robotPositionAfterFlightTime = robotPosition.plus(new Translation2d(
+                robotVelocityFieldRelative.vxMetersPerSecond * flightTime,
+                robotVelocityFieldRelative.vyMetersPerSecond * flightTime
+        ));
+
+        return targetPosition.minus(robotPositionAfterFlightTime).getAngle();
     }
 
     public ShooterState getOptimizedShootingState(Translation2d targetPosition, Translation2d robotPosition, ChassisSpeeds robotVelocityFieldRelative) {

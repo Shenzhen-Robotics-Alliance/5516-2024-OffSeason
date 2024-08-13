@@ -19,19 +19,15 @@ import java.util.function.Supplier;
 public class JoystickDriveAndAimAtTarget extends Command {
     private final MapleJoystickDriveInput input;
     private final Supplier<Translation2d> targetPositionSupplier;
-    private final DoubleSupplier inAdvanceTimeSupplier;
+    private final MapleShooterOptimization shooterOptimization;
     private final HolonomicDriveSubsystem driveSubsystem;
     private final PIDController chassisRotationController;
 
     private final double pilotInputMultiplier;
-    public JoystickDriveAndAimAtTarget(MapleJoystickDriveInput input, HolonomicDriveSubsystem driveSubsystem, Supplier<Translation2d> targetPositionSupplier, MapleShooterOptimization shooterOptimization, double pilotInputMultiplier) {
-        this(input, driveSubsystem, targetPositionSupplier,
-                () -> shooterOptimization.getFlightTimeSeconds(targetPositionSupplier.get(), driveSubsystem.getPose().getTranslation()), pilotInputMultiplier);
-    }
 
-    public JoystickDriveAndAimAtTarget(MapleJoystickDriveInput input, HolonomicDriveSubsystem driveSubsystem, Supplier<Translation2d> targetPositionSupplier, DoubleSupplier inAdvanceTimeSupplier, double pilotInputMultiplier) {
+    public JoystickDriveAndAimAtTarget(MapleJoystickDriveInput input, HolonomicDriveSubsystem driveSubsystem, Supplier<Translation2d> targetPositionSupplier, MapleShooterOptimization shooterOptimization, double pilotInputMultiplier) {
         this.targetPositionSupplier = targetPositionSupplier;
-        this.inAdvanceTimeSupplier = inAdvanceTimeSupplier;
+        this.shooterOptimization = shooterOptimization;
         this.pilotInputMultiplier = pilotInputMultiplier;
         this.chassisRotationController = new MaplePIDController(
                 Constants.SwerveDriveChassisConfigs.chassisRotationalPIDConfig
@@ -66,7 +62,7 @@ public class JoystickDriveAndAimAtTarget extends Command {
         super.execute();
     }
 
-    public static double FEED_FORWARD_RATE = 1.3, ROTATION_TOLERANCE_DEGREES = 3;
+    public static double FEED_FORWARD_RATE = 1.3, ROTATION_TOLERANCE_DEGREES = 5;
     public double getRotationalCorrectionVelocityRadPerSec() {
         final Translation2d robotPosition = driveSubsystem.getPose().getTranslation();
         final ChassisSpeeds robotVelocityFieldRelative = driveSubsystem.getMeasuredChassisSpeedsFieldRelative();
@@ -74,27 +70,32 @@ public class JoystickDriveAndAimAtTarget extends Command {
                 robotVelocityFieldRelative.vxMetersPerSecond * Robot.defaultPeriodSecs,
                 robotVelocityFieldRelative.vyMetersPerSecond * Robot.defaultPeriodSecs
         ));
-        final Translation2d targetPosition = targetPositionSupplier.get(),
-                robotNewPosition = robotPosition.plus(new Translation2d(
-                        robotVelocityFieldRelative.vxMetersPerSecond * inAdvanceTimeSupplier.getAsDouble(),
-                        robotVelocityFieldRelative.vyMetersPerSecond * inAdvanceTimeSupplier.getAsDouble()
-                ).times(inAdvanceTimeSupplier.getAsDouble()));
-        final Rotation2d targetedFacingInAdvance = targetPosition.minus(robotNewPosition).getAngle(),
-                targetFacingNow = targetPosition.minus(robotPosition).getAngle(),
-                targetFacingAfterDT = targetPosition.minus(robotPositionAfterDt).getAngle();
+
+        final Rotation2d targetedFacing =
+                shooterOptimization.getShooterFacing(
+                        targetPositionSupplier.get(),
+                        robotPosition,
+                        robotVelocityFieldRelative
+                ),
+                /* to calculate the derivative of target facing */
+                targetedFacingAfterDT = shooterOptimization.getShooterFacing(
+                        targetPositionSupplier.get(),
+                        robotPositionAfterDt,
+                        robotVelocityFieldRelative
+                );
         final double targetedFacingChangeRateRadPerSec =
-                targetFacingAfterDT.minus(targetFacingNow).getRadians()
+                targetedFacingAfterDT.minus(targetedFacing).getRadians()
                         / Robot.defaultPeriodSecs;
-        Logger.recordOutput("Drive/Face To Target Rotation (Deg)",targetedFacingInAdvance.getDegrees());
+        Logger.recordOutput("Drive/Face To Target Rotation (Deg)", targetedFacing.getDegrees());
 
         final double feedBackRotationalSpeed = chassisRotationController.calculate(
                 driveSubsystem.getFacing().getRadians(),
-                targetedFacingInAdvance.getRadians()),
+                targetedFacing.getRadians()),
                 feedForwardRotationalSpeed = targetedFacingChangeRateRadPerSec
                         * FEED_FORWARD_RATE;
 
         final double chassisRotationalError = Math.abs(
-                targetedFacingInAdvance
+                targetedFacing
                         .minus(driveSubsystem.getFacing())
                         .getDegrees()
         );
