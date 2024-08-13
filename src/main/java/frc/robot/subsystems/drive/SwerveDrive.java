@@ -24,6 +24,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.MapleSubsystem;
 import frc.robot.subsystems.drive.IO.*;
 import frc.robot.utils.Alert;
+import frc.robot.utils.CompetitionFieldUtils.CompetitionFieldVisualizer;
 import frc.robot.utils.Config.MapleConfigFile;
 
 import frc.robot.utils.MapleTimeUtils;
@@ -40,6 +41,7 @@ public class SwerveDrive extends MapleSubsystem implements HolonomicDriveSubsyst
     private final SwerveModule[] swerveModules;
 
     private final Translation2d[] MODULE_TRANSLATIONS;
+    private final double DRIVE_BASE_RADIUS;
     public final SwerveDriveKinematics kinematics;
     private Rotation2d rawGyroRotation;
     private final SwerveModulePosition[] lastModulePositions;
@@ -59,8 +61,8 @@ public class SwerveDrive extends MapleSubsystem implements HolonomicDriveSubsyst
         };
 
         final double horizontalWheelsMarginMeters = generalConfigBlock.getDoubleConfig("horizontalWheelsMarginMeters"),
-                verticalWheelsMarginMeters = generalConfigBlock.getDoubleConfig("verticalWheelsMarginMeters"),
-                driveBaseRadius = Math.hypot(horizontalWheelsMarginMeters/2, verticalWheelsMarginMeters/2);
+                verticalWheelsMarginMeters = generalConfigBlock.getDoubleConfig("verticalWheelsMarginMeters");
+        DRIVE_BASE_RADIUS = Math.hypot(horizontalWheelsMarginMeters/2, verticalWheelsMarginMeters/2);
 
         this.maxModuleVelocityMetersPerSec = generalConfigBlock.getDoubleConfig("maxVelocityMetersPerSecond");
         this.maxAngularVelocityRadPerSec = generalConfigBlock.getDoubleConfig("maxAngularVelocityRadiansPerSecond");
@@ -79,8 +81,6 @@ public class SwerveDrive extends MapleSubsystem implements HolonomicDriveSubsyst
                 VecBuilder.fill(TRANSLATIONAL_STANDARD_ERROR_METERS_FOR_SINGLE_OBSERVATION, TRANSLATIONAL_STANDARD_ERROR_METERS_FOR_SINGLE_OBSERVATION, ROTATIONAL_STANDARD_ERROR_RADIANS_FOR_SINGLE_OBSERVATION)
         );
 
-        configHolonomicPathPlannerAutoBuilder(driveBaseRadius);
-
         this.odometryThread = OdometryThread.createInstance();
         this.odometryThreadInputs = new OdometryThreadInputsAutoLogged();
         this.odometryThread.start();
@@ -89,6 +89,10 @@ public class SwerveDrive extends MapleSubsystem implements HolonomicDriveSubsyst
         visionNoResultAlert.setActivated(false);
 
         startDashboardDisplay();
+    }
+
+    public void configHolonomicPathPlannerAutoBuilder(CompetitionFieldVisualizer fieldVisualizer) {
+        HolonomicDriveSubsystem.super.configHolonomicPathPlannerAutoBuilder(fieldVisualizer, DRIVE_BASE_RADIUS);
     }
 
     @Override
@@ -269,7 +273,7 @@ public class SwerveDrive extends MapleSubsystem implements HolonomicDriveSubsyst
     public double getPreviousVisionMeasurementTimeStamp() {
         return previousMeasurementTimeStamp;
     }
-    
+
     private void startDashboardDisplay() {
         SmartDashboard.putData("Swerve Drive", builder -> {
             builder.setSmartDashboardType("SwerveDrive");

@@ -76,6 +76,10 @@ public class CompetitionFieldVisualizer {
         return originalSet;
     }
 
+    public void displayTrajectory(Pose2d[] trajectory) {
+        dashboardField2d.getObject("trajectory").setPoses(trajectory);
+    }
+
     public void updateObjectsToDashboardAndTelemetry() {
         removeGamePiecesOnFlyIfReachedTarget();
         for (String typeName: objectsOnFieldWithGivenType.keySet()) {

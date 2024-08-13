@@ -210,6 +210,9 @@ public class RobotContainer {
                 });
             }
         }
+
+        this.drive.configHolonomicPathPlannerAutoBuilder(competitionFieldVisualizer);
+
         this.ledStatusLight = new LEDStatusLight(0, 155);
         CommandScheduler.getInstance().schedule(Commands.run(
                 () -> ShooterVisualizer.showResultsToDashboard(competitionFieldVisualizer.mainRobot.getPose3d())
@@ -261,6 +264,19 @@ public class RobotContainer {
                 drive
                 ).ignoringDisable(true)
         );
+        driverController.y().whileTrue(new AutoAlignment(
+                drive,
+                () -> Constants.toCurrentAlliancePose(new Pose2d(
+                        1.85, 7,
+                        Rotation2d.fromDegrees(-90)
+                )),
+                () -> Constants.toCurrentAlliancePose(new Pose2d(
+                        1.85, 7.7,
+                        Rotation2d.fromDegrees(-90)
+                )),
+                new Pose2d(0.1, 0.1, Rotation2d.fromDegrees(3)),
+                0.75
+        ));
 
         /* intake commands */
         driverController.leftBumper().whileTrue(intake.executeIntakeNote());
