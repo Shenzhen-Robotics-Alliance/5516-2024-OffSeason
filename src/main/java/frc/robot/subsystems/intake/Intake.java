@@ -60,7 +60,7 @@ public class Intake extends MapleSubsystem {
     }
 
     public void runInvertVoltage() {
-        io.runIntakeVoltage(-10);
+        io.runIntakeVoltage(-12);
     }
 
     public void runMinimumPropellingVoltage() {

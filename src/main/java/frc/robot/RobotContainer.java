@@ -285,9 +285,9 @@ public class RobotContainer {
         /* shoot commands */
         final MapleShooterOptimization shooterOptimization = new MapleShooterOptimization(
                 "MainShooter",
-                new double[] {1.35, 2, 3, 4, 4.5, 5},
-                new double[] {60, 50, 40, 35, 30, 25},
-                new double[] {3000, 4000, 5000, 5500, 6000, 6000},
+                new double[] {1.35, 2, 3, 3.5, 4, 4.5},
+                new double[] {55, 47, 36, 30, 25, 22},
+                new double[] {2300, 2500, 3000, 3500, 3700, 3700},
                 new double[] {0.15, 0.2, 0.25, 0.3, 0.35, 0.4}
         );
 
@@ -349,5 +349,11 @@ public class RobotContainer {
         else
             competitionFieldVisualizer.updateObjectsToDashboardAndTelemetry();
         ShooterVisualizer.showResultsToDashboard(competitionFieldVisualizer.mainRobot.getPose3d());
+        SmartDashboard.putNumber("Target To Speaker (M)", drive
+                .getPose()
+                .getTranslation()
+                .minus(Constants.CrescendoField2024Constants.SPEAKER_POSITION_SUPPLIER.get())
+                .getNorm()
+        );
     }
 }

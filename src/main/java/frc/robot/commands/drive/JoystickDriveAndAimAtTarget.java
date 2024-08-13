@@ -36,8 +36,8 @@ public class JoystickDriveAndAimAtTarget extends Command {
 
         this.driveSubsystem = driveSubsystem;
         this.input = new MapleJoystickDriveInput(
-                () -> input.joystickXSupplier.getAsDouble() * pilotInputMultiplier,
-                () -> input.joystickYSupplier.getAsDouble() * pilotInputMultiplier,
+                input.joystickXSupplier,
+                input.joystickYSupplier,
                 () -> 0
         );
     }
@@ -51,9 +51,8 @@ public class JoystickDriveAndAimAtTarget extends Command {
     @Override
     public void execute() {
         final ChassisSpeeds pilotInputSpeeds = input.getJoystickChassisSpeeds(
-                        driveSubsystem.getChassisMaxLinearVelocityMetersPerSec(), driveSubsystem.getChassisMaxAngularVelocity())
+                driveSubsystem.getChassisMaxLinearVelocityMetersPerSec(), driveSubsystem.getChassisMaxAngularVelocity())
                 .times(pilotInputMultiplier),
-
                 chassisSpeeds = pilotInputSpeeds.plus(new ChassisSpeeds(
                         0, 0,
                         getRotationalCorrectionVelocityRadPerSec()
@@ -63,7 +62,7 @@ public class JoystickDriveAndAimAtTarget extends Command {
         super.execute();
     }
 
-    public static double FEED_FORWARD_RATE = 1.3, ROTATION_TOLERANCE_DEGREES = 5;
+    public static double FEED_FORWARD_RATE = 1, ROTATION_TOLERANCE_DEGREES = 3.5;
     public double getRotationalCorrectionVelocityRadPerSec() {
         final Translation2d robotPosition = driveSubsystem.getPose().getTranslation();
         final ChassisSpeeds robotVelocityFieldRelative = driveSubsystem.getMeasuredChassisSpeedsFieldRelative();
