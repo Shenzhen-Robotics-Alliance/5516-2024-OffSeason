@@ -16,16 +16,16 @@ import frc.robot.subsystems.drive.IO.ModuleIO;
 import frc.robot.subsystems.drive.IO.ModuleIOInputsAutoLogged;
 import frc.robot.utils.Alert;
 import frc.robot.utils.MapleMaths.SwerveStateProjection;
-import frc.robot.utils.MechanismControl.InterpolatedMotorFeedForward;
 import frc.robot.utils.MechanismControl.MaplePIDController;
 import org.littletonrobotics.junction.Logger;
+
+import static frc.robot.Constants.SwerveModuleConfigs.DRIVE_OPEN_LOOP;
 
 public class SwerveModule extends MapleSubsystem {
     private final ModuleIO io;
     private final String name;
     private final ModuleIOInputsAutoLogged inputs = new ModuleIOInputsAutoLogged();
 
-    private final InterpolatedMotorFeedForward driveOpenLoop;
     private final PIDController turnCloseLoop;
     private SwerveModuleState setPoint;
     private SwerveModulePosition[] odometryPositions = new SwerveModulePosition[]{};
@@ -42,7 +42,6 @@ public class SwerveModule extends MapleSubsystem {
         );
         this.hardwareFaultAlert.setActivated(false);
 
-        driveOpenLoop = InterpolatedMotorFeedForward.fromDeployedDirectory("DrivingMotorOpenLoop");
         turnCloseLoop = new MaplePIDController(Constants.SwerveModuleConfigs.steerHeadingCloseLoopConfig);
 
         CommandScheduler.getInstance().unregisterSubsystem(this);
@@ -81,15 +80,15 @@ public class SwerveModule extends MapleSubsystem {
     private void runDriveOpenLoop() {
         final double adjustSpeedSetpointMetersPerSec = SwerveStateProjection.project(setPoint, getSteerFacing());
         Logger.recordOutput("/SwerveStates/FeedForward/" + this.name + "/required velocity", adjustSpeedSetpointMetersPerSec);
-        Logger.recordOutput("/SwerveStates/FeedForward/" + this.name + "/corresponding power (mag)", driveOpenLoop.calculate(adjustSpeedSetpointMetersPerSec));
-        io.setDriveSpeedPercent(driveOpenLoop.calculate(adjustSpeedSetpointMetersPerSec));
+        Logger.recordOutput("/SwerveStates/FeedForward/" + this.name + "/corresponding power (mag)", DRIVE_OPEN_LOOP.calculate(adjustSpeedSetpointMetersPerSec));
+        io.setDriveVoltage(DRIVE_OPEN_LOOP.calculate(adjustSpeedSetpointMetersPerSec));
     }
 
     /**
      * Runs the module with the specified setpoint state. Returns the optimized state.
      */
     public SwerveModuleState runSetPoint(SwerveModuleState state) {
-        if (state.speedMetersPerSecond < 0.1)
+        if (Math.abs(state.speedMetersPerSecond) < 0.01)
             this.setPoint = new SwerveModuleState(0, setPoint.angle);
         else
             this.setPoint = SwerveModuleState.optimize(state, getSteerFacing());
@@ -103,7 +102,7 @@ public class SwerveModule extends MapleSubsystem {
     @Override
     public void onDisable() {
         io.setSteerPowerPercent(0);
-        io.setDriveSpeedPercent(0);
+        io.setDriveVoltage(0);
     }
 
     /**

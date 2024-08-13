@@ -12,8 +12,10 @@ import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 import java.util.Queue;
 
@@ -156,8 +158,8 @@ public class ModuleIOSparkMax implements ModuleIO {
     }
 
     @Override
-    public void setDriveSpeedPercent(double speedPercent) {
-        driveSparkMax.set(speedPercent);
+    public void setDriveVoltage(double volts) {
+        driveSparkMax.set(volts / RobotController.getBatteryVoltage());
     }
 
     @Override

@@ -1,7 +1,7 @@
 <ChassisWheelsCalibration>
     <GeneralInformation>
         <gyroPort type="int">0</gyroPort>
-        <overallGearRatio type="double">6.12</overallGearRatio>
+        <overallGearRatio type="double">5.36</overallGearRatio>
         <wheelRadiusMeters type="double">0.051</wheelRadiusMeters>
         <horizontalWheelsMarginMeters type="double">0.55</horizontalWheelsMarginMeters>
         <verticalWheelsMarginMeters type="double">0.44</verticalWheelsMarginMeters>

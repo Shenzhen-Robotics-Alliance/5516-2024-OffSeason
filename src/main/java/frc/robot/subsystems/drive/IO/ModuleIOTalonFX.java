@@ -8,6 +8,7 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -111,9 +112,9 @@ public class ModuleIOTalonFX implements ModuleIO {
     }
 
     @Override
-    public void setDriveSpeedPercent(double speedPercent) {
-        driveTalon.setControl(new DutyCycleOut(speedPercent)
-                .withEnableFOC(false));
+    public void setDriveVoltage(double volts) {
+        final VoltageOut voltageOut = new VoltageOut(volts).withEnableFOC(false);
+        driveTalon.setControl(voltageOut);
     }
 
     @Override
