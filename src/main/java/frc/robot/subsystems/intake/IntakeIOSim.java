@@ -6,10 +6,10 @@ import frc.robot.utils.CompetitionFieldUtils.Simulation.IntakeSimulation;
 
 public class IntakeIOSim extends IntakeSimulation implements IntakeIO {
     /* running the intake in full voltage for 0.5 seconds is what it takes to get the note from bottom to top  */
-    private static final double VOLTAGE_INTEGRAL_SINCE_NOTE_IN_INTAKE_WHEN_NOTE_IN_POSITION = 2 * 0.5;
+    private static final double VOLTAGE_INTEGRAL_SINCE_NOTE_IN_INTAKE_WHEN_NOTE_IN_POSITION = 4 * 0.5;
     private static final double VOLTAGE_INTEGRAL_SINCE_NOTE_IN_INTAKE_WHEN_NOTE_LEAVE =
             VOLTAGE_INTEGRAL_SINCE_NOTE_IN_INTAKE_WHEN_NOTE_IN_POSITION
-            + 2 * 0.3;
+            + 4 * 0.5;
     /* the integral of the voltage of the intake ever since the note touches the lower gate */
     private double voltageIntegralSinceNoteInIntake = 0.0;
 
@@ -25,11 +25,11 @@ public class IntakeIOSim extends IntakeSimulation implements IntakeIO {
 
     @Override
     public void updateInputs(IntakeInputs inputs) {
-        if (voltageIntegralSinceNoteInIntake > VOLTAGE_INTEGRAL_SINCE_NOTE_IN_INTAKE_WHEN_NOTE_LEAVE)
+        if (shooterRunning && voltageIntegralSinceNoteInIntake > VOLTAGE_INTEGRAL_SINCE_NOTE_IN_INTAKE_WHEN_NOTE_LEAVE) {
             super.gamePieceCount--;
-        final boolean noteTouchingIntake = super.gamePieceCount > 0;
-        if (noteTouchingIntake && !inputs.lowerBeamBreakBlocked)
             voltageIntegralSinceNoteInIntake = 0;
+        }
+        final boolean noteTouchingIntake = super.gamePieceCount > 0;
         inputs.lowerBeamBreakBlocked = noteTouchingIntake;
         if (noteTouchingIntake) voltageIntegralSinceNoteInIntake += intakeVoltage * Robot.defaultPeriodSecs;
         inputs.upperBeamBreakerBlocked = inputs.lowerBeamBreakBlocked

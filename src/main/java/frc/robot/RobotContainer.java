@@ -21,6 +21,8 @@ import frc.robot.autos.Auto;
 import frc.robot.autos.AutoBuilder;
 import frc.robot.commands.drive.*;
 import frc.robot.commands.shooter.AimAndShootSequence;
+import frc.robot.commands.shooter.PrepareToAmp;
+import frc.robot.commands.shooter.ScoreAmp;
 import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.drive.IO.GyroIOPigeon2;
 import frc.robot.subsystems.drive.IO.GyroIOSim;
@@ -175,8 +177,8 @@ public class RobotContainer {
                 this.intake = new Intake(intakeIOSim);
                 this.pitch = new Pitch(new PitchIOSim());
                 this.flyWheels = new FlyWheels(new FlyWheelIO[]{
-                        new FlyWheelIOSim(),
-                        new FlyWheelIOSim()
+                        new FlyWheelIOSim(intakeIOSim),
+                        new FlyWheelIOSim(intakeIOSim)
                 });
             }
 
@@ -346,5 +348,6 @@ public class RobotContainer {
             fieldSimulation.updateSimulationWorld();
         else
             competitionFieldVisualizer.updateObjectsToDashboardAndTelemetry();
+        ShooterVisualizer.showResultsToDashboard(competitionFieldVisualizer.mainRobot.getPose3d());
     }
 }
