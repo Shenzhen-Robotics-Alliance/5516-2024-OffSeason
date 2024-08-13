@@ -290,7 +290,7 @@ public class SwerveDrive extends MapleSubsystem implements HolonomicDriveSubsyst
             builder.addDoubleProperty("Back Right Angle", () -> swerveModules[0].getSteerFacing().getRadians(), null);
             builder.addDoubleProperty("Back Right Velocity", () -> swerveModules[0].getDriveVelocityMetersPerSec(), null);
 
-            builder.addDoubleProperty("Robot Angle", () -> gyroInputs.yawPosition.minus(Constants.getDriverStationFacing()).getRadians(), null);
+            builder.addDoubleProperty("Robot Angle", () -> getFacing().minus(Constants.getDriverStationFacing()).getRadians(), null);
         });
     }
 }
