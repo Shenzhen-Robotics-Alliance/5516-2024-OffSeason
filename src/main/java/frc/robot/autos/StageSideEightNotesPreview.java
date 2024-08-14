@@ -43,6 +43,14 @@ public class StageSideEightNotesPreview extends Auto {
         super.addCommands(AutoBuilder.followPath(PathPlannerPath.fromPathFile(
                 "shoot seventh normal"
         )));
+
+        super.addCommands(AutoBuilder.followPath(PathPlannerPath.fromPathFile(
+                "grab eighth normal"
+        )));
+
+        super.addCommands(AutoBuilder.followPath(PathPlannerPath.fromPathFile(
+                "shoot eighth normal"
+        )));
     }
 
     @Override

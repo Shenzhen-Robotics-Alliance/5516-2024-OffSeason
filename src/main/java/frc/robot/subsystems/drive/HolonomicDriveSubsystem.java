@@ -123,7 +123,7 @@ public interface HolonomicDriveSubsystem extends Subsystem {
                 new HolonomicPathFollowerConfig(
                         getChassisMaxLinearVelocityMetersPerSec(),
                         getChassisMaxLinearVelocityMetersPerSec() / getChassisMaxAngularVelocity(),
-                        new ReplanningConfig(false, true)
+                        new ReplanningConfig(true, true)
                 ),
                 Constants::isSidePresentedAsRed,
                 this

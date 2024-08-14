@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.358536932969477,
-        "y": 6.466159931133624
+        "x": 0.865820342694317,
+        "y": 5.044556556125417
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.605025594392825,
-        "y": 6.592756435809432
+        "x": 1.865820342694317,
+        "y": 5.044556556125417
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.822299677814065,
-        "y": 5.998726683099867
+        "x": 3.171338859878195,
+        "y": 4.944211075713886
       },
       "prevControl": {
-        "x": 6.916647759748663,
-        "y": 6.427207160464143
+        "x": 2.171338859878195,
+        "y": 4.944211075713886
       },
       "nextControl": null,
       "isLocked": false,
@@ -38,14 +38,14 @@
     "maxAngularAcceleration": 1080.0
   },
   "goalEndState": {
-    "velocity": 0.8,
-    "rotation": 154.91640599380915,
-    "rotateFast": true
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
   },
   "reversed": false,
-  "folder": "Stage Side Eight Note",
+  "folder": null,
   "previewStartingState": {
-    "rotation": -168.4398692057821,
+    "rotation": 0,
     "velocity": 0
   },
   "useDefaultConstraints": true
