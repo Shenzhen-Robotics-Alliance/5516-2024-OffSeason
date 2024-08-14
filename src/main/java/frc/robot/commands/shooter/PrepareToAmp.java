@@ -1,17 +1,23 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.led.LEDStatusLight;
 import frc.robot.subsystems.shooter.FlyWheels;
 import frc.robot.subsystems.shooter.Pitch;
+import frc.robot.utils.LEDAnimation;
 
 public class PrepareToAmp extends Command {
     private final Pitch pitch;
     private final FlyWheels flyWheels;
-    public PrepareToAmp(Pitch pitch, FlyWheels flyWheels) {
+    private final LEDStatusLight statusLight;
+    private static final LEDAnimation PREPARING_AMP = new LEDAnimation.Charging(0, 255, 50, 2), // green charging
+            READY_TO_AMP = new LEDAnimation.ShowColor(0, 255, 0); // show color
+    public PrepareToAmp(Pitch pitch, FlyWheels flyWheels, LEDStatusLight statusLight) {
         super();
         this.pitch = pitch;
         this.flyWheels = flyWheels;
-        super.addRequirements(pitch, flyWheels);
+        this.statusLight = statusLight;
+        super.addRequirements(pitch, flyWheels, statusLight);
     }
 
     private boolean running = false;
@@ -24,7 +30,9 @@ public class PrepareToAmp extends Command {
     public void execute() {
         running = true;
         pitch.runSetPointProfiled(Math.toRadians(55));
-        flyWheels.runRPMProfiled(500);
+        flyWheels.runRPMProfiled(600);
+
+        statusLight.setAnimation(isReady() ? READY_TO_AMP : PREPARING_AMP);
     }
 
     public boolean isReady() {

@@ -31,7 +31,8 @@ public class IntakeIOSim extends IntakeSimulation implements IntakeIO {
         }
         final boolean noteTouchingIntake = super.gamePieceCount > 0;
         inputs.lowerBeamBreakBlocked = noteTouchingIntake;
-        if (noteTouchingIntake) voltageIntegralSinceNoteInIntake += intakeVoltage * Robot.defaultPeriodSecs;
+        if (noteTouchingIntake)
+            voltageIntegralSinceNoteInIntake += intakeVoltage * Robot.defaultPeriodSecs;
         inputs.upperBeamBreakerBlocked = inputs.lowerBeamBreakBlocked
                 && voltageIntegralSinceNoteInIntake >= VOLTAGE_INTEGRAL_SINCE_NOTE_IN_INTAKE_WHEN_NOTE_IN_POSITION;
     }

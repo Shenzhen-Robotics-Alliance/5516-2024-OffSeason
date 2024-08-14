@@ -275,11 +275,13 @@ public class RobotContainer {
 //        ));
 
         /* intake commands */
-        driverController.leftTrigger(0.5).whileTrue(intake.executeIntakeNote());
+        driverController.leftTrigger(0.5).whileTrue(intake.executeIntakeNote(ledStatusLight));
         driverController.a().whileTrue(Commands.run(intake::runInvertVoltage));
 
         /* amp command */
-        driverController.y().onTrue(new PrepareToAmp(pitch, flyWheels)).onFalse(new ScoreAmp(intake, pitch, flyWheels));
+        driverController.y()
+                .onTrue(new PrepareToAmp(pitch, flyWheels, ledStatusLight))
+                .onFalse(new ScoreAmp(intake, pitch, flyWheels, ledStatusLight));
 
         /* shoot commands */
         final MapleShooterOptimization shooterOptimization = new MapleShooterOptimization(
@@ -299,7 +301,8 @@ public class RobotContainer {
         final Command semiAutoAimAndShoot = new AimAndShootSequence(
                 pitch, flyWheels, intake, shooterOptimization, drive,
                 Constants.CrescendoField2024Constants.SPEAKER_POSITION_SUPPLIER,
-                faceTargetWhileDrivingLowSpeed::chassisRotationInPosition
+                faceTargetWhileDrivingLowSpeed::chassisRotationInPosition,
+                ledStatusLight
         );
         driverController.rightTrigger(0.5).whileTrue(faceTargetWhileDrivingLowSpeed.raceWith(semiAutoAimAndShoot));
 
@@ -312,7 +315,8 @@ public class RobotContainer {
         driverController.rightBumper().whileTrue(faceTargetWhileDrivingFullSpeed.alongWith(new AimAndShootSequence(
                 pitch, flyWheels, intake, shooterOptimization, drive,
                 Constants.CrescendoField2024Constants.SPEAKER_POSITION_SUPPLIER,
-                () -> false // never shoot
+                () -> false, // never shoot
+                ledStatusLight
         )));
 
         // simulation testing commands

@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.drive.HolonomicDriveSubsystem;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.led.LEDStatusLight;
 import frc.robot.subsystems.shooter.FlyWheels;
 import frc.robot.subsystems.shooter.Pitch;
 import frc.robot.utils.MapleShooterOptimization;
@@ -19,14 +20,16 @@ public class AimAndShootSequence extends SequentialCommandGroup  {
             MapleShooterOptimization shooterOptimization,
             HolonomicDriveSubsystem drive,
             Supplier<Translation2d> targetPositionSupplier,
-            BooleanSupplier externalShootCondition) {
+            BooleanSupplier externalShootCondition,
+            LEDStatusLight statusLight) {
         this(
                 pitch, flyWheels, intake,
                 shooterOptimization,
                 drive,
                 () -> drive.getPose().getTranslation(),
                 targetPositionSupplier,
-                externalShootCondition
+                externalShootCondition,
+                statusLight
         );
     }
 
@@ -42,18 +45,19 @@ public class AimAndShootSequence extends SequentialCommandGroup  {
             HolonomicDriveSubsystem drive,
             Supplier<Translation2d> robotScoringPositionSupplier,
             Supplier<Translation2d> targetPositionSupplier,
-            BooleanSupplier externalShootCondition) {
+            BooleanSupplier externalShootCondition,
+            LEDStatusLight ledStatusLight) {
 
         super();
         super.addRequirements(pitch, flyWheels, intake);
         super.addCommands(Commands.runOnce(intake::runIdle));
 
         super.addCommands(
-                new PrepareToAim(flyWheels, pitch, shooterOptimization, robotScoringPositionSupplier, targetPositionSupplier)
+                new PrepareToAim(flyWheels, pitch, ledStatusLight, shooterOptimization, robotScoringPositionSupplier, targetPositionSupplier)
                         .untilReady()
         );
         final AimAtSpeakerContinuously aimAtSpeakerContinuously = new AimAtSpeakerContinuously(
-                flyWheels, pitch, shooterOptimization, drive, targetPositionSupplier
+                flyWheels, pitch, shooterOptimization, drive, targetPositionSupplier, ledStatusLight
         );
         final Command waitForRightTimingAndShoot = Commands.waitUntil(
                 () -> aimAtSpeakerContinuously.readyToShoot()

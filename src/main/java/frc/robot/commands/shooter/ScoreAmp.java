@@ -2,30 +2,44 @@ package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.led.LEDStatusLight;
 import frc.robot.subsystems.shooter.FlyWheels;
 import frc.robot.subsystems.shooter.Pitch;
+import frc.robot.utils.LEDAnimation;
+import frc.robot.utils.MapleTimeUtils;
 
 public class ScoreAmp extends Command {
     private final Intake intake;
     private final Pitch pitch;
     private final FlyWheels flyWheels;
-    public ScoreAmp(Intake intake, Pitch pitch, FlyWheels flyWheels) {
+    private final LEDStatusLight statusLight;
+
+    private static final LEDAnimation SCORING_AMP = new LEDAnimation.Breathe(0, 255, 0, 3);
+    public ScoreAmp(Intake intake, Pitch pitch, FlyWheels flyWheels, LEDStatusLight statusLight) {
         super();
         this.intake = intake;
         this.pitch = pitch;
         this.flyWheels = flyWheels;
-        super.addRequirements(intake, pitch, flyWheels);
+        this.statusLight = statusLight;
+        super.addRequirements(intake, pitch, flyWheels, statusLight);
+    }
+
+    private double startTime = 0;
+    @Override
+    public void initialize() {
+        startTime = MapleTimeUtils.getLogTimeSeconds();
     }
 
     @Override
     public void execute() {
         intake.runFullIntakeVoltage();
         pitch.runSetPointProfiled(Math.toRadians(92));
-        flyWheels.runRPMProfiled(500);
+        flyWheels.runRPMProfiled(600);
+        statusLight.setAnimation(SCORING_AMP);
     }
 
     @Override
     public boolean isFinished() {
-        return !intake.isNotePresent();
+        return MapleTimeUtils.getLogTimeSeconds() - startTime > 0.8;
     }
 }

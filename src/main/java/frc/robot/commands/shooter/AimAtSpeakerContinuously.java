@@ -1,13 +1,13 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.HolonomicDriveSubsystem;
+import frc.robot.subsystems.led.LEDStatusLight;
 import frc.robot.subsystems.shooter.FlyWheels;
 import frc.robot.subsystems.shooter.Pitch;
+import frc.robot.utils.LEDAnimation;
 import frc.robot.utils.MapleShooterOptimization;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.function.Supplier;
 
@@ -24,15 +24,20 @@ public class AimAtSpeakerContinuously extends Command {
     private final MapleShooterOptimization shooterOptimization;
     private final Supplier<Translation2d> targetPositionSupplier;
     private final HolonomicDriveSubsystem drive;
+    private final LEDStatusLight statusLight;
 
-    public AimAtSpeakerContinuously(FlyWheels flyWheels, Pitch pitch, MapleShooterOptimization shooterOptimization, HolonomicDriveSubsystem drive, Supplier<Translation2d> targetPositionSupplier) {
+    private static final LEDAnimation AIMING_SPEAKER = new LEDAnimation.Charging(255, 0, 255, 4),
+                AIMING_SPEAKER_READY = new LEDAnimation.ShowColor(255, 0, 255);
+
+    public AimAtSpeakerContinuously(FlyWheels flyWheels, Pitch pitch, MapleShooterOptimization shooterOptimization, HolonomicDriveSubsystem drive, Supplier<Translation2d> targetPositionSupplier, LEDStatusLight statusLight) {
         this.flyWheels = flyWheels;
         this.pitch = pitch;
         this.shooterOptimization = shooterOptimization;
         this.drive = drive;
         this.targetPositionSupplier = targetPositionSupplier;
+        this.statusLight = statusLight;
 
-        super.addRequirements(flyWheels, pitch);
+        super.addRequirements(flyWheels, pitch, statusLight);
     }
 
     boolean shooterOptimizationRunning = false;
@@ -53,6 +58,9 @@ public class AimAtSpeakerContinuously extends Command {
 
         pitch.runStaticSetPoint(Math.toRadians(state.shooterAngleDegrees), Math.toRadians(state.shooterAngleChangeRateDegreesPerSecond));
         flyWheels.runStaticRPMSetPoint(state.shooterRPM, state.shooterRPMChangeRateRPMPerSeconds);
+
+        if (statusLight != null)
+            statusLight.setAnimation(readyToShoot() ? AIMING_SPEAKER_READY : AIMING_SPEAKER);
     }
 
     public boolean readyToShoot() {

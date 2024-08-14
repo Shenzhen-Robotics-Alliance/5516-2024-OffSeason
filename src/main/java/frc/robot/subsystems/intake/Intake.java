@@ -3,13 +3,18 @@ package frc.robot.subsystems.intake;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.MapleSubsystem;
+import frc.robot.subsystems.led.LEDStatusLight;
 import frc.robot.subsystems.shooter.ShooterVisualizer;
 import frc.robot.utils.Alert;
+import frc.robot.utils.LEDAnimation;
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends MapleSubsystem {
     private final IntakeIO io;
     private final IntakeInputsAutoLogged inputs;
+
+    private static final LEDAnimation RUNNING = new LEDAnimation.Charging(255, 140, 50, 2), // orange charging
+            GRABBED_NOTE = new LEDAnimation.Breathe(230, 255, 0, 6); // yellow flashing
 
     private boolean lowerBeamBrakeAlwaysTrue, upperBeamBrakeAlwaysTrue;
     private final Alert lowerBeamBrakeAlwaysBlockedAlert, upperBeamBrakeAlwaysBlockedAlert;
@@ -81,6 +86,13 @@ public class Intake extends MapleSubsystem {
                 .until(() -> inputs.upperBeamBreakerBlocked)
                 .onlyIf(() -> !inputs.upperBeamBreakerBlocked)
                 .finallyDo(this::runIdle);
+    }
+
+    public Command executeIntakeNote(LEDStatusLight statusLight) {
+        final Command executeIntake =  executeIntakeNote()
+                .raceWith(Commands.run(() -> statusLight.setAnimation(RUNNING), statusLight))
+                .andThen(statusLight.playAnimationAndStop(GRABBED_NOTE, 1));
+        return executeIntake;
     }
 
     public Command executeLaunch() {

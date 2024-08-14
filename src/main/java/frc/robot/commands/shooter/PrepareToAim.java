@@ -4,8 +4,10 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.HolonomicDriveSubsystem;
+import frc.robot.subsystems.led.LEDStatusLight;
 import frc.robot.subsystems.shooter.FlyWheels;
 import frc.robot.subsystems.shooter.Pitch;
+import frc.robot.utils.LEDAnimation;
 import frc.robot.utils.MapleShooterOptimization;
 
 import java.util.function.Supplier;
@@ -18,25 +20,31 @@ import java.util.function.Supplier;
 public class PrepareToAim extends Command {
     private final FlyWheels flyWheels;
     private final Pitch pitch;
+    private final LEDStatusLight statusLight;
     private final MapleShooterOptimization shooterOptimization;
     private final Supplier<Translation2d> robotPositionSupplier, targetPositionSupplier;
+
+    private static final LEDAnimation PREPARING_TO_SHOOT = new LEDAnimation.Charging(255, 0, 255, 2),
+            READY_TO_SHOOT = new LEDAnimation.Charging(255, 0, 255, 3);
+
 
     /**
      * creates a prepare to aim command
      * the static shooter state is calculated from the robot's estimated pose when the command is initialized
      * */
-    public PrepareToAim(FlyWheels flyWheels, Pitch pitch, MapleShooterOptimization shooterOptimization, HolonomicDriveSubsystem driveSubsystem, Supplier<Translation2d> targetPositionSupplier) {
-        this(flyWheels, pitch, shooterOptimization, () -> driveSubsystem.getPose().getTranslation(), targetPositionSupplier);
+    public PrepareToAim(FlyWheels flyWheels, Pitch pitch, MapleShooterOptimization shooterOptimization, HolonomicDriveSubsystem driveSubsystem, Supplier<Translation2d> targetPositionSupplier, LEDStatusLight statusLight) {
+        this(flyWheels, pitch, statusLight, shooterOptimization, () -> driveSubsystem.getPose().getTranslation(), targetPositionSupplier);
     }
 
-    public PrepareToAim(FlyWheels flyWheels, Pitch pitch, MapleShooterOptimization shooterOptimization, Supplier<Translation2d> robotPositionSupplier, Supplier<Translation2d> targetPositionSupplier) {
+    public PrepareToAim(FlyWheels flyWheels, Pitch pitch, LEDStatusLight statusLight, MapleShooterOptimization shooterOptimization, Supplier<Translation2d> robotPositionSupplier, Supplier<Translation2d> targetPositionSupplier) {
         this.flyWheels = flyWheels;
         this.pitch = pitch;
+        this.statusLight = statusLight;
         this.shooterOptimization = shooterOptimization;
         this.robotPositionSupplier = robotPositionSupplier;
         this.targetPositionSupplier = targetPositionSupplier;
 
-        super.addRequirements(flyWheels, pitch);
+        super.addRequirements(flyWheels, pitch, statusLight);
     }
 
     private MapleShooterOptimization.ShooterState initialState;
@@ -57,10 +65,17 @@ public class PrepareToAim extends Command {
         running = true;
         flyWheels.runRPMProfiled(initialState.shooterRPM);
         pitch.runSetPointProfiled(Math.toRadians(initialState.shooterAngleDegrees));
+
+        if (statusLight != null)
+            statusLight.setAnimation(isReady() ? READY_TO_SHOOT : PREPARING_TO_SHOOT);
     }
 
     public Command untilReady() {
         return super.beforeStarting(() -> running = false)
-                .until(() -> running && flyWheels.flyWheelsReady() && pitch.inPosition());
+                .until(this::isReady);
+    }
+
+    public boolean isReady() {
+        return running && flyWheels.flyWheelsReady() && pitch.inPosition();
     }
 }
