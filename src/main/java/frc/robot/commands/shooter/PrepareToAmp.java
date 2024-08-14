@@ -23,7 +23,7 @@ public class PrepareToAmp extends Command {
     @Override
     public void execute() {
         running = true;
-        pitch.runSetPointProfiled(Math.toRadians(65));
+        pitch.runSetPointProfiled(Math.toRadians(55));
         flyWheels.runRPMProfiled(500);
     }
 

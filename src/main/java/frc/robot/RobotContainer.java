@@ -275,7 +275,7 @@ public class RobotContainer {
 //        ));
 
         /* intake commands */
-        driverController.leftBumper().whileTrue(intake.executeIntakeNote());
+        driverController.leftTrigger(0.5).whileTrue(intake.executeIntakeNote());
         driverController.a().whileTrue(Commands.run(intake::runInvertVoltage));
 
         /* amp command */
@@ -285,9 +285,9 @@ public class RobotContainer {
         final MapleShooterOptimization shooterOptimization = new MapleShooterOptimization(
                 "MainShooter",
                 new double[] {1.35, 2, 3, 3.5, 4, 4.5},
-                new double[] {55, 47, 36, 30, 26.5, 24},
-                new double[] {2300, 2500, 3000, 3500, 3700, 3700},
-                new double[] {0.15, 0.2, 0.25, 0.3, 0.35, 0.4}
+                new double[] {54, 45, 34, 31, 28.5, 24.5},
+                new double[] {2500, 3000, 3500, 3700, 4000, 4200},
+                new double[] {0.1, 0.15, 0.2, 0.25, 0.27, 0.28}
         );
 
         final JoystickDriveAndAimAtTarget faceTargetWhileDrivingLowSpeed = new JoystickDriveAndAimAtTarget(
@@ -301,7 +301,7 @@ public class RobotContainer {
                 Constants.CrescendoField2024Constants.SPEAKER_POSITION_SUPPLIER,
                 faceTargetWhileDrivingLowSpeed::chassisRotationInPosition
         );
-        driverController.rightBumper().whileTrue(faceTargetWhileDrivingLowSpeed.raceWith(semiAutoAimAndShoot));
+        driverController.rightTrigger(0.5).whileTrue(faceTargetWhileDrivingLowSpeed.raceWith(semiAutoAimAndShoot));
 
         final JoystickDriveAndAimAtTarget faceTargetWhileDrivingFullSpeed  = new JoystickDriveAndAimAtTarget(
                 driveInput, drive,
@@ -309,7 +309,7 @@ public class RobotContainer {
                 shooterOptimization,
                 1
         );
-        driverController.rightTrigger(0.5).whileTrue(faceTargetWhileDrivingFullSpeed.alongWith(new AimAndShootSequence(
+        driverController.rightBumper().whileTrue(faceTargetWhileDrivingFullSpeed.alongWith(new AimAndShootSequence(
                 pitch, flyWheels, intake, shooterOptimization, drive,
                 Constants.CrescendoField2024Constants.SPEAKER_POSITION_SUPPLIER,
                 () -> false // never shoot
@@ -328,13 +328,14 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        final Pose2d startingPose = Constants.toCurrentAlliancePose(
-                autoChooser.get().getStartingPoseAtBlueAlliance()
-        );
-        drive.setPose(startingPose);
-        if (fieldSimulation != null)
-            fieldSimulation.getMainRobot().setSimulationWorldPose(startingPose);
-        return autoChooser.get();
+        return autoChooser.get().beforeStarting(() -> {
+            final Pose2d startingPose = Constants.toCurrentAlliancePose(
+                    autoChooser.get().getStartingPoseAtBlueAlliance()
+            );
+            drive.setPose(startingPose);
+            if (fieldSimulation != null)
+                fieldSimulation.getMainRobot().setSimulationWorldPose(startingPose);
+        });
     }
 
 

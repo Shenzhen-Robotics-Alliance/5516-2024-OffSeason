@@ -68,18 +68,19 @@ public class Intake extends MapleSubsystem {
     }
 
     public boolean isNotePresent() {
-        return inputs.upperBeamBreakerBlocked;
+        return inputs.upperBeamBreakerBlocked || inputs.lowerBeamBreakBlocked;
     }
 
     public Command executeIntakeNote() {
-        return Commands.run(() ->{
+        return Commands.run(() -> {
             if (inputs.lowerBeamBreakBlocked)
                 runMinimumPropellingVoltage();
             else
                 runFullIntakeVoltage();
-        }, this)
-                .until(this::isNotePresent)
-                .onlyIf(() -> !this.isNotePresent());
+            }, this)
+                .until(() -> inputs.upperBeamBreakerBlocked)
+                .onlyIf(() -> !inputs.upperBeamBreakerBlocked)
+                .finallyDo(this::runIdle);
     }
 
     public Command executeLaunch() {
