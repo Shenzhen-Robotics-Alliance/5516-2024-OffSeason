@@ -91,10 +91,6 @@ public class SwerveDrive extends MapleSubsystem implements HolonomicDriveSubsyst
         startDashboardDisplay();
     }
 
-    public void configHolonomicPathPlannerAutoBuilder(CompetitionFieldVisualizer fieldVisualizer) {
-        HolonomicDriveSubsystem.super.configHolonomicPathPlannerAutoBuilder(fieldVisualizer, DRIVE_BASE_RADIUS);
-    }
-
     @Override
     public void periodic(double dt, boolean enabled) {
         final double t0 = MapleTimeUtils.getRealTimeSeconds();

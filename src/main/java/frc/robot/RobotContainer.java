@@ -13,12 +13,11 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.autos.Auto;
-import frc.robot.autos.AutoBuilder;
+import frc.robot.autos.AutoChooserBuilder;
 import frc.robot.commands.drive.*;
 import frc.robot.commands.shooter.AimAndShootSequence;
 import frc.robot.commands.shooter.PrepareToAmp;
@@ -216,7 +215,7 @@ public class RobotContainer {
         this.ledStatusLight = new LEDStatusLight(0, 155);
 
         SmartDashboard.putData("Select Test", testChooser = TestBuilder.buildTestsChooser(this));
-        autoChooser = AutoBuilder.buildAutoChooser(this);
+        autoChooser = AutoChooserBuilder.buildAutoChooser(this);
 
         driverModeChooser = new LoggedDashboardChooser<>("Driver Mode", new SendableChooser<>());
         driverModeChooser.addDefaultOption(DriverMode.LEFT_HANDED.name(), DriverMode.LEFT_HANDED);
@@ -286,7 +285,7 @@ public class RobotContainer {
         final MapleShooterOptimization shooterOptimization = new MapleShooterOptimization(
                 "MainShooter",
                 new double[] {1.35, 2, 3, 3.5, 4, 4.5},
-                new double[] {55, 47, 36, 30, 25, 22},
+                new double[] {55, 47, 36, 30, 26.5, 24},
                 new double[] {2300, 2500, 3000, 3500, 3700, 3700},
                 new double[] {0.15, 0.2, 0.25, 0.3, 0.35, 0.4}
         );

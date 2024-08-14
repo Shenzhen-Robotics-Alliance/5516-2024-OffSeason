@@ -1,0 +1,79 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.356139746680443,
+      "y": 4.645117902335449
+    },
+    "rotation": 180.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "shoot first grab second normal"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "shoot third and fourth normal"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "grab fifth normal"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "shoot fifth normal"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "grab sixth normal"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "shoot sixth normal"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "grab seventh normal"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "shoot seventh normal"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "grab eighth normal"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "shoot eighth normal"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

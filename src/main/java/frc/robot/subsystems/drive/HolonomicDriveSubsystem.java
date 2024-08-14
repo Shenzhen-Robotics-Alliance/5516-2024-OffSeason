@@ -114,13 +114,17 @@ public interface HolonomicDriveSubsystem extends Subsystem {
         runRawChassisSpeeds(ChassisSpeeds.discretize(speeds, 0.02));
     }
 
-    default void configHolonomicPathPlannerAutoBuilder(CompetitionFieldVisualizer fieldVisualizer, double driveBaseRadius) {
+    default void configHolonomicPathPlannerAutoBuilder(CompetitionFieldVisualizer fieldVisualizer) {
         AutoBuilder.configureHolonomic(
                 this::getPose,
                 this::setPose,
                 this::getMeasuredChassisSpeedsRobotRelative,
                 this::runRobotCentricChassisSpeeds,
-                new HolonomicPathFollowerConfig(getChassisMaxLinearVelocityMetersPerSec(), driveBaseRadius, new ReplanningConfig()),
+                new HolonomicPathFollowerConfig(
+                        getChassisMaxLinearVelocityMetersPerSec(),
+                        getChassisMaxLinearVelocityMetersPerSec() / getChassisMaxAngularVelocity(),
+                        new ReplanningConfig(false, true)
+                ),
                 Constants::isSidePresentedAsRed,
                 this
         );
@@ -128,7 +132,6 @@ public interface HolonomicDriveSubsystem extends Subsystem {
         PathPlannerLogging.setLogActivePathCallback(
                 (activePath) -> {
                     final Pose2d[] trajectory = activePath.toArray(new Pose2d[0]);
-                    System.out.println(Arrays.toString(trajectory));
                     Logger.recordOutput("Odometry/Trajectory", trajectory);
                     fieldVisualizer.displayTrajectory(trajectory);
                 }

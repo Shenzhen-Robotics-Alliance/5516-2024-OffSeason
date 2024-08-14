@@ -98,8 +98,8 @@ public final class Constants {
         public static final double ODOMETRY_WAIT_TIMEOUT_SECONDS = 0.02;
 
         public static final MaplePIDController.MaplePIDConfig chassisRotationalPIDConfig = new MaplePIDController.MaplePIDConfig(
-                Math.toRadians(270),
-                Math.toRadians(35),
+                Math.toRadians(ChassisDefaultConfigs.DEFAULT_MAX_ANGULAR_VELOCITY_DEGREES_PER_SECOND),
+                Math.toRadians(50),
                 0.01,
                 Math.toRadians(3),
                 0.03,
@@ -134,15 +134,15 @@ public final class Constants {
     public static final class SwerveModuleConfigs {
         public static final MaplePIDController.MaplePIDConfig steerHeadingCloseLoopConfig = new MaplePIDController.MaplePIDConfig(
                 0.7,
-                Math.toRadians(45),
-                0.01,
+                Math.toRadians(90),
+                0,
                 Math.toRadians(1.5),
                 0,
                 true,
                 0
         );
         public static final double STEERING_CURRENT_LIMIT = 20;
-        public static final double DRIVING_CURRENT_LIMIT = 50;
+        public static final double DRIVING_CURRENT_LIMIT = 40;
         public static final double WHEEL_RADIUS = Units.inchesToMeters(2.0);
 
         public static final SimpleMotorFeedforward DRIVE_OPEN_LOOP = new SimpleMotorFeedforward(0.01, 2.03);

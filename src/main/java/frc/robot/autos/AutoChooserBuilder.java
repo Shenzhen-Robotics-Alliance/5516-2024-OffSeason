@@ -3,11 +3,11 @@ package frc.robot.autos;
 import frc.robot.RobotContainer;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
-public class AutoBuilder {
+public class AutoChooserBuilder {
     public static LoggedDashboardChooser<Auto> buildAutoChooser(RobotContainer robotContainer) {
         final LoggedDashboardChooser<Auto> autoSendableChooser = new LoggedDashboardChooser<>("Select Auto");
         autoSendableChooser.addDefaultOption("None", Auto.none());
-        autoSendableChooser.addOption("Example Auto", new ExampleAuto(robotContainer));
+        autoSendableChooser.addOption("Stage Side Eight Notes Prev", new StageSideEightNotesPreview(robotContainer));
 
         return autoSendableChooser;
     }
