@@ -35,7 +35,10 @@ public class LEDStatusLight extends MapleSubsystem {
         t.start();
         if (led != null) led.start();
 
-        super.setDefaultCommand(Commands.run(() -> setAnimation(DriverStation.isEnabled() ? ENABLED: DISABLED), this));
+        super.setDefaultCommand(Commands.run(
+                () -> setAnimation(DriverStation.isEnabled() ? ENABLED: DISABLED),
+                this)
+                .ignoringDisable(true));
     }
 
     final String[] colors = new String[DASHBOARD_DISPLAY_LENGTH/2];
