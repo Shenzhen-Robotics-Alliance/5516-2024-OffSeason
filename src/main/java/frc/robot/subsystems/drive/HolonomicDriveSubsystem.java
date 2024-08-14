@@ -121,6 +121,8 @@ public interface HolonomicDriveSubsystem extends Subsystem {
                 this::getMeasuredChassisSpeedsRobotRelative,
                 this::runRobotCentricChassisSpeeds,
                 new HolonomicPathFollowerConfig(
+                        Constants.SwerveDriveChassisConfigs.chassisTranslationPIDConfig.toPathPlannerPIDConstants(),
+                        Constants.SwerveDriveChassisConfigs.chassisRotationalPIDConfig.toPathPlannerPIDConstants(),
                         getChassisMaxLinearVelocityMetersPerSec(),
                         getChassisMaxLinearVelocityMetersPerSec() / getChassisMaxAngularVelocity(),
                         new ReplanningConfig(true, true)
