@@ -75,7 +75,7 @@ public class RobotContainer {
         RIGHT_HANDED
     }
     private final LoggedDashboardChooser<DriverMode> driverModeChooser;
-    private LoggedDashboardChooser<Auto> autoChooser;
+    private final LoggedDashboardChooser<Supplier<Auto>> autoChooser;
     private final SendableChooser<Supplier<Command>> testChooser;
 
     // Simulation
@@ -335,9 +335,10 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return autoChooser.get().beforeStarting(() -> {
+        final Auto auto = autoChooser.get().get();
+        return auto.beforeStarting(() -> {
             final Pose2d startingPose = Constants.toCurrentAlliancePose(
-                    autoChooser.get().getStartingPoseAtBlueAlliance()
+                    auto.getStartingPoseAtBlueAlliance()
             );
             drive.setPose(startingPose);
             if (fieldSimulation != null)
