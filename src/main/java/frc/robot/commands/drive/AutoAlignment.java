@@ -43,7 +43,7 @@ public class AutoAlignment extends SequentialCommandGroup {
 
         super.addRequirements(driveSubsystem);
 
-        super.addCommands(pathFindToTargetRough.alongWith(toRunDuringRoughApproach));
+        super.addCommands(pathFindToTargetRough.raceWith(toRunDuringRoughApproach));
         super.addCommands(preciseAlignment.alongWith(toRunDuringPrecise));
     }
 }

@@ -3,6 +3,7 @@ package frc.robot.commands.shooter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.commands.drive.AutoAlignment;
 import frc.robot.subsystems.drive.HolonomicDriveSubsystem;
 import frc.robot.subsystems.intake.Intake;
@@ -18,6 +19,7 @@ public class DriveToPoseAndShootSequence extends AutoAlignment {
             Intake intake, Pitch pitch, FlyWheels flyWheels,
             MapleShooterOptimization shooterOptimization,
             HolonomicDriveSubsystem driveSubsystem,
+            Supplier<Translation2d> robotPrepareToShootPositionSupplier,
             Supplier<Translation2d> robotShootingPositionSupplier,
             Supplier<Translation2d> speaerPositionSupplier,
             LEDStatusLight statusLight
@@ -27,7 +29,7 @@ public class DriveToPoseAndShootSequence extends AutoAlignment {
                 () -> {
                     final Translation2d displacementToTarget = speaerPositionSupplier.get().minus(robotShootingPositionSupplier.get());
                     return new Pose2d(
-                            robotShootingPositionSupplier.get(),
+                            robotPrepareToShootPositionSupplier.get(),
                             displacementToTarget.getAngle()
                     );
                 },
@@ -45,11 +47,17 @@ public class DriveToPoseAndShootSequence extends AutoAlignment {
                         pitch, flyWheels, intake, shooterOptimization, driveSubsystem,
                         robotShootingPositionSupplier,
                         speaerPositionSupplier,
-                        () -> true,
+                        () -> isChassisSlowEnough(driveSubsystem),
                         statusLight
                 )
         );
 
         super.addRequirements(driveSubsystem, pitch, flyWheels, intake);
+    }
+
+    private static boolean isChassisSlowEnough(HolonomicDriveSubsystem driveSubsystem) {
+        final ChassisSpeeds vel =  driveSubsystem.getMeasuredChassisSpeedsFieldRelative();
+        return Math.hypot(vel.vxMetersPerSecond, vel.vyMetersPerSecond) < 0.7
+                && Math.abs(vel.omegaRadiansPerSecond) < Math.toRadians(50);
     }
 }

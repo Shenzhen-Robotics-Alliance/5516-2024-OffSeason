@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.util.function.BooleanConsumer;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -21,6 +22,7 @@ import frc.robot.autos.Auto;
 import frc.robot.autos.AutoChooserBuilder;
 import frc.robot.commands.drive.*;
 import frc.robot.commands.shooter.AimAndShootSequence;
+import frc.robot.commands.shooter.DriveToPoseAndShootSequence;
 import frc.robot.commands.shooter.PrepareToAmp;
 import frc.robot.commands.shooter.ScoreAmp;
 import frc.robot.subsystems.drive.*;
@@ -64,6 +66,9 @@ public class RobotContainer {
     public final Intake intake;
     public final Pitch pitch;
     public final FlyWheels flyWheels;
+
+    /* shoot commands */
+    public final MapleShooterOptimization shooterOptimization;
 
     // Controller
     private final CommandXboxController driverController = new CommandXboxController(0),
@@ -224,6 +229,14 @@ public class RobotContainer {
         driverModeChooser.addDefaultOption(DriverMode.LEFT_HANDED.name(), DriverMode.LEFT_HANDED);
         driverModeChooser.addOption(DriverMode.RIGHT_HANDED.name(), DriverMode.RIGHT_HANDED);
 
+        this.shooterOptimization = new MapleShooterOptimization(
+                "MainShooter",
+                new double[] {1.35, 2, 3, 3.5, 4, 4.5, 4.8},
+                new double[] {54, 45, 35, 31, 29.5, 25, 25},
+                new double[] {2500, 3000, 3500, 3700, 4000, 4300, 4500},
+                new double[] {0.1, 0.1, 0.1, 0.12, 0.12, 0.15, 0.15}
+        );
+
         configureButtonBindings();
     }
 
@@ -292,15 +305,6 @@ public class RobotContainer {
 //                )))
                 .onFalse(new ScoreAmp(intake, pitch, flyWheels, ledStatusLight));
 
-        /* shoot commands */
-        final MapleShooterOptimization shooterOptimization = new MapleShooterOptimization(
-                "MainShooter",
-                new double[] {1.35, 2, 3, 3.5, 4, 4.5, 4.8},
-                new double[] {54, 45, 35, 31, 29.5, 25, 25},
-                new double[] {2500, 3000, 3500, 3700, 4000, 4300, 4500},
-                new double[] {0.1, 0.1, 0.1, 0.12, 0.12, 0.15, 0.15}
-        );
-
         final JoystickDriveAndAimAtTarget faceTargetWhileDrivingLowSpeed = new JoystickDriveAndAimAtTarget(
                 driveInput, drive,
                 Constants.CrescendoField2024Constants.SPEAKER_POSITION_SUPPLIER,
@@ -321,12 +325,22 @@ public class RobotContainer {
                 shooterOptimization,
                 1
         );
-        driverController.rightBumper().whileTrue(faceTargetWhileDrivingFullSpeed.alongWith(new AimAndShootSequence(
-                pitch, flyWheels, intake, shooterOptimization, drive,
+//        driverController.rightBumper().whileTrue(faceTargetWhileDrivingFullSpeed.alongWith(new AimAndShootSequence(
+//                pitch, flyWheels, intake, shooterOptimization, drive,
+//                Constants.CrescendoField2024Constants.SPEAKER_POSITION_SUPPLIER,
+//                () -> false, // never shoot
+//                ledStatusLight
+//        )));
+
+        driverController.rightBumper().whileTrue(new DriveToPoseAndShootSequence(
+                intake, pitch, flyWheels, shooterOptimization, drive,
+                () -> Constants.toCurrentAllianceTranslation(new Translation2d(4.37, 4.98)),
+                () -> Constants.toCurrentAllianceTranslation(new Translation2d(3.39, 5.94)),
                 Constants.CrescendoField2024Constants.SPEAKER_POSITION_SUPPLIER,
-                () -> false, // never shoot
                 ledStatusLight
-        )));
+        ));
+
+
 
         // simulation testing commands
 //        if (Robot.CURRENT_ROBOT_MODE == Constants.RobotMode.SIM)
