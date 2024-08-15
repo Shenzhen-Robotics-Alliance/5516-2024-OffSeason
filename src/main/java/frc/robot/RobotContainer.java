@@ -252,11 +252,14 @@ public class RobotContainer {
                 : MapleJoystickDriveInput.leftHandedJoystick(driverController);
 
         /* drive commands */
-        drive.setDefaultCommand(new JoystickDrive(
+        final JoystickDrive joystickDrive = new JoystickDrive(
                 driveInput,
                 () -> true,
-                drive
-        ));
+                drive,
+                0.7,
+                0.7
+        );
+        drive.setDefaultCommand(joystickDrive);
         driverController.x().whileTrue(Commands.run(drive::lockChassisWithXFormation, drive));
         driverController.start().onTrue(Commands.runOnce(
                 () -> drive.setPose(new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
@@ -284,6 +287,9 @@ public class RobotContainer {
         /* amp command */
         driverController.y()
                 .onTrue(new PrepareToAmp(pitch, flyWheels, ledStatusLight))
+//                .whileTrue(Commands.run(() -> joystickDrive.setCurrentRotationalMaintenance(
+//                        Constants.toCurrentAllianceRotation(Rotation2d.fromDegrees(-90))
+//                )))
                 .onFalse(new ScoreAmp(intake, pitch, flyWheels, ledStatusLight));
 
         /* shoot commands */
@@ -292,14 +298,14 @@ public class RobotContainer {
                 new double[] {1.35, 2, 3, 3.5, 4, 4.5, 4.8},
                 new double[] {54, 45, 35, 31, 29.5, 25, 25},
                 new double[] {2500, 3000, 3500, 3700, 4000, 4300, 4500},
-                new double[] {0.1, 0.15, 0.2, 0.25, 0.27, 0.29, 0.3}
+                new double[] {0.1, 0.1, 0.1, 0.12, 0.12, 0.15, 0.15}
         );
 
         final JoystickDriveAndAimAtTarget faceTargetWhileDrivingLowSpeed = new JoystickDriveAndAimAtTarget(
                 driveInput, drive,
                 Constants.CrescendoField2024Constants.SPEAKER_POSITION_SUPPLIER,
                 shooterOptimization,
-                0.6
+                0.5
         );
         final Command semiAutoAimAndShoot = new AimAndShootSequence(
                 pitch, flyWheels, intake, shooterOptimization, drive,

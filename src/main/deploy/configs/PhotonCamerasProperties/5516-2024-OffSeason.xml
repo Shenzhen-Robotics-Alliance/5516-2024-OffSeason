@@ -14,7 +14,7 @@
         <calibrationAverageErrorPixel type="double">0.6</calibrationAverageErrorPixel>
         <calibrationErrorStandardDeviationPixel type="double">0.2</calibrationErrorStandardDeviationPixel>
         <mountPositionToRobotCenterForwardsMeters type="double">0.330</mountPositionToRobotCenterForwardsMeters>
-        <mountPositionToRobotCenterLeftwardsMeters type="double">0.127</mountPositionToRobotCenterLeftwardsMeters>
+        <mountPositionToRobotCenterLeftwardsMeters type="double">-0.127</mountPositionToRobotCenterLeftwardsMeters>
         <mountHeightMeters type="double">0.254</mountHeightMeters>
         <cameraPitchDegrees type="double">24</cameraPitchDegrees>
         <cameraYawDegrees type="double">0</cameraYawDegrees>

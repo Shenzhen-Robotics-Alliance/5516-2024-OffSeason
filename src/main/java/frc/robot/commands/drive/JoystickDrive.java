@@ -4,6 +4,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -25,11 +26,15 @@ public class JoystickDrive extends Command {
     protected final Timer previousChassisUsageTimer, previousRotationalInputTimer;
     private ChassisSpeeds currentPilotInputSpeeds;
     protected Rotation2d currentRotationMaintenanceSetpoint;
-    public JoystickDrive(MapleJoystickDriveInput input, BooleanSupplier useDriverStationCentricSwitch, HolonomicDriveSubsystem driveSubsystem) {
+
+    private final double translationalSensitivity, rotationalSensitivity;
+    public JoystickDrive(MapleJoystickDriveInput input, BooleanSupplier useDriverStationCentricSwitch, HolonomicDriveSubsystem driveSubsystem, double translationalSensitivity, double rotationalSensitivity) {
         super();
         this.input = input;
         this.useDriverStationCentricSwitch = useDriverStationCentricSwitch;
         this.driveSubsystem = driveSubsystem;
+        this.translationalSensitivity = translationalSensitivity;
+        this.rotationalSensitivity = rotationalSensitivity;
         this.previousChassisUsageTimer = new Timer();
         this.previousChassisUsageTimer.start();
         this.previousRotationalInputTimer = new Timer();
@@ -55,7 +60,8 @@ public class JoystickDrive extends Command {
         if (input == null) return;
 
         final ChassisSpeeds newestPilotInputSpeed = input.getJoystickChassisSpeeds(
-                driveSubsystem.getChassisMaxLinearVelocityMetersPerSec(), driveSubsystem.getChassisMaxAngularVelocity()
+                driveSubsystem.getChassisMaxLinearVelocityMetersPerSec() * translationalSensitivity,
+                driveSubsystem.getChassisMaxAngularVelocity() * rotationalSensitivity
         );
         currentPilotInputSpeeds = driveSubsystem.constrainAcceleration(
                 currentPilotInputSpeeds,
@@ -102,5 +108,10 @@ public class JoystickDrive extends Command {
             driveSubsystem.runDriverStationCentricChassisSpeeds(chassisSpeedsWithRotationMaintenance);
         else
             driveSubsystem.runRobotCentricChassisSpeeds(chassisSpeedsWithRotationMaintenance);
+    }
+
+    public void setCurrentRotationalMaintenance(Rotation2d setPointAbsoluteFacing) {
+        final Rotation2d gyroReadingBiasFromActualFacing = driveSubsystem.getRawGyroYaw().minus(driveSubsystem.getFacing());
+        this.currentRotationMaintenanceSetpoint = setPointAbsoluteFacing.rotateBy(gyroReadingBiasFromActualFacing);
     }
 }
