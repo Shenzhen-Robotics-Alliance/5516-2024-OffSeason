@@ -133,9 +133,9 @@ public final class Constants {
 
     public static final class SwerveModuleConfigs {
         public static final MaplePIDController.MaplePIDConfig steerHeadingCloseLoopConfig = new MaplePIDController.MaplePIDConfig(
-                0.7,
+                0.5,
                 Math.toRadians(90),
-                0,
+                0.02,
                 Math.toRadians(1.5),
                 0,
                 true,

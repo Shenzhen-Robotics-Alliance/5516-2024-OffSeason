@@ -144,7 +144,7 @@ public interface HolonomicDriveSubsystem extends Subsystem {
     }
 
     static boolean isZero(ChassisSpeeds chassisSpeeds) {
-        return chassisSpeeds.omegaRadiansPerSecond == 0 && chassisSpeeds.vxMetersPerSecond == 0 && chassisSpeeds.vyMetersPerSecond == 0;
+        return Math.abs(chassisSpeeds.omegaRadiansPerSecond) < Math.toRadians(5) && Math.abs(chassisSpeeds.vxMetersPerSecond) < 0.05 && Math.abs(chassisSpeeds.vyMetersPerSecond) < 0.05;
     }
 
     default ChassisSpeeds constrainAcceleration(

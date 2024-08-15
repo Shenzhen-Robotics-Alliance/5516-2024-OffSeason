@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.commands.FollowPathCommand;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -20,7 +21,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 public class Robot extends LoggedRobot {
     private static final Constants.RobotMode JAVA_SIM_MODE = Constants.RobotMode.SIM;
     public static final Constants.RobotMode CURRENT_ROBOT_MODE = isReal() ? Constants.RobotMode.REAL : JAVA_SIM_MODE;
-    public static final boolean IS_COMPETITION = false;
+    public static final boolean IS_COMPETITION = true;
 
 
     private Command autonomousCommand;
@@ -69,6 +70,8 @@ public class Robot extends LoggedRobot {
 
         // Start AdvantageKit logger
         Logger.start();
+
+        FollowPathCommand.warmupCommand().schedule();
     }
 
     /**

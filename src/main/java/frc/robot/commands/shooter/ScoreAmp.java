@@ -15,7 +15,7 @@ public class ScoreAmp extends Command {
     private final LEDStatusLight statusLight;
 
     private static final LEDAnimation SCORING_AMP = new LEDAnimation.Breathe(0, 255, 0, 2);
-    private static final double START_PITCH_DELAY = 0.1;
+    private static final double START_PITCH_DELAY = 0.05;
     public ScoreAmp(Intake intake, Pitch pitch, FlyWheels flyWheels, LEDStatusLight statusLight) {
         super();
         this.intake = intake;
@@ -38,7 +38,7 @@ public class ScoreAmp extends Command {
             pitch.runSetPointProfiled(Math.toRadians(92));
         else
             pitch.runSetPointProfiled(45);
-        flyWheels.runRPMProfiled(500);
+        flyWheels.runRPMProfiled(600);
         statusLight.setAnimation(SCORING_AMP);
     }
 
