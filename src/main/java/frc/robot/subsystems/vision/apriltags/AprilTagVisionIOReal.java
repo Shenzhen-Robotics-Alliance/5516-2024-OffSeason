@@ -1,6 +1,5 @@
 package frc.robot.subsystems.vision.apriltags;
 
-import edu.wpi.first.net.PortForwarder;
 import frc.robot.utils.Config.PhotonCameraProperties;
 import frc.robot.utils.MapleTimeUtils;
 import org.photonvision.PhotonCamera;
@@ -17,7 +16,7 @@ public class AprilTagVisionIOReal implements AprilTagVisionIO {
         for (int i = 0; i < cameraProperties.size(); i++)
             cameras[i] = new PhotonCamera(cameraProperties.get(i).name);
 
-        PortForwarder.add(5800, "photonvision", 5800);
+        // PortForwarder.add(5800, "photonvision", 5800);
     }
 
     @Override

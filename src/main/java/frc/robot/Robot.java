@@ -20,7 +20,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 public class Robot extends LoggedRobot {
     private static final Constants.RobotMode JAVA_SIM_MODE = Constants.RobotMode.SIM;
     public static final Constants.RobotMode CURRENT_ROBOT_MODE = isReal() ? Constants.RobotMode.REAL : JAVA_SIM_MODE;
-    public static final boolean IS_COMPETITION = true;
+    public static final boolean IS_COMPETITION = false;
 
 
     private Command autonomousCommand;
@@ -39,7 +39,7 @@ public class Robot extends LoggedRobot {
                 Logger.recordMetadata("GitDirty", "All changes committed");
                 break;
             case 1:
-                Logger.recordMetadata("GitDirty", "Uncomitted changes");
+                Logger.recordMetadata("GitDirty", "Uncommitted changes");
                 break;
             default:
                 Logger.recordMetadata("GitDirty", "Unknown");

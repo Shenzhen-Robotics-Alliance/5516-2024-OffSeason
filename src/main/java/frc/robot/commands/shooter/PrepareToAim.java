@@ -24,8 +24,7 @@ public class PrepareToAim extends Command {
     private final MapleShooterOptimization shooterOptimization;
     private final Supplier<Translation2d> robotPositionSupplier, targetPositionSupplier;
 
-    private static final LEDAnimation PREPARING_TO_SHOOT = new LEDAnimation.Charging(255, 0, 255, 2),
-            READY_TO_SHOOT = new LEDAnimation.Charging(255, 0, 255, 3);
+    private static final LEDAnimation PREPARING_TO_SHOOT = new LEDAnimation.Charging(255, 0, 255, 2);
 
 
     /**
@@ -67,7 +66,7 @@ public class PrepareToAim extends Command {
         pitch.runSetPointProfiled(Math.toRadians(initialState.shooterAngleDegrees));
 
         if (statusLight != null)
-            statusLight.setAnimation(isReady() ? READY_TO_SHOOT : PREPARING_TO_SHOOT);
+            statusLight.setAnimation(PREPARING_TO_SHOOT);
     }
 
     public Command untilReady() {

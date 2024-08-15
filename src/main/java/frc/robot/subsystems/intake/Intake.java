@@ -1,5 +1,6 @@
 package frc.robot.subsystems.intake;
 
+import edu.wpi.first.util.function.BooleanConsumer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.MapleSubsystem;
@@ -13,12 +14,13 @@ public class Intake extends MapleSubsystem {
     private final IntakeIO io;
     private final IntakeInputsAutoLogged inputs;
 
-    private static final LEDAnimation RUNNING = new LEDAnimation.Charging(255, 140, 50, 2), // orange charging
-            GRABBED_NOTE = new LEDAnimation.Breathe(230, 255, 0, 6); // yellow flashing
+    private static final LEDAnimation RUNNING = new LEDAnimation.Charging(255, 255, 255, 2), // orange charging
+            GRABBED_NOTE = new LEDAnimation.ShowColor(230, 255, 0); // yellow
 
     private boolean lowerBeamBrakeAlwaysTrue, upperBeamBrakeAlwaysTrue;
     private final Alert lowerBeamBrakeAlwaysBlockedAlert, upperBeamBrakeAlwaysBlockedAlert;
-    public Intake(IntakeIO intakeIO) {
+    private final BooleanConsumer noteInShooterConsumer;
+    public Intake(IntakeIO intakeIO, BooleanConsumer noteInShooterConsumer) {
         super("Intake");
         this.io = intakeIO;
         this.inputs = new IntakeInputsAutoLogged();
@@ -26,6 +28,8 @@ public class Intake extends MapleSubsystem {
         this.lowerBeamBrakeAlwaysTrue = this.upperBeamBrakeAlwaysTrue = true;
         this.lowerBeamBrakeAlwaysBlockedAlert = new Alert("Intake LOWER Beam Breaker Always Blocked", Alert.AlertType.WARNING);
         this.upperBeamBrakeAlwaysBlockedAlert = new Alert("Intake UPPER Beam Breaker Always Blocked", Alert.AlertType.WARNING);
+
+        this.noteInShooterConsumer = noteInShooterConsumer;
 
         super.setDefaultCommand(Commands.run(this::runIdle, this));
     }
@@ -45,6 +49,7 @@ public class Intake extends MapleSubsystem {
         this.upperBeamBrakeAlwaysBlockedAlert.setActivated(
                 upperBeamBrakeAlwaysTrue &= inputs.upperBeamBreakerBlocked
         );
+        noteInShooterConsumer.accept(isNotePresent());
 
         visualizeNoteInShooter();
     }
@@ -91,7 +96,7 @@ public class Intake extends MapleSubsystem {
     public Command executeIntakeNote(LEDStatusLight statusLight) {
         final Command executeIntake =  executeIntakeNote()
                 .raceWith(Commands.run(() -> statusLight.setAnimation(RUNNING), statusLight))
-                .andThen(statusLight.playAnimationAndStop(GRABBED_NOTE, 1));
+                .andThen(statusLight.playAnimationAndStop(GRABBED_NOTE, 1.5));
         return executeIntake;
     }
 

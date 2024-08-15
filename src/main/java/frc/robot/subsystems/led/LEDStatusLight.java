@@ -21,8 +21,10 @@ public class LEDStatusLight extends MapleSubsystem {
     private final Timer t = new Timer();
     private LEDAnimation animation;
 
+    private boolean notePresent = false;
     private static final LEDAnimation DISABLED = new LEDAnimation.SlideBackAndForth(0,200, 255, 0.5, 0.8),
-            ENABLED = new LEDAnimation.Rainbow(1);
+            ENABLED = new LEDAnimation.SlideBackAndForth(0,200, 255, 2, 0.8),
+            ENABLED_HOLDING_NOTE = new LEDAnimation.Rainbow(1);
 
     public LEDStatusLight(int port, int length) {
         super("LED");
@@ -36,7 +38,8 @@ public class LEDStatusLight extends MapleSubsystem {
         if (led != null) led.start();
 
         super.setDefaultCommand(Commands.run(
-                () -> setAnimation(DriverStation.isEnabled() ? ENABLED: DISABLED),
+                () -> setAnimation(DriverStation.isEnabled() ? (
+                        notePresent ? ENABLED_HOLDING_NOTE : ENABLED): DISABLED),
                 this)
                 .ignoringDisable(true));
     }
@@ -50,10 +53,10 @@ public class LEDStatusLight extends MapleSubsystem {
             colors[i] = bufferForDashboard.getLED(DASHBOARD_DISPLAY_LENGTH/2 + i).toHexString();
 
         if (led != null) led.setData(buffer);
-        if (Robot.CURRENT_ROBOT_MODE == Constants.RobotMode.REPLAY)
-            Logger.recordOutput("Status Light", colors);
-        else
+        if (Robot.CURRENT_ROBOT_MODE == Constants.RobotMode.SIM)
             SmartDashboard.putStringArray("Status Light", colors);
+        else if (Robot.CURRENT_ROBOT_MODE == Constants.RobotMode.REPLAY)
+            Logger.recordOutput("Status Light", colors);
     }
 
     public void setAnimation(LEDAnimation animation) {
@@ -66,5 +69,9 @@ public class LEDStatusLight extends MapleSubsystem {
                 .andThen(Commands.runOnce(() -> setAnimation(
                         DriverStation.isEnabled() ? ENABLED : DISABLED
                 )));
+    }
+
+    public void setNotePresent(boolean present) {
+        this.notePresent = present;
     }
 }

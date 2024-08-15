@@ -9,6 +9,7 @@ import frc.robot.subsystems.shooter.Pitch;
 import frc.robot.utils.LEDAnimation;
 import frc.robot.utils.MapleShooterOptimization;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 /**
@@ -25,17 +26,19 @@ public class AimAtSpeakerContinuously extends Command {
     private final Supplier<Translation2d> targetPositionSupplier;
     private final HolonomicDriveSubsystem drive;
     private final LEDStatusLight statusLight;
+    private final BooleanSupplier additionalCondition;
 
-    private static final LEDAnimation AIMING_SPEAKER = new LEDAnimation.Charging(255, 0, 255, 4),
-                AIMING_SPEAKER_READY = new LEDAnimation.ShowColor(255, 0, 255);
+    private static final LEDAnimation AIMING_SPEAKER = new LEDAnimation.Charging(255, 0, 255, 2),
+                AIMING_SPEAKER_READY = new LEDAnimation.ShowColor(0, 255, 0);
 
-    public AimAtSpeakerContinuously(FlyWheels flyWheels, Pitch pitch, MapleShooterOptimization shooterOptimization, HolonomicDriveSubsystem drive, Supplier<Translation2d> targetPositionSupplier, LEDStatusLight statusLight) {
+    public AimAtSpeakerContinuously(FlyWheels flyWheels, Pitch pitch, MapleShooterOptimization shooterOptimization, HolonomicDriveSubsystem drive, Supplier<Translation2d> targetPositionSupplier, LEDStatusLight statusLight, BooleanSupplier additionalCondition) {
         this.flyWheels = flyWheels;
         this.pitch = pitch;
         this.shooterOptimization = shooterOptimization;
         this.drive = drive;
         this.targetPositionSupplier = targetPositionSupplier;
         this.statusLight = statusLight;
+        this.additionalCondition = additionalCondition;
 
         super.addRequirements(flyWheels, pitch, statusLight);
     }
@@ -65,6 +68,7 @@ public class AimAtSpeakerContinuously extends Command {
 
     public boolean readyToShoot() {
         return shooterOptimizationRunning
+                && additionalCondition.getAsBoolean()
                 && flyWheels.flyWheelsReady()
                 && pitch.inPosition();
     }

@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.util.function.BooleanConsumer;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -97,7 +98,8 @@ public class RobotContainer {
         final List<PhotonCameraProperties> camerasProperties = PhotonCameraProperties.loadCamerasPropertiesFromConfig(Constants.ROBOT_NAME);
         final MapleConfigFile.ConfigBlock chassisGeneralConfigBlock = chassisCalibrationFile.getBlock("GeneralInformation");
 
-
+        this.ledStatusLight = new LEDStatusLight(0, 155);
+        final BooleanConsumer noteInShooterConsumer = ledStatusLight::setNotePresent;
         switch (Robot.CURRENT_ROBOT_MODE) {
             case REAL -> {
                 // Real robot, instantiate hardware IO implementations
@@ -119,7 +121,10 @@ public class RobotContainer {
 
                 this.competitionFieldVisualizer = new CompetitionFieldVisualizer(drive::getPose);
 
-                this.intake = new Intake(new IntakeIOReal(16, 2, 1));
+                this.intake = new Intake(
+                        new IntakeIOReal(16, 2, 1),
+                        noteInShooterConsumer
+                );
                 this.pitch = new Pitch(new PitchIOReal(
                         17, true,
                         18, false
@@ -173,7 +178,7 @@ public class RobotContainer {
 
                 final IntakeIOSim intakeIOSim = new IntakeIOSim();
                 fieldSimulation.registerIntake(intakeIOSim);
-                this.intake = new Intake(intakeIOSim);
+                this.intake = new Intake(intakeIOSim, noteInShooterConsumer);
                 this.pitch = new Pitch(new PitchIOSim());
                 this.flyWheels = new FlyWheels(new FlyWheelIO[]{
                         new FlyWheelIOSim(intakeIOSim),
@@ -201,7 +206,7 @@ public class RobotContainer {
 
                 this.competitionFieldVisualizer = new CompetitionFieldVisualizer(drive::getPose);
 
-                this.intake = new Intake((inputs) -> {});
+                this.intake = new Intake((inputs) -> {}, noteInShooterConsumer);
                 this.pitch = new Pitch((inputs) -> {});
                 this.flyWheels = new FlyWheels(new FlyWheelIO[]{
                         (inputs) -> {},
@@ -211,8 +216,6 @@ public class RobotContainer {
         }
 
         this.drive.configHolonomicPathPlannerAutoBuilder(competitionFieldVisualizer);
-
-        this.ledStatusLight = new LEDStatusLight(0, 155);
 
         SmartDashboard.putData("Select Test", testChooser = TestBuilder.buildTestsChooser(this));
         autoChooser = AutoChooserBuilder.buildAutoChooser(this);
@@ -286,10 +289,10 @@ public class RobotContainer {
         /* shoot commands */
         final MapleShooterOptimization shooterOptimization = new MapleShooterOptimization(
                 "MainShooter",
-                new double[] {1.35, 2, 3, 3.5, 4, 4.5},
-                new double[] {54, 45, 34, 31, 28.5, 24.5},
-                new double[] {2500, 3000, 3500, 3700, 4000, 4200},
-                new double[] {0.1, 0.15, 0.2, 0.25, 0.27, 0.28}
+                new double[] {1.35, 2, 3, 3.5, 4, 4.5, 4.8},
+                new double[] {54, 45, 35, 31, 29.5, 25, 25},
+                new double[] {2500, 3000, 3500, 3700, 4000, 4300, 4500},
+                new double[] {0.1, 0.15, 0.2, 0.25, 0.27, 0.29, 0.3}
         );
 
         final JoystickDriveAndAimAtTarget faceTargetWhileDrivingLowSpeed = new JoystickDriveAndAimAtTarget(
