@@ -263,6 +263,7 @@ public class RobotContainer {
                     .beforeStarting(() -> resetFieldAndOdometryForAuto(auto))
                     .finallyDo(MapleSubsystem::disableSubsystems);
         }
+        autoChooserSelected = autoChooserNewSelected;
     }
 
     private void resetFieldAndOdometryForAuto(Auto auto) {

@@ -20,15 +20,14 @@ public class StageSideSevenNotes extends Auto {
     public StageSideSevenNotes(RobotContainer robot) {
         super();
         super.addRequirements(robot.drive, robot.intake, robot.pitch, robot.flyWheels);
-        PPHolonomicDriveController.setRotationTargetOverride(rotationTargetOverride::get);
         final AutoUtils utils = new AutoUtils(robot, rotationTargetOverride);
 
         /* shoot first */
         final PathPlannerPath moveToShootFirst = PathPlannerPath.fromPathFile("shoot first normal");
-        final Command driveToShootFirstPose = utils.followPathAndStop(moveToShootFirst);
+        final Command driveToShootFirstPose = AutoBuilder.followPath(moveToShootFirst);
         final Command prepareToShoot1 = utils.prepareToShootDuringFollowPathForSeconds(
                 moveToShootFirst,
-                0.3, 0.5
+                0.3, 1
         );
         final AimAtSpeakerContinuously aimAtSpeaker1 = utils.aimAtSpeakerShooterOnly();
         final MapleShooterOptimization.ChassisAimAtSpeakerDuringAuto aimAtSpeakerChassis1 = utils.aimAtSpeakerChassisOnly();
@@ -37,21 +36,20 @@ public class StageSideSevenNotes extends Auto {
                         .until(() -> !robot.intake.isNotePresent())
                 );
         final Command shootFirst = executeShoot1
-                .deadlineWith(aimAtSpeaker1
-                        .alongWith(aimAtSpeakerChassis1));
+                .deadlineWith(aimAtSpeaker1.alongWith(aimAtSpeakerChassis1));
         super.addCommands(driveToShootFirstPose
                 .alongWith(prepareToShoot1.andThen(shootFirst))
         );
 
         /* grab and shoot second */
-        final Command driveToSecond = utils.followPathAndStop(PathPlannerPath.fromPathFile(
+        final Command driveToSecond = AutoBuilder.followPath(PathPlannerPath.fromPathFile(
                 "shoot second normal"
         ));
         final AimAtSpeakerContinuously aimAtSpeaker2 = utils.aimAtSpeakerShooterOnly();
         final MapleShooterOptimization.ChassisAimAtSpeakerDuringAuto aimAtSpeakerChassis2 = utils.aimAtSpeakerChassisOnly();
         final Command executeShoot2 = utils.executeGrabAndShootWithTimeOut(
                 () -> aimAtSpeaker2.readyToShoot() && aimAtSpeakerChassis2.aimComplete(),
-                4
+                2
         );
         final Command shootSecond = executeShoot2.deadlineWith(
                 aimAtSpeaker2.alongWith(aimAtSpeakerChassis2)
@@ -87,7 +85,7 @@ public class StageSideSevenNotes extends Auto {
         );
 
         /* shoot fourth */
-        final Command driveToFourth = utils.followPathAndStop(PathPlannerPath.fromPathFile(
+        final Command driveToFourth = AutoBuilder.followPath(PathPlannerPath.fromPathFile(
                 "shoot fourth normal"
         ));
         final AimAtSpeakerContinuously aimAtSpeaker4 = utils.aimAtSpeakerShooterOnly();
