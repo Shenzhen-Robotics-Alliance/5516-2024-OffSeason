@@ -11,7 +11,6 @@ import frc.robot.RobotContainer;
 import frc.robot.commands.shooter.AimAtSpeakerContinuously;
 import frc.robot.utils.MapleShooterOptimization;
 
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -48,10 +47,6 @@ public class StageSideSevenNotes extends Auto {
         final Command driveToSecond = utils.followPathAndStop(PathPlannerPath.fromPathFile(
                 "shoot second normal"
         ));
-        utils.prepareToShootDuringFollowPathForSeconds(
-                moveToShootFirst,
-                0.3, 0.5
-        );
         final AimAtSpeakerContinuously aimAtSpeaker2 = utils.aimAtSpeakerShooterOnly();
         final MapleShooterOptimization.ChassisAimAtSpeakerDuringAuto aimAtSpeakerChassis2 = utils.aimAtSpeakerChassisOnly();
         final Command executeShoot2 = utils.executeGrabAndShootWithTimeOut(
@@ -92,9 +87,22 @@ public class StageSideSevenNotes extends Auto {
         );
 
         /* shoot fourth */
-        super.addCommands(utils.followPathAndStop(PathPlannerPath.fromPathFile(
+        final Command driveToFourth = utils.followPathAndStop(PathPlannerPath.fromPathFile(
                 "shoot fourth normal"
-        )));
+        ));
+        final AimAtSpeakerContinuously aimAtSpeaker4 = utils.aimAtSpeakerShooterOnly();
+        final MapleShooterOptimization.ChassisAimAtSpeakerDuringAuto aimAtSpeakerChassis4 = utils.aimAtSpeakerChassisOnly();
+        final Command executeShoot4 = utils.executeGrabAndShootWithTimeOut(
+                () -> aimAtSpeaker4.readyToShoot() && aimAtSpeakerChassis4.aimComplete(),
+                2
+        );
+        final Command shootFourth= executeShoot4.deadlineWith(
+                aimAtSpeaker4.alongWith(aimAtSpeakerChassis4)
+        );
+        super.addCommands(driveToFourth
+                .alongWith(shootFourth)
+        );
+        super.addCommands(Commands.runOnce(robot.intake::runIdle, robot.intake));
 
         if (true) return;
 
