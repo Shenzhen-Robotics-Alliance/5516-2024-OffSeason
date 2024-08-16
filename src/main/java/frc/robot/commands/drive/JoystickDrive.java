@@ -27,22 +27,21 @@ public class JoystickDrive extends Command {
     private ChassisSpeeds currentPilotInputSpeeds;
     protected Rotation2d currentRotationMaintenanceSetpoint;
 
-    private final double translationalSensitivity, rotationalSensitivity;
-    public JoystickDrive(MapleJoystickDriveInput input, BooleanSupplier useDriverStationCentricSwitch, HolonomicDriveSubsystem driveSubsystem, double translationalSensitivity, double rotationalSensitivity) {
+    private double translationalSensitivity = 1, rotationalSensitivity = 1;
+    public JoystickDrive(MapleJoystickDriveInput input, BooleanSupplier useDriverStationCentricSwitch, HolonomicDriveSubsystem driveSubsystem) {
         super();
         this.input = input;
         this.useDriverStationCentricSwitch = useDriverStationCentricSwitch;
         this.driveSubsystem = driveSubsystem;
-        this.translationalSensitivity = translationalSensitivity;
-        this.rotationalSensitivity = rotationalSensitivity;
         this.previousChassisUsageTimer = new Timer();
         this.previousChassisUsageTimer.start();
         this.previousRotationalInputTimer = new Timer();
         this.previousRotationalInputTimer.start();
-
         this.chassisRotationController = new MaplePIDController(Constants.SwerveDriveChassisConfigs.chassisRotationalPIDConfig);
 
         super.addRequirements(driveSubsystem);
+
+        resetSensitivity();
     }
 
     @Override
@@ -113,5 +112,15 @@ public class JoystickDrive extends Command {
     public void setCurrentRotationalMaintenance(Rotation2d setPointAbsoluteFacing) {
         final Rotation2d gyroReadingBiasFromActualFacing = driveSubsystem.getRawGyroYaw().minus(driveSubsystem.getFacing());
         this.currentRotationMaintenanceSetpoint = setPointAbsoluteFacing.rotateBy(gyroReadingBiasFromActualFacing);
+    }
+
+    public void setSensitivity(double translationalSensitivity, double rotationalSensitivity) {
+        this.translationalSensitivity = translationalSensitivity;
+        this.rotationalSensitivity = rotationalSensitivity;
+    }
+
+    public void resetSensitivity() {
+        this.translationalSensitivity = Constants.DriveConfigs.DRIVE_TRANSLATIONAL_SENSITIVITY;
+        this.rotationalSensitivity = Constants.DriveConfigs.DRIVE_ROTATIONAL_SENSITIVITY;
     }
 }

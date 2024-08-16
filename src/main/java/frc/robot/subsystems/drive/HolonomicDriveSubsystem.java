@@ -15,14 +15,11 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants;
 import frc.robot.utils.CompetitionFieldUtils.CompetitionFieldVisualizer;
 import frc.robot.utils.LocalADStarAK;
 import org.littletonrobotics.junction.Logger;
-
-import java.util.Arrays;
 
 public interface HolonomicDriveSubsystem extends Subsystem {
     /**
@@ -121,7 +118,7 @@ public interface HolonomicDriveSubsystem extends Subsystem {
                 this::getMeasuredChassisSpeedsRobotRelative,
                 this::runRobotCentricChassisSpeeds,
                 new HolonomicPathFollowerConfig(
-                        Constants.SwerveDriveChassisConfigs.chassisTranslationPIDConfig.toPathPlannerPIDConstants(),
+                        Constants.SwerveDriveChassisConfigs.chassisTranslationPIDConfigPathFollowing.toPathPlannerPIDConstants(),
                         Constants.SwerveDriveChassisConfigs.chassisRotationalPIDConfig.toPathPlannerPIDConstants(),
                         getChassisMaxLinearVelocityMetersPerSec(),
                         getChassisMaxLinearVelocityMetersPerSec() / getChassisMaxAngularVelocity(),

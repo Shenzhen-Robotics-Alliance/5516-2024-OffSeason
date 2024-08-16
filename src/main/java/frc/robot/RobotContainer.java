@@ -71,7 +71,7 @@ public class RobotContainer {
     public final MapleShooterOptimization shooterOptimization;
 
     // Controller
-    private final CommandXboxController driverController = new CommandXboxController(0),
+    private final CommandXboxController driverXBox = new CommandXboxController(0),
             operatorController = new CommandXboxController(1);
 
     // Dashboard inputs
@@ -261,20 +261,22 @@ public class RobotContainer {
     public void configureButtonBindings() {
         System.out.println("configuring key bindings...  mode:" + driverModeChooser.get());
         final MapleJoystickDriveInput driveInput = DriverMode.RIGHT_HANDED.equals(driverModeChooser.get()) ?
-                MapleJoystickDriveInput.rightHandedJoystick(driverController)
-                : MapleJoystickDriveInput.leftHandedJoystick(driverController);
+                MapleJoystickDriveInput.rightHandedJoystick(driverXBox)
+                : MapleJoystickDriveInput.leftHandedJoystick(driverXBox);
 
-        /* drive commands */
         final JoystickDrive joystickDrive = new JoystickDrive(
                 driveInput,
                 () -> true,
-                drive,
-                0.7,
-                0.7
+                drive
         );
         drive.setDefaultCommand(joystickDrive);
-        driverController.x().whileTrue(Commands.run(drive::lockChassisWithXFormation, drive));
-        driverController.start().onTrue(Commands.runOnce(
+        driverXBox.x().whileTrue(Commands.run(drive::lockChassisWithXFormation, drive));
+        driverXBox.b().whileTrue(new DriveToPose(
+                drive,
+                () -> Constants.toCurrentAlliancePose(new Pose2d(4.4, 7, Rotation2d.fromDegrees(180))),
+                new Pose2d(0.15, 0.15, Rotation2d.fromDegrees(10))
+        ));
+        driverXBox.start().onTrue(Commands.runOnce(
                 () -> drive.setPose(new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                 drive
                 ).ignoringDisable(true)
@@ -294,11 +296,11 @@ public class RobotContainer {
 //        ));
 
         /* intake commands */
-        driverController.leftTrigger(0.5).whileTrue(intake.executeIntakeNote(ledStatusLight));
-        driverController.a().whileTrue(Commands.run(intake::runInvertVoltage));
+        driverXBox.leftTrigger(0.5).whileTrue(intake.executeIntakeNote(joystickDrive, ledStatusLight));
+        driverXBox.a().whileTrue(Commands.run(intake::runInvertVoltage));
 
         /* amp command */
-        driverController.y()
+        driverXBox.y()
                 .onTrue(new PrepareToAmp(pitch, flyWheels, ledStatusLight))
 //                .whileTrue(Commands.run(() -> joystickDrive.setCurrentRotationalMaintenance(
 //                        Constants.toCurrentAllianceRotation(Rotation2d.fromDegrees(-90))
@@ -317,7 +319,7 @@ public class RobotContainer {
                 faceTargetWhileDrivingLowSpeed::chassisRotationInPosition,
                 ledStatusLight
         );
-        driverController.rightTrigger(0.5).whileTrue(faceTargetWhileDrivingLowSpeed.raceWith(semiAutoAimAndShoot));
+        driverXBox.rightTrigger(0.5).whileTrue(faceTargetWhileDrivingLowSpeed.raceWith(semiAutoAimAndShoot));
 
         final JoystickDriveAndAimAtTarget faceTargetWhileDrivingFullSpeed  = new JoystickDriveAndAimAtTarget(
                 driveInput, drive,
@@ -332,7 +334,7 @@ public class RobotContainer {
 //                ledStatusLight
 //        )));
 
-        driverController.rightBumper().whileTrue(new DriveToPoseAndShootSequence(
+        driverXBox.rightBumper().whileTrue(new DriveToPoseAndShootSequence(
                 intake, pitch, flyWheels, shooterOptimization, drive,
                 () -> Constants.toCurrentAllianceTranslation(new Translation2d(4.37, 4.98)),
                 () -> Constants.toCurrentAllianceTranslation(new Translation2d(3.39, 5.94)),

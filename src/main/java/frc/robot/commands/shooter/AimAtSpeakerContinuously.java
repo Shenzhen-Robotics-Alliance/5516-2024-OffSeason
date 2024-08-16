@@ -1,5 +1,6 @@
 package frc.robot.commands.shooter;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.HolonomicDriveSubsystem;
@@ -9,6 +10,8 @@ import frc.robot.subsystems.shooter.Pitch;
 import frc.robot.utils.LEDAnimation;
 import frc.robot.utils.MapleShooterOptimization;
 
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
@@ -31,7 +34,7 @@ public class AimAtSpeakerContinuously extends Command {
     private static final LEDAnimation AIMING_SPEAKER = new LEDAnimation.Charging(255, 0, 255, 2),
                 AIMING_SPEAKER_READY = new LEDAnimation.ShowColor(0, 255, 0);
 
-    public AimAtSpeakerContinuously(FlyWheels flyWheels, Pitch pitch, MapleShooterOptimization shooterOptimization, HolonomicDriveSubsystem drive, Supplier<Translation2d> targetPositionSupplier, LEDStatusLight statusLight, BooleanSupplier additionalCondition) {
+    public AimAtSpeakerContinuously(FlyWheels flyWheels, Pitch pitch, LEDStatusLight statusLight, MapleShooterOptimization shooterOptimization, HolonomicDriveSubsystem drive, Supplier<Translation2d> targetPositionSupplier, BooleanSupplier additionalCondition) {
         this.flyWheels = flyWheels;
         this.pitch = pitch;
         this.shooterOptimization = shooterOptimization;

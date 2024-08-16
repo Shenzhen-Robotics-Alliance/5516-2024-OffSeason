@@ -4,13 +4,18 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Robot;
+import frc.robot.subsystems.drive.HolonomicDriveSubsystem;
 import frc.robot.utils.Config.MapleConfigFile;
 import frc.robot.utils.Config.MapleInterpolationTable;
 import org.littletonrobotics.junction.Logger;
 
 import java.io.IOException;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 
 import static frc.robot.utils.Config.MapleInterpolationTable.Variable;
 
@@ -129,5 +134,15 @@ public class MapleShooterOptimization {
 
     public void saveConfigsToUSBIfExist() {
         table.toConfigFile("ShooterOptimization").saveConfigToUSBSafe();
+    }
+
+    public Command overrideRotationalTargetForever(AtomicReference<Optional<Rotation2d>> rotationalTargetOverride, Supplier<Translation2d> targetPositionSupplier, HolonomicDriveSubsystem driveSubsystem) {
+        return Commands.run(
+                () -> rotationalTargetOverride.set(Optional.of(getShooterFacing(
+                        targetPositionSupplier.get(),
+                        driveSubsystem.getPose().getTranslation(),
+                        driveSubsystem.getMeasuredChassisSpeedsFieldRelative()
+                )))
+        ).finallyDo(() -> rotationalTargetOverride.set(Optional.empty()));
     }
 }

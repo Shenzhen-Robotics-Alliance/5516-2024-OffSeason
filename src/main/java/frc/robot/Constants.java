@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -68,6 +69,9 @@ public final class Constants {
     }
 
     public static final class DriveConfigs {
+        public static final double DRIVE_TRANSLATIONAL_SENSITIVITY = 1;
+        public static final double DRIVE_ROTATIONAL_SENSITIVITY = 1;
+
         public static final double nonUsageTimeResetWheels = 1;
 
         public static final double deadBandWhenOtherAxisEmpty = 0.02;
@@ -109,6 +113,16 @@ public final class Constants {
         public static final TrapezoidProfile.Constraints chassisRotationalConstraints = new TrapezoidProfile.Constraints(ChassisDefaultConfigs.DEFAULT_MAX_ANGULAR_VELOCITY_DEGREES_PER_SECOND, ChassisDefaultConfigs.DEFAULT_MAX_ACCELERATION_METERS_PER_SQUARED_SECOND / 0.6);
 
         public static final MaplePIDController.MaplePIDConfig chassisTranslationPIDConfig = new MaplePIDController.MaplePIDConfig(
+                3,
+                0.8,
+                0,
+                0.03,
+                0.07,
+                false,
+                0
+        );
+
+        public static final MaplePIDController.MaplePIDConfig chassisTranslationPIDConfigPathFollowing = new MaplePIDController.MaplePIDConfig(
                 2,
                 1.2,
                 0,
@@ -282,6 +296,10 @@ public final class Constants {
                 toCurrentAllianceTranslation(poseAtBlueSide.getTranslation()),
                 toCurrentAllianceRotation(poseAtBlueSide.getRotation())
         );
+    }
+
+    public static PathPlannerPath toCurrentAlliancePath(PathPlannerPath pathAtBlueAlliance) {
+        return isSidePresentedAsRed() ? pathAtBlueAlliance.flipPath() : pathAtBlueAlliance;
     }
 
     public static boolean isSidePresentedAsRed() {

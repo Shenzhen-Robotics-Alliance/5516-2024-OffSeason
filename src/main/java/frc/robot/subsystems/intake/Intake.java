@@ -3,6 +3,8 @@ package frc.robot.subsystems.intake;
 import edu.wpi.first.util.function.BooleanConsumer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants;
+import frc.robot.commands.drive.JoystickDrive;
 import frc.robot.subsystems.MapleSubsystem;
 import frc.robot.subsystems.led.LEDStatusLight;
 import frc.robot.subsystems.shooter.ShooterVisualizer;
@@ -81,20 +83,29 @@ public class Intake extends MapleSubsystem {
         return inputs.upperBeamBreakerBlocked || inputs.lowerBeamBreakBlocked;
     }
 
-    public Command executeIntakeNote() {
+    public boolean isNoteInUpperPosition() {
+        return inputs.upperBeamBreakerBlocked;
+    }
+
+    public Command executeIntakeNote(JoystickDrive joystickDrive) {
         return Commands.run(() -> {
-            if (inputs.lowerBeamBreakBlocked)
-                runMinimumPropellingVoltage();
-            else
-                runFullIntakeVoltage();
-            }, this)
+                    if (inputs.lowerBeamBreakBlocked) {
+                        runMinimumPropellingVoltage();
+                        joystickDrive.resetSensitivity();
+                    }
+                    else {
+                        runFullIntakeVoltage();
+                        joystickDrive.setSensitivity(0.4, 0.4);
+                    }
+                }, this)
                 .until(() -> inputs.upperBeamBreakerBlocked)
                 .onlyIf(() -> !inputs.upperBeamBreakerBlocked)
+                .andThen(joystickDrive::resetSensitivity)
                 .finallyDo(this::runIdle);
     }
 
-    public Command executeIntakeNote(LEDStatusLight statusLight) {
-        final Command executeIntake =  executeIntakeNote()
+    public Command executeIntakeNote(JoystickDrive joystickDrive, LEDStatusLight statusLight) {
+        final Command executeIntake =  executeIntakeNote(joystickDrive)
                 .raceWith(Commands.run(() -> statusLight.setAnimation(RUNNING), statusLight))
                 .andThen(statusLight.playAnimationAndStop(GRABBED_NOTE, 1.5));
         return executeIntake;
@@ -102,6 +113,7 @@ public class Intake extends MapleSubsystem {
 
     public Command executeLaunch() {
         return Commands.run(this::runFullIntakeVoltage, this)
+                .onlyIf(this::isNotePresent)
                 .until(() -> !isNotePresent())
                 .finallyDo(this::runIdle);
     }

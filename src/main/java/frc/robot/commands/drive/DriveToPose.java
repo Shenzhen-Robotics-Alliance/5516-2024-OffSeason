@@ -11,16 +11,16 @@ import frc.robot.utils.MechanismControl.MapleProfiledPIDController;
 
 import java.util.function.Supplier;
 
-public class DriveToPosition extends Command {
+public class DriveToPose extends Command {
     private final Supplier<Pose2d> desiredPoseSupplier;
     private final HolonomicDriveSubsystem driveSubsystem;
     private final HolonomicDriveController positionController;
 
-    public DriveToPosition(HolonomicDriveSubsystem driveSubsystem, Supplier<Pose2d> desiredPoseSupplier, Pose2d tolerance) {
+    public DriveToPose(HolonomicDriveSubsystem driveSubsystem, Supplier<Pose2d> desiredPoseSupplier, Pose2d tolerance) {
         this(driveSubsystem, desiredPoseSupplier);
         this.positionController.setTolerance(tolerance);
     }
-    public DriveToPosition(HolonomicDriveSubsystem driveSubsystem, Supplier<Pose2d> desiredPoseSupplier) {
+    public DriveToPose(HolonomicDriveSubsystem driveSubsystem, Supplier<Pose2d> desiredPoseSupplier) {
         this.desiredPoseSupplier = desiredPoseSupplier;
         this.driveSubsystem = driveSubsystem;
         this.positionController = createPositionController();

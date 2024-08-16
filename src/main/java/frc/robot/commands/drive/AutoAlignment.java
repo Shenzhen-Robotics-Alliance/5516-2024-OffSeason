@@ -35,7 +35,7 @@ public class AutoAlignment extends SequentialCommandGroup {
      * */
     public AutoAlignment(HolonomicDriveSubsystem driveSubsystem, Supplier<Pose2d> roughTarget, Supplier<Pose2d> target, Pose2d tolerance, double speedMultiplier, Command toRunDuringRoughApproach, Command toRunDuringPrecise) {
         final Command pathFindToTargetRough = new PathFindToPose(driveSubsystem, roughTarget, speedMultiplier),
-                preciseAlignment = new DriveToPosition(
+                preciseAlignment = new DriveToPose(
                         driveSubsystem,
                         target,
                         tolerance
