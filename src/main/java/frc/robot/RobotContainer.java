@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -21,10 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.autos.Auto;
 import frc.robot.autos.AutoChooserBuilder;
 import frc.robot.commands.drive.*;
-import frc.robot.commands.shooter.AimAndShootSequence;
-import frc.robot.commands.shooter.DriveToPoseAndShootSequence;
-import frc.robot.commands.shooter.PrepareToAmp;
-import frc.robot.commands.shooter.ScoreAmp;
+import frc.robot.commands.shooter.*;
 import frc.robot.subsystems.MapleSubsystem;
 import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.drive.IO.GyroIOPigeon2;
@@ -233,7 +231,7 @@ public class RobotContainer {
         this.shooterOptimization = new MapleShooterOptimization(
                 "MainShooter",
                 new double[] {1.35, 2, 3, 3.5, 4, 4.5, 4.8},
-                new double[] {54, 45, 36.5, 31, 28, 25, 25},
+                new double[] {54, 45, 36.5, 32.5, 29.5, 25, 25},
                 new double[] {2500, 3000, 3500, 3700, 4000, 4300, 4500},
                 new double[] {0.1, 0.1, 0.1, 0.12, 0.12, 0.15, 0.15}
         );
@@ -298,8 +296,8 @@ public class RobotContainer {
         driverXBox.x().whileTrue(Commands.run(drive::lockChassisWithXFormation, drive));
         driverXBox.b().whileTrue(new DriveToPose(
                 drive,
-                () -> Constants.toCurrentAlliancePose(new Pose2d(4.4, 7, Rotation2d.fromDegrees(180))),
-                new Pose2d(0.15, 0.15, Rotation2d.fromDegrees(10)),
+                () -> Constants.toCurrentAlliancePose(new Pose2d(4.4, 7, Rotation2d.fromDegrees(0))),
+                new Pose2d(0.1, 0.1, Rotation2d.fromDegrees(3)),
                 2
         ));
         driverXBox.start().onTrue(Commands.runOnce(
@@ -351,28 +349,19 @@ public class RobotContainer {
         );
         driverXBox.rightTrigger(0.5).whileTrue(faceTargetWhileDrivingLowSpeed.raceWith(semiAutoAimAndShoot));
 
-        final JoystickDriveAndAimAtTarget faceTargetWhileDrivingFullSpeed  = new JoystickDriveAndAimAtTarget(
-                driveInput, drive,
-                Constants.CrescendoField2024Constants.SPEAKER_POSITION_SUPPLIER,
-                shooterOptimization,
-                1
-        );
-//        driverController.rightBumper().whileTrue(faceTargetWhileDrivingFullSpeed.alongWith(new AimAndShootSequence(
-//                pitch, flyWheels, intake, shooterOptimization, drive,
+//        driverXBox.rightBumper().whileTrue(new PathFindToPoseAndShootSequence(
+//                intake, pitch, flyWheels, shooterOptimization, drive,
+//                () -> Constants.toCurrentAllianceTranslation(new Translation2d(4.37, 4.98)),
+//                () -> Constants.toCurrentAllianceTranslation(new Translation2d(3.39, 5.94)),
 //                Constants.CrescendoField2024Constants.SPEAKER_POSITION_SUPPLIER,
-//                () -> false, // never shoot
 //                ledStatusLight
-//        )));
+//        ));
 
-        driverXBox.rightBumper().whileTrue(new DriveToPoseAndShootSequence(
-                intake, pitch, flyWheels, shooterOptimization, drive,
-                () -> Constants.toCurrentAllianceTranslation(new Translation2d(4.37, 4.98)),
-                () -> Constants.toCurrentAllianceTranslation(new Translation2d(3.39, 5.94)),
-                Constants.CrescendoField2024Constants.SPEAKER_POSITION_SUPPLIER,
-                ledStatusLight
+        driverXBox.rightBumper().whileTrue(AutoStageShootingCommandsFactory.followPathGrabAndShoot(
+                PathPlannerPath.fromPathFile("test shoot"),
+                drive, intake, pitch, flyWheels, shooterOptimization, ledStatusLight,
+                false
         ));
-
-
 
         // simulation testing commands
 //        if (Robot.CURRENT_ROBOT_MODE == Constants.RobotMode.SIM)

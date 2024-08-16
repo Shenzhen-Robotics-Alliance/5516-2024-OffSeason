@@ -31,11 +31,11 @@ public class PrepareToAim extends Command {
      * creates a prepare to aim command
      * the static shooter state is calculated from the robot's estimated pose when the command is initialized
      * */
-    public PrepareToAim(FlyWheels flyWheels, Pitch pitch, MapleShooterOptimization shooterOptimization, HolonomicDriveSubsystem driveSubsystem, Supplier<Translation2d> targetPositionSupplier, LEDStatusLight statusLight) {
-        this(flyWheels, pitch, statusLight, shooterOptimization, () -> driveSubsystem.getPose().getTranslation(), targetPositionSupplier);
+    public PrepareToAim(FlyWheels flyWheels, Pitch pitch, MapleShooterOptimization shooterOptimization, LEDStatusLight statusLight, HolonomicDriveSubsystem driveSubsystem, Supplier<Translation2d> targetPositionSupplier) {
+        this(flyWheels, pitch, shooterOptimization, statusLight, () -> driveSubsystem.getPose().getTranslation(), targetPositionSupplier);
     }
 
-    public PrepareToAim(FlyWheels flyWheels, Pitch pitch, LEDStatusLight statusLight, MapleShooterOptimization shooterOptimization, Supplier<Translation2d> robotPositionSupplier, Supplier<Translation2d> targetPositionSupplier) {
+    public PrepareToAim(FlyWheels flyWheels, Pitch pitch, MapleShooterOptimization shooterOptimization, LEDStatusLight statusLight, Supplier<Translation2d> robotPositionSupplier, Supplier<Translation2d> targetPositionSupplier) {
         this.flyWheels = flyWheels;
         this.pitch = pitch;
         this.statusLight = statusLight;

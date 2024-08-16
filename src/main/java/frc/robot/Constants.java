@@ -102,22 +102,25 @@ public final class Constants {
         public static final double ODOMETRY_WAIT_TIMEOUT_SECONDS = 0.02;
 
         public static final MaplePIDController.MaplePIDConfig chassisRotationalPIDConfig = new MaplePIDController.MaplePIDConfig(
-                Math.toRadians(ChassisDefaultConfigs.DEFAULT_MAX_ANGULAR_VELOCITY_DEGREES_PER_SECOND),
-                Math.toRadians(65),
-                0.02,
+                Math.toRadians(360),
+                Math.toRadians(75),
+                0.03,
                 Math.toRadians(3),
-                0.04,
+                0.12,
                 true,
                 0
         );
-        public static final TrapezoidProfile.Constraints chassisRotationalConstraints = new TrapezoidProfile.Constraints(ChassisDefaultConfigs.DEFAULT_MAX_ANGULAR_VELOCITY_DEGREES_PER_SECOND, ChassisDefaultConfigs.DEFAULT_MAX_ACCELERATION_METERS_PER_SQUARED_SECOND / 0.6);
+        public static final TrapezoidProfile.Constraints chassisRotationalConstraints = new TrapezoidProfile.Constraints(
+                Math.toRadians(360),
+                Math.toRadians(ChassisDefaultConfigs.DEFAULT_MAX_ANGULAR_ACCELERATION_DEGREES_PER_SECOND_SQUARE)
+        );
 
         public static final MaplePIDController.MaplePIDConfig chassisTranslationPIDConfig = new MaplePIDController.MaplePIDConfig(
                 3,
-                0.8,
-                0,
-                0.03,
-                0.07,
+                1,
+                0.05,
+                0.05,
+                0.05,
                 false,
                 0
         );
@@ -202,7 +205,6 @@ public final class Constants {
 
     public static final class VisionConfigs {
         public static final AprilTagFieldLayout fieldLayout = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
-        public static final PhotonPoseEstimator.PoseStrategy poseEstimatorStrategy = PhotonPoseEstimator.PoseStrategy.AVERAGE_BEST_TARGETS;
         /* default standard error for vision observation, if only one apriltag observed */
         public static final double
                 TRANSLATIONAL_STANDARD_ERROR_METERS_FOR_SINGLE_OBSERVATION = 0.6,

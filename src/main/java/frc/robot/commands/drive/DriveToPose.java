@@ -1,9 +1,10 @@
 package frc.robot.commands.drive;
 
 import edu.wpi.first.math.controller.HolonomicDriveController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.drive.HolonomicDriveSubsystem;
@@ -16,20 +17,24 @@ public class DriveToPose extends Command {
     private final Supplier<Pose2d> desiredPoseSupplier;
     private final HolonomicDriveSubsystem driveSubsystem;
     private final HolonomicDriveController positionController;
-    private double speedConstrainMPS = 3;
+
+    private final double speedConstrainMPS;
+    private final Pose2d tolerance;
+
+    public DriveToPose(HolonomicDriveSubsystem driveSubsystem, Supplier<Pose2d> desiredPoseSupplier) {
+        this(driveSubsystem, desiredPoseSupplier, new Pose2d(0.1, 0.1, Rotation2d.fromDegrees(10)), 3);
+    }
 
     public DriveToPose(HolonomicDriveSubsystem driveSubsystem, Supplier<Pose2d> desiredPoseSupplier, Pose2d tolerance, double speedConstrainMPS) {
-        this(driveSubsystem, desiredPoseSupplier);
-        this.positionController.setTolerance(tolerance);
-        this.speedConstrainMPS = speedConstrainMPS;
-    }
-    public DriveToPose(HolonomicDriveSubsystem driveSubsystem, Supplier<Pose2d> desiredPoseSupplier) {
         this.desiredPoseSupplier = desiredPoseSupplier;
         this.driveSubsystem = driveSubsystem;
         this.positionController = createPositionController();
+        this.tolerance = tolerance;
+        this.speedConstrainMPS = speedConstrainMPS;
 
         super.addRequirements(driveSubsystem);
     }
+
 
 
     @Override
@@ -60,7 +65,14 @@ public class DriveToPose extends Command {
 
     @Override
     public boolean isFinished() {
-        return this.positionController.atReference();
+        final Pose2d desiredPose = desiredPoseSupplier.get(),
+                currentPose = driveSubsystem.getPose();
+        final ChassisSpeeds speeds = driveSubsystem.getMeasuredChassisSpeedsFieldRelative();
+        return Math.abs(desiredPose.getX() - currentPose.getX()) < tolerance.getX()
+                &&  Math.abs(desiredPose.getY() - currentPose.getY()) < tolerance.getY()
+                && Math.abs(desiredPose.getRotation().getDegrees() - currentPose.getRotation().getDegrees()) < tolerance.getRotation().getDegrees()
+                && Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond) < 0.8
+                && Math.abs(speeds.omegaRadiansPerSecond) < Math.toRadians(30);
     }
 
     public static HolonomicDriveController createPositionController() {

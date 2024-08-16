@@ -53,7 +53,7 @@ public class AimAndShootSequence extends SequentialCommandGroup  {
         super.addCommands(Commands.runOnce(intake::runIdle));
 
         super.addCommands(
-                new PrepareToAim(flyWheels, pitch, ledStatusLight, shooterOptimization, robotScoringPositionSupplier, targetPositionSupplier)
+                new PrepareToAim(flyWheels, pitch, shooterOptimization, ledStatusLight,  robotScoringPositionSupplier, targetPositionSupplier)
                         .untilReady()
         );
         final AimAtSpeakerContinuously aimAtSpeakerContinuously = new AimAtSpeakerContinuously(

@@ -14,8 +14,8 @@ import frc.robot.utils.MapleShooterOptimization;
 
 import java.util.function.Supplier;
 
-public class DriveToPoseAndShootSequence extends AutoAlignment {
-    public DriveToPoseAndShootSequence(
+public class PathFindToPoseAndShootSequence extends AutoAlignment {
+    public PathFindToPoseAndShootSequence(
             Intake intake, Pitch pitch, FlyWheels flyWheels,
             MapleShooterOptimization shooterOptimization,
             HolonomicDriveSubsystem driveSubsystem,
@@ -42,7 +42,7 @@ public class DriveToPoseAndShootSequence extends AutoAlignment {
                 ),
                 new Pose2d(0.3, 0.3, Rotation2d.fromDegrees(3)),
                 0.75,
-                new PrepareToAim(flyWheels, pitch, statusLight, shooterOptimization, robotShootingPositionSupplier, speaerPositionSupplier),
+                new PrepareToAim(flyWheels, pitch, shooterOptimization, statusLight, robotShootingPositionSupplier, speaerPositionSupplier),
                 new AimAndShootSequence(
                         pitch, flyWheels, intake, shooterOptimization, driveSubsystem,
                         robotShootingPositionSupplier,
