@@ -1,0 +1,79 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.474717716270295,
+      "y": 6.319729668395012
+    },
+    "rotation": 180.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "move to second fast"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "grab second fast"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "shoot second fast"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "move to third fast"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "grab third fast"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "move to shoot third fast"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "shoot third fast"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "grab fourth and shoot fast"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "grab fifth and shoot fast"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "grab sixth and shoot fast"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

@@ -3,41 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.65,
-        "y": 4.65
+        "x": 8.270256540517947,
+        "y": 5.765010059087858
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.7850821162852295,
-        "y": 4.219306819657531
+        "x": 5.6604209056571735,
+        "y": 7.264691729853306
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.225236080365399,
-        "y": 3.992658993621665
+        "x": 3.9601324659351573,
+        "y": 6.294767740187914
       },
       "prevControl": {
-        "x": 5.491337644982651,
-        "y": 4.191859997511268
+        "x": 4.5601135703803255,
+        "y": 6.2995294949859115
       },
       "nextControl": {
-        "x": 6.9069095670812946,
-        "y": 3.807633332941636
+        "x": 3.6601419137125735,
+        "y": 6.292386862788915
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.017063531161464,
-        "y": 2.804599488202535
+        "x": 2.349435398752174,
+        "y": 6.294767740187914
       },
       "prevControl": {
-        "x": 7.30617546644346,
-        "y": 3.5154875529205385
+        "x": 3.344678689357379,
+        "y": 6.302558294321138
       },
       "nextControl": null,
       "isLocked": false,
@@ -47,7 +47,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 1,
-      "rotationDegrees": 170.39142213130603,
+      "rotationDegrees": -179.38061029678195,
       "rotateFast": false
     }
   ],
@@ -60,14 +60,14 @@
     "maxAngularAcceleration": 1080.0
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 131.82016988002798,
+    "velocity": 1.5,
+    "rotation": 180.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Stage Side Seven Note",
+  "folder": "Amp Side Six Note",
   "previewStartingState": {
-    "rotation": 171.5288553669433,
+    "rotation": 163.94001269283933,
     "velocity": 0
   },
   "useDefaultConstraints": true

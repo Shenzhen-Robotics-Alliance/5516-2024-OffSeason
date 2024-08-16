@@ -3,41 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.65,
-        "y": 4.65
+        "x": 1.474717716270295,
+        "y": 6.319729668395012
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.7850821162852295,
-        "y": 4.219306819657531
+        "x": 2.4747177162702965,
+        "y": 6.319729668395012
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.225236080365399,
-        "y": 3.992658993621665
+        "x": 3.9190168838397157,
+        "y": 6.319729668395012
       },
       "prevControl": {
-        "x": 5.491337644982651,
-        "y": 4.191859997511268
+        "x": 3.0464735962575062,
+        "y": 6.319729668395012
       },
       "nextControl": {
-        "x": 6.9069095670812946,
-        "y": 3.807633332941636
+        "x": 5.407262138510385,
+        "y": 6.319729668395012
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.017063531161464,
-        "y": 2.804599488202535
+        "x": 7.4522483564480035,
+        "y": 7.449717390542201
       },
       "prevControl": {
-        "x": 7.30617546644346,
-        "y": 3.5154875529205385
+        "x": 6.0499486123467365,
+        "y": 7.391288234537981
       },
       "nextControl": null,
       "isLocked": false,
@@ -47,7 +47,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 1,
-      "rotationDegrees": 170.39142213130603,
+      "rotationDegrees": 180.0,
       "rotateFast": false
     }
   ],
@@ -60,14 +60,14 @@
     "maxAngularAcceleration": 1080.0
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 131.82016988002798,
+    "velocity": 2.5,
+    "rotation": 180.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Stage Side Seven Note",
+  "folder": "Amp Side Six Note",
   "previewStartingState": {
-    "rotation": 171.5288553669433,
+    "rotation": 179.37040139158972,
     "velocity": 0
   },
   "useDefaultConstraints": true

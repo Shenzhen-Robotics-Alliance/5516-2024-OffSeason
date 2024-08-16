@@ -4,7 +4,8 @@
   "holonomicMode": true,
   "pathFolders": [
     "Cycle Path",
-    "Stage Side Eight Note"
+    "Amp Side Six Note",
+    "Stage Side Seven Note"
   ],
   "autoFolders": [],
   "defaultMaxVel": 4.2,
