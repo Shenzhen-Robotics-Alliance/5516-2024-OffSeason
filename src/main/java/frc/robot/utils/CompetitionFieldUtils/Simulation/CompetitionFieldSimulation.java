@@ -79,6 +79,7 @@ public abstract class CompetitionFieldSimulation {
     public void addGamePiece(GamePieceInSimulation gamePieceInSimulation) {
         this.physicsWorld.addBody(gamePieceInSimulation);
         this.competitionField.addObject(gamePieceInSimulation);
+        this.gamePieces.add(gamePieceInSimulation);
     }
 
     public void removeGamePiece(GamePieceInSimulation gamePieceInSimulation) {

@@ -1,5 +1,6 @@
 package frc.robot.autos;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -81,8 +82,12 @@ public class AutoUtils {
 
     public Command runShooterIdle() {
         return Commands.run(() -> {
-            robot.pitch.runSetPointProfiled(Math.toDegrees(30));
+            robot.pitch.runSetPointProfiled(Math.toRadians(30));
             robot.flyWheels.runRPMProfiled(0);
         }, robot.pitch, robot.flyWheels);
+    }
+
+    public Command followPathAndStop(PathPlannerPath path) {
+        return AutoBuilder.followPath(path).finallyDo(robot.drive::stop);
     }
 }

@@ -8,12 +8,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
-import frc.robot.commands.drive.DriveToPose;
 import frc.robot.commands.shooter.AimAtSpeakerContinuously;
-import frc.robot.utils.MaplePathPlannerLoader;
 import frc.robot.utils.MapleShooterOptimization;
 
-import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -28,7 +26,7 @@ public class StageSideSevenNotes extends Auto {
 
         /* shoot first */
         final PathPlannerPath moveToShootFirst = PathPlannerPath.fromPathFile("shoot first normal");
-        final Command driveToShootFirstPose = AutoBuilder.followPath(moveToShootFirst);
+        final Command driveToShootFirstPose = utils.followPathAndStop(moveToShootFirst);
         final Command prepareToShoot1 = utils.prepareToShootDuringFollowPathForSeconds(
                 moveToShootFirst,
                 0.3, 0.5
@@ -47,7 +45,7 @@ public class StageSideSevenNotes extends Auto {
         );
 
         /* grab and shoot second */
-        final Command driveToSecond = AutoBuilder.followPath(PathPlannerPath.fromPathFile(
+        final Command driveToSecond = utils.followPathAndStop(PathPlannerPath.fromPathFile(
                 "shoot second normal"
         ));
         utils.prepareToShootDuringFollowPathForSeconds(
@@ -72,7 +70,8 @@ public class StageSideSevenNotes extends Auto {
         final PathPlannerPath grabThirdAndMoveToShootingPose = PathPlannerPath.fromPathFile("grab third and shoot normal");
         final Command intakeThirdUntilTouchingNote = Commands.run(robot.intake::runFullIntakeVoltage, robot.intake)
                 .until(robot.intake::isNoteTouchingIntake)
-                .deadlineWith(utils.runShooterIdle());
+                .deadlineWith(utils.runShooterIdle())
+                .withTimeout(2);
         final Command prepareToShootThird = utils.prepareToShootDuringFollowPathForSeconds(
                 grabThirdAndMoveToShootingPose,
                 0.3, 0.8
@@ -81,18 +80,19 @@ public class StageSideSevenNotes extends Auto {
         final AimAtSpeakerContinuously aimAtSpeaker3 = utils.aimAtSpeakerShooterOnly();
         final MapleShooterOptimization.ChassisAimAtSpeakerDuringAuto aimAtSpeakerChassis3 = utils.aimAtSpeakerChassisOnly();
         final Command executeShoot3 = Commands.waitUntil(() -> aimAtSpeaker3.readyToShoot() && aimAtSpeakerChassis3.aimComplete())
+                .deadlineWith(aimAtSpeaker3.alongWith(aimAtSpeakerChassis3))
                 .andThen(Commands.run(robot.intake::runFullIntakeVoltage, robot.intake)
                         .until(() -> !robot.intake.isNotePresent())
                 );
         final Command grabThirdNoteAndShoot = intakeThirdUntilTouchingNote
                 .andThen(prepareToShootThirdAndPushNoteForward)
                 .andThen(executeShoot3);
-        super.addCommands(AutoBuilder.followPath(grabThirdAndMoveToShootingPose)
+        super.addCommands(utils.followPathAndStop(grabThirdAndMoveToShootingPose)
                 .alongWith(grabThirdNoteAndShoot)
         );
 
         /* shoot fourth */
-        super.addCommands(AutoBuilder.followPath(PathPlannerPath.fromPathFile(
+        super.addCommands(utils.followPathAndStop(PathPlannerPath.fromPathFile(
                 "shoot fourth normal"
         )));
 

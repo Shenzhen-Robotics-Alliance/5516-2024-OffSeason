@@ -36,12 +36,13 @@ public abstract class MapleSubsystem extends SubsystemBase {
             disableSubsystems();
         wasEnabled = DriverStation.isEnabled();
     }
-    private static void enableSubsystems() {
+    public static void enableSubsystems() {
         for (MapleSubsystem instance:instances)
             instance.onEnable();
     }
 
-    private static void disableSubsystems() {
+    public static void disableSubsystems() {
+        System.out.println("disable all subsystems...");
         for (MapleSubsystem instance:instances)
             instance.onDisable();
     }

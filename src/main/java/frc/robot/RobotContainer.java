@@ -25,6 +25,7 @@ import frc.robot.commands.shooter.AimAndShootSequence;
 import frc.robot.commands.shooter.DriveToPoseAndShootSequence;
 import frc.robot.commands.shooter.PrepareToAmp;
 import frc.robot.commands.shooter.ScoreAmp;
+import frc.robot.subsystems.MapleSubsystem;
 import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.drive.IO.GyroIOPigeon2;
 import frc.robot.subsystems.drive.IO.GyroIOSim;
@@ -242,16 +243,39 @@ public class RobotContainer {
 
     private boolean isDSPresentedAsRed = Constants.isSidePresentedAsRed();
     private boolean isLeftHanded = true;
+    private Command autonomousCommand = Commands.none();
+    private Supplier<Auto> autoChooserSelected = null;
     /**
      * reconfigures button bindings if alliance station has changed
+     * re-create autos if not yet created
      * */
-    public void rebindKeysIfChanged() {
+    public void checkForCommandChanges() {
         final boolean isLeftHandedSelected = !DriverMode.RIGHT_HANDED.equals(driverModeChooser.get());
         if (Constants.isSidePresentedAsRed() != isDSPresentedAsRed || isLeftHanded != isLeftHandedSelected)
             configureButtonBindings();
         isDSPresentedAsRed = Constants.isSidePresentedAsRed();
         isLeftHanded = isLeftHandedSelected;
+
+        final Supplier<Auto> autoChooserNewSelected = autoChooser.get();
+        if (autoChooserNewSelected != autoChooserSelected) {
+            final Auto auto = autoChooserNewSelected.get();
+            this.autonomousCommand = auto
+                    .beforeStarting(() -> resetFieldAndOdometryForAuto(auto))
+                    .finallyDo(MapleSubsystem::disableSubsystems);
+        }
     }
+
+    private void resetFieldAndOdometryForAuto(Auto auto) {
+        final Pose2d startingPose = Constants.toCurrentAlliancePose(
+                auto.getStartingPoseAtBlueAlliance()
+        );
+        drive.setPose(startingPose);
+
+        if (fieldSimulation == null) return;
+        fieldSimulation.getMainRobot().setSimulationWorldPose(startingPose);
+        fieldSimulation.resetFieldForAuto();
+    }
+
     /**
      * Use this method to define your button->command mappings. Buttons can be created by
      * instantiating a {@link GenericHID} or one of its subclasses ({@link
@@ -362,17 +386,8 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        final Auto auto = autoChooser.get().get();
-        return auto.beforeStarting(() -> {
-            final Pose2d startingPose = Constants.toCurrentAlliancePose(
-                    auto.getStartingPoseAtBlueAlliance()
-            );
-            drive.setPose(startingPose);
-            if (fieldSimulation != null)
-                fieldSimulation.getMainRobot().setSimulationWorldPose(startingPose);
-        });
+        return autonomousCommand;
     }
-
 
     public Command getTestCommand() {
       return testChooser.getSelected().get();
