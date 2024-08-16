@@ -6,8 +6,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.RobotContainer;
 
-public class StageSideEightNotesPreview extends Auto {
-    public StageSideEightNotesPreview(RobotContainer robot) {
+public class StageSideSevenNotesPreview extends Auto {
+    public StageSideSevenNotesPreview(RobotContainer robot) {
         super();
 
         super.addRequirements(robot.drive, robot.intake, robot.pitch, robot.flyWheels);

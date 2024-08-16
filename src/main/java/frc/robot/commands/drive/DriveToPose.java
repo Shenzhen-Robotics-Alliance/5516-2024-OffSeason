@@ -3,6 +3,7 @@ package frc.robot.commands.drive;
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.drive.HolonomicDriveSubsystem;
@@ -15,10 +16,12 @@ public class DriveToPose extends Command {
     private final Supplier<Pose2d> desiredPoseSupplier;
     private final HolonomicDriveSubsystem driveSubsystem;
     private final HolonomicDriveController positionController;
+    private double speedConstrainMPS = 3;
 
-    public DriveToPose(HolonomicDriveSubsystem driveSubsystem, Supplier<Pose2d> desiredPoseSupplier, Pose2d tolerance) {
+    public DriveToPose(HolonomicDriveSubsystem driveSubsystem, Supplier<Pose2d> desiredPoseSupplier, Pose2d tolerance, double speedConstrainMPS) {
         this(driveSubsystem, desiredPoseSupplier);
         this.positionController.setTolerance(tolerance);
+        this.speedConstrainMPS = speedConstrainMPS;
     }
     public DriveToPose(HolonomicDriveSubsystem driveSubsystem, Supplier<Pose2d> desiredPoseSupplier) {
         this.desiredPoseSupplier = desiredPoseSupplier;
@@ -36,7 +39,10 @@ public class DriveToPose extends Command {
 
     @Override
     public void execute() {
-        final ChassisSpeeds feedBackSpeeds = getFeedBackSpeeds();
+        ChassisSpeeds feedBackSpeeds = getFeedBackSpeeds();
+        final double feedBackSpeedMagnitude = Math.hypot(feedBackSpeeds.vxMetersPerSecond, feedBackSpeeds.vyMetersPerSecond);
+        if (feedBackSpeedMagnitude < speedConstrainMPS)
+            feedBackSpeeds = feedBackSpeeds.times(speedConstrainMPS / feedBackSpeedMagnitude);
         driveSubsystem.runRobotCentricChassisSpeeds(feedBackSpeeds);
     }
 

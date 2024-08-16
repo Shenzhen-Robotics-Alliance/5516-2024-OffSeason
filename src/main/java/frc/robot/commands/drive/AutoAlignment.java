@@ -38,7 +38,8 @@ public class AutoAlignment extends SequentialCommandGroup {
                 preciseAlignment = new DriveToPose(
                         driveSubsystem,
                         target,
-                        tolerance
+                        tolerance,
+                        2
                 );
 
         super.addRequirements(driveSubsystem);

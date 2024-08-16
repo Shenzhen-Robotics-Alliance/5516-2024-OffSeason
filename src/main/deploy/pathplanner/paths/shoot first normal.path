@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.356139746680443,
-        "y": 4.645117902335449
+        "x": 1.4496263962827314,
+        "y": 4.179632292830811
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7917096680606237,
-        "y": 4.577715935394451
+        "x": 1.693081212971442,
+        "y": 4.506835566458796
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.622104793438532,
-        "y": 4.164051184567375
+        "x": 2.2325770867392727,
+        "y": 4.401663085646845
       },
       "prevControl": {
-        "x": 2.332124521893285,
-        "y": 4.33151646347707
+        "x": 1.817730079113777,
+        "y": 4.545788337128276
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,18 +30,7 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [
-    {
-      "name": "shoot first",
-      "waypointRelativePos": 0.55,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": []
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 2.0,
     "maxAcceleration": 7.5,
@@ -50,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 152.21699491667152,
+    "rotation": 159.53557056815544,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "Stage Side Eight Note",
   "previewStartingState": {
-    "rotation": 180.0,
+    "rotation": 179.0206803456605,
     "velocity": 0
   },
   "useDefaultConstraints": false

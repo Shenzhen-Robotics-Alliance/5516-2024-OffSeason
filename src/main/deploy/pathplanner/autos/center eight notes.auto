@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.356139746680443,
-      "y": 4.645117902335449
+      "x": 1.4593645889545637,
+      "y": 4.13
     },
     "rotation": 180.0
   },
@@ -14,20 +14,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "shoot first grab second normal"
+            "pathName": "shoot first normal"
           }
         },
         {
-          "type": "race",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "shoot first grab second normal"
-                }
-              }
-            ]
+            "pathName": "shoot second normal"
           }
         },
         {

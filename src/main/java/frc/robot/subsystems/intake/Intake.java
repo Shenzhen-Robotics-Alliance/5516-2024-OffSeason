@@ -100,7 +100,7 @@ public class Intake extends MapleSubsystem {
                 }, this)
                 .until(() -> inputs.upperBeamBreakerBlocked)
                 .onlyIf(() -> !inputs.upperBeamBreakerBlocked)
-                .andThen(joystickDrive::resetSensitivity)
+                .finallyDo(joystickDrive::resetSensitivity)
                 .finallyDo(this::runIdle);
     }
 

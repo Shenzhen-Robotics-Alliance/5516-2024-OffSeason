@@ -122,7 +122,7 @@ public interface HolonomicDriveSubsystem extends Subsystem {
                         Constants.SwerveDriveChassisConfigs.chassisRotationalPIDConfig.toPathPlannerPIDConstants(),
                         getChassisMaxLinearVelocityMetersPerSec(),
                         getChassisMaxLinearVelocityMetersPerSec() / getChassisMaxAngularVelocity(),
-                        new ReplanningConfig(true, true)
+                        new ReplanningConfig(false, true)
                 ),
                 Constants::isSidePresentedAsRed,
                 this
