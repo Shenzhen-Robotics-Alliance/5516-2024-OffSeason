@@ -10,6 +10,7 @@ import frc.robot.RobotContainer;
 import frc.robot.commands.shooter.AimAtSpeakerContinuously;
 import frc.robot.commands.shooter.PrepareToAim;
 import frc.robot.utils.MaplePathPlannerLoader;
+import frc.robot.utils.MapleShooterOptimization;
 
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
@@ -63,8 +64,8 @@ public class AutoUtils {
         return aimAtSpeakerChassisOnly().alongWith(aimAtSpeakerShooterOnly());
     }
 
-    public Command aimAtSpeakerChassisOnly() {
-        return robot.shooterOptimization.overrideRotationalTargetForever(
+    public MapleShooterOptimization.ChassisAimAtSpeakerDuringAuto aimAtSpeakerChassisOnly() {
+        return robot.shooterOptimization.chassisAimAtSpeakerDuringAuto(
                 rotationTargetOverride,
                 Constants.CrescendoField2024Constants.SPEAKER_POSITION_SUPPLIER,
                 robot.drive
@@ -76,5 +77,12 @@ public class AutoUtils {
                 Constants.CrescendoField2024Constants.SPEAKER_POSITION_SUPPLIER,
                 () -> true
         );
+    }
+
+    public Command runShooterIdle() {
+        return Commands.run(() -> {
+            robot.pitch.runSetPointProfiled(Math.toDegrees(30));
+            robot.flyWheels.runRPMProfiled(0);
+        }, robot.pitch, robot.flyWheels);
     }
 }

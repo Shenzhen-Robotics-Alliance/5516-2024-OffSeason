@@ -1,6 +1,8 @@
 package frc.robot.subsystems.intake;
 
 import edu.wpi.first.util.function.BooleanConsumer;
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
@@ -87,6 +89,22 @@ public class Intake extends MapleSubsystem {
         return inputs.upperBeamBreakerBlocked;
     }
 
+    public boolean isNoteTouchingIntake() {
+        return inputs.lowerBeamBreakBlocked;
+    }
+
+    public Command executeIntakeNote() {
+        return Commands.run(() -> {
+                    if (inputs.lowerBeamBreakBlocked)
+                        runMinimumPropellingVoltage();
+                    else
+                        runFullIntakeVoltage();
+                }, this)
+                .until(() -> inputs.upperBeamBreakerBlocked)
+                .onlyIf(() -> !inputs.upperBeamBreakerBlocked)
+                .finallyDo(this::runIdle);
+    }
+
     public Command executeIntakeNote(JoystickDrive joystickDrive) {
         return Commands.run(() -> {
                     if (inputs.lowerBeamBreakBlocked) {
@@ -104,11 +122,19 @@ public class Intake extends MapleSubsystem {
                 .finallyDo(this::runIdle);
     }
 
-    public Command executeIntakeNote(JoystickDrive joystickDrive, LEDStatusLight statusLight) {
-        final Command executeIntake =  executeIntakeNote(joystickDrive)
+    public Command executeIntakeNote(JoystickDrive joystickDrive, LEDStatusLight statusLight, XboxController xboxController) {
+        return executeIntakeNote(joystickDrive)
                 .raceWith(Commands.run(() -> statusLight.setAnimation(RUNNING), statusLight))
-                .andThen(statusLight.playAnimationAndStop(GRABBED_NOTE, 1.5));
-        return executeIntake;
+                .andThen(statusLight.playAnimationAndStop(GRABBED_NOTE, 1.5)
+                        .deadlineWith(rumbleGamepad(xboxController))
+                );
+    }
+
+    public static Command rumbleGamepad(XboxController xboxController) {
+        return Commands.runEnd(
+                () -> xboxController.setRumble(GenericHID.RumbleType.kBothRumble, 1),
+                () -> xboxController.setRumble(GenericHID.RumbleType.kBothRumble, 0)
+        );
     }
 
     public Command executeLaunch() {

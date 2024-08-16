@@ -11,7 +11,9 @@ import frc.robot.RobotContainer;
 import frc.robot.commands.drive.DriveToPose;
 import frc.robot.commands.shooter.AimAtSpeakerContinuously;
 import frc.robot.utils.MaplePathPlannerLoader;
+import frc.robot.utils.MapleShooterOptimization;
 
+import java.nio.file.Path;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -32,9 +34,11 @@ public class StageSideSevenNotes extends Auto {
                 0.3, 0.5
         );
         final AimAtSpeakerContinuously aimAtSpeaker1 = utils.aimAtSpeakerShooterOnly();
-        final Command aimAtSpeakerChassis1 = utils.aimAtSpeakerChassisOnly();
-        final Command executeShoot1 = Commands.waitUntil(aimAtSpeaker1::readyToShoot)
-                .andThen(robot.intake.executeLaunch());
+        final MapleShooterOptimization.ChassisAimAtSpeakerDuringAuto aimAtSpeakerChassis1 = utils.aimAtSpeakerChassisOnly();
+        final Command executeShoot1 = Commands.waitUntil(() -> aimAtSpeaker1.readyToShoot() && aimAtSpeakerChassis1.aimComplete())
+                .andThen(Commands.run(robot.intake::runFullIntakeVoltage, robot.intake)
+                        .until(() -> !robot.intake.isNotePresent())
+                );
         final Command shootFirst = executeShoot1
                 .deadlineWith(aimAtSpeaker1
                         .alongWith(aimAtSpeakerChassis1));
@@ -46,23 +50,53 @@ public class StageSideSevenNotes extends Auto {
         final Command driveToSecond = AutoBuilder.followPath(PathPlannerPath.fromPathFile(
                 "shoot second normal"
         ));
+        utils.prepareToShootDuringFollowPathForSeconds(
+                moveToShootFirst,
+                0.3, 0.5
+        );
         final AimAtSpeakerContinuously aimAtSpeaker2 = utils.aimAtSpeakerShooterOnly();
-        final Command aimAtSpeakerChassis2 = utils.aimAtSpeakerChassisOnly();
-        final Command executeShoot2 = utils.executeGrabAndShootWithTimeOut(aimAtSpeaker2::readyToShoot, 1);
+        final MapleShooterOptimization.ChassisAimAtSpeakerDuringAuto aimAtSpeakerChassis2 = utils.aimAtSpeakerChassisOnly();
+        final Command executeShoot2 = utils.executeGrabAndShootWithTimeOut(
+                () -> aimAtSpeaker2.readyToShoot() && aimAtSpeakerChassis2.aimComplete(),
+                4
+        );
         final Command shootSecond = executeShoot2.deadlineWith(
                 aimAtSpeaker2.alongWith(aimAtSpeakerChassis2)
         );
         super.addCommands(driveToSecond
                 .alongWith(shootSecond)
         );
+        super.addCommands(Commands.runOnce(robot.intake::runIdle, robot.intake));
 
+        /* grab and shoot third */
+        final PathPlannerPath grabThirdAndMoveToShootingPose = PathPlannerPath.fromPathFile("grab third and shoot normal");
+        final Command intakeThirdUntilTouchingNote = Commands.run(robot.intake::runFullIntakeVoltage, robot.intake)
+                .until(robot.intake::isNoteTouchingIntake)
+                .deadlineWith(utils.runShooterIdle());
+        final Command prepareToShootThird = utils.prepareToShootDuringFollowPathForSeconds(
+                grabThirdAndMoveToShootingPose,
+                0.3, 0.8
+        );
+        final Command prepareToShootThirdAndPushNoteForward = prepareToShootThird.deadlineWith(robot.intake.executeIntakeNote());
+        final AimAtSpeakerContinuously aimAtSpeaker3 = utils.aimAtSpeakerShooterOnly();
+        final MapleShooterOptimization.ChassisAimAtSpeakerDuringAuto aimAtSpeakerChassis3 = utils.aimAtSpeakerChassisOnly();
+        final Command executeShoot3 = Commands.waitUntil(() -> aimAtSpeaker3.readyToShoot() && aimAtSpeakerChassis3.aimComplete())
+                .andThen(Commands.run(robot.intake::runFullIntakeVoltage, robot.intake)
+                        .until(() -> !robot.intake.isNotePresent())
+                );
+        final Command grabThirdNoteAndShoot = intakeThirdUntilTouchingNote
+                .andThen(prepareToShootThirdAndPushNoteForward)
+                .andThen(executeShoot3);
+        super.addCommands(AutoBuilder.followPath(grabThirdAndMoveToShootingPose)
+                .alongWith(grabThirdNoteAndShoot)
+        );
+
+        /* shoot fourth */
         super.addCommands(AutoBuilder.followPath(PathPlannerPath.fromPathFile(
-                "shoot third and fourth normal"
+                "shoot fourth normal"
         )));
 
-        super.addCommands(AutoBuilder.followPath(PathPlannerPath.fromPathFile(
-                "grab fifth normal"
-        )));
+        if (true) return;
 
         super.addCommands(AutoBuilder.followPath(PathPlannerPath.fromPathFile(
                 "shoot fifth normal"

@@ -6,7 +6,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Robot;
 import frc.robot.subsystems.drive.HolonomicDriveSubsystem;
 import frc.robot.utils.Config.MapleConfigFile;
 import frc.robot.utils.Config.MapleInterpolationTable;
@@ -136,13 +135,48 @@ public class MapleShooterOptimization {
         table.toConfigFile("ShooterOptimization").saveConfigToUSBSafe();
     }
 
-    public Command overrideRotationalTargetForever(AtomicReference<Optional<Rotation2d>> rotationalTargetOverride, Supplier<Translation2d> targetPositionSupplier, HolonomicDriveSubsystem driveSubsystem) {
-        return Commands.run(
-                () -> rotationalTargetOverride.set(Optional.of(getShooterFacing(
-                        targetPositionSupplier.get(),
-                        driveSubsystem.getPose().getTranslation(),
-                        driveSubsystem.getMeasuredChassisSpeedsFieldRelative()
-                )))
-        ).finallyDo(() -> rotationalTargetOverride.set(Optional.empty()));
+    public static class ChassisAimAtSpeakerDuringAuto extends Command {
+        private final AtomicReference<Optional<Rotation2d>> rotationalTargetOverride;
+        private final Supplier<Translation2d> targetPositionSupplier;
+        private final HolonomicDriveSubsystem driveSubsystem;
+        private final MapleShooterOptimization shooterOptimization;
+        public ChassisAimAtSpeakerDuringAuto(AtomicReference<Optional<Rotation2d>> rotationalTargetOverride, Supplier<Translation2d> targetPositionSupplier, HolonomicDriveSubsystem driveSubsystem, MapleShooterOptimization shooterOptimization) {
+            this.rotationalTargetOverride = rotationalTargetOverride;
+            this.targetPositionSupplier = targetPositionSupplier;
+            this.driveSubsystem = driveSubsystem;
+            this.shooterOptimization = shooterOptimization;
+        }
+
+        Rotation2d desiredChassisFacing = new Rotation2d();
+        boolean complete = false;
+
+        @Override
+        public void initialize() {
+            complete = false;
+        }
+
+        @Override
+        public void execute() {
+            desiredChassisFacing = shooterOptimization.getShooterFacing(
+                    targetPositionSupplier.get(),
+                    driveSubsystem.getPose().getTranslation(),
+                    driveSubsystem.getMeasuredChassisSpeedsFieldRelative()
+            );
+            rotationalTargetOverride.set(Optional.of(desiredChassisFacing));
+            complete = driveSubsystem.getFacing().minus(desiredChassisFacing).getDegrees() < 3;
+        }
+
+        @Override
+        public void end(boolean interrupted) {
+            rotationalTargetOverride.set(Optional.empty());
+        }
+
+        public boolean aimComplete() {
+            return complete;
+        }
+    }
+
+    public ChassisAimAtSpeakerDuringAuto chassisAimAtSpeakerDuringAuto(AtomicReference<Optional<Rotation2d>> rotationalTargetOverride, Supplier<Translation2d> targetPositionSupplier, HolonomicDriveSubsystem driveSubsystem) {
+        return new ChassisAimAtSpeakerDuringAuto(rotationalTargetOverride, targetPositionSupplier, driveSubsystem, this);
     }
 }
