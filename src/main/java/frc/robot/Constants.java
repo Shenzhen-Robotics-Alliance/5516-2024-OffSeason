@@ -255,7 +255,7 @@ public final class Constants {
                 6000/0.8, 6000/0.2
         );
 
-        public static final double TOLERANCE_RPM = 40;
+        public static final double TOLERANCE_RPM = 60;
         public static final MaplePIDController.MaplePIDConfig FLYWHEEL_PID_CONFIG = new MaplePIDController.MaplePIDConfig(
                 7,
                 25.526,
