@@ -1,6 +1,5 @@
 package frc.robot.commands.shooter;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.HolonomicDriveSubsystem;
@@ -10,8 +9,6 @@ import frc.robot.subsystems.shooter.Pitch;
 import frc.robot.utils.LEDAnimation;
 import frc.robot.utils.MapleShooterOptimization;
 
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
@@ -74,5 +71,9 @@ public class AimAtSpeakerContinuously extends Command {
                 && additionalCondition.getAsBoolean()
                 && flyWheels.flyWheelsReady()
                 && pitch.inPosition();
+    }
+
+    public Command untilReady() {
+        return this.until(this::readyToShoot);
     }
 }

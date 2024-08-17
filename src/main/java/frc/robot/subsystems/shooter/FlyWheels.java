@@ -54,7 +54,7 @@ public class FlyWheels extends MapleSubsystem {
         this.currentStateRPM = new TrapezoidProfile.State(0, 0);
         this.goalRPM = 0;
 
-        setDefaultCommand(Commands.run(() -> runRPMProfiled(0), this));
+        setDefaultCommand(Commands.run(this::runIdle, this));
     }
 
     @Override
@@ -86,7 +86,11 @@ public class FlyWheels extends MapleSubsystem {
         return (voltageMeasure -> runVolts(index, voltageMeasure.in(Units.Volt)));
     }
 
-    public void runVolts(int index, double volts) {
+    public void runIdle() {
+        for (FlyWheelIO io : IOs) io.runVoltage(0);
+    }
+
+    private void runVolts(int index, double volts) {
         Logger.recordOutput("Shooter/FlyWheel" + index + "AppliedVolts", volts);
         IOs[index].runVoltage(volts);
     }

@@ -64,6 +64,10 @@ public class Pitch extends MapleSubsystem {
         SmartDashboard.putBoolean("Pitch In Position", inPosition());
     }
 
+    public void setIdle() {
+        io.runPitchVoltage(0);
+    }
+
     private double previousStateVelocity = 0;
     private TrapezoidProfile.State currentState = new TrapezoidProfile.State(PITCH_LOWEST_ROTATION_RAD, 0);
     public void runSetPointProfiled(double setPointRad) {
