@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants;
 import frc.robot.commands.drive.JoystickDrive;
 import frc.robot.subsystems.MapleSubsystem;
 import frc.robot.subsystems.led.LEDStatusLight;
@@ -91,6 +90,13 @@ public class Intake extends MapleSubsystem {
 
     public boolean isNoteTouchingIntake() {
         return inputs.lowerBeamBreakBlocked;
+    }
+
+    public Command suckNoteUntilTouching() {
+        return Commands.run(this::runFullIntakeVoltage, this)
+                .onlyIf(() -> !inputs.lowerBeamBreakBlocked)
+                .until(() -> inputs.lowerBeamBreakBlocked)
+                .finallyDo(this::runMinimumPropellingVoltage);
     }
 
     public Command executeIntakeNote() {

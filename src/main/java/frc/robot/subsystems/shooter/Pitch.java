@@ -6,6 +6,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Robot;
 import frc.robot.subsystems.MapleSubsystem;
@@ -36,7 +37,11 @@ public class Pitch extends MapleSubsystem {
 
         notCalibratedAlert.setActivated(false);
 
-        setDefaultCommand(Commands.run(() -> runSetPointProfiled(PITCH_LOWEST_ROTATION_RAD), this));
+        setDefaultCommand(getPitchDefaultCommand());
+    }
+
+    public Command getPitchDefaultCommand() {
+        return Commands.run(() -> runSetPointProfiled(PITCH_LOWEST_ROTATION_RAD), this);
     }
 
     @Override

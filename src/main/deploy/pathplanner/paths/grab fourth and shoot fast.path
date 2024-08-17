@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.2397604340041912,
-        "y": 6.690919561689239
+        "x": 1.9342664209477884,
+        "y": 6.2625328158468205
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.395801063703387,
-        "y": 6.799174485388714
+        "x": 2.282538086404351,
+        "y": 6.56166505577594
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.796456677516902,
-        "y": 6.987605867505556
+        "x": 2.8457612546136124,
+        "y": 6.967577964964403
       },
       "prevControl": {
-        "x": 2.539368391098337,
-        "y": 6.855166447229324
+        "x": 2.4347810023679513,
+        "y": 6.642875365955014
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,19 +33,19 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.2,
-    "maxAcceleration": 7.5,
+    "maxAcceleration": 7.0,
     "maxAngularVelocity": 670.0,
     "maxAngularAcceleration": 1080.0
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": -152.5924245621816,
+    "rotation": -144.43334096477494,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "Amp Side Six Note",
   "previewStartingState": {
-    "rotation": -151.83829108404882,
+    "rotation": -144.86413746252984,
     "velocity": 0
   },
   "useDefaultConstraints": true

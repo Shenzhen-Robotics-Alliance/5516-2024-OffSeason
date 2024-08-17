@@ -16,19 +16,25 @@
     },
     {
       "anchor": {
-        "x": 8.192350999174122,
-        "y": 5.823439215087209
+        "x": 8.552664127866809,
+        "y": 5.64815174707455
       },
       "prevControl": {
-        "x": 7.043244264424472,
-        "y": 6.261657885118855
+        "x": 7.4035573931171585,
+        "y": 6.086370417106196
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.9,
+      "rotationDegrees": 156.90755197239994,
+      "rotateFast": true
+    }
+  ],
   "constraintZones": [
     {
       "name": "slow down to turn",
@@ -45,13 +51,13 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.2,
-    "maxAcceleration": 7.5,
+    "maxAcceleration": 7.0,
     "maxAngularVelocity": 670.0,
     "maxAngularAcceleration": 1080.0
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": 153.43494882292208,
+    "rotation": 157.43299092212544,
     "rotateFast": false
   },
   "reversed": false,

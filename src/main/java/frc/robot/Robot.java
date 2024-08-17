@@ -21,8 +21,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 public class Robot extends LoggedRobot {
     private static final Constants.RobotMode JAVA_SIM_MODE = Constants.RobotMode.SIM;
     public static final Constants.RobotMode CURRENT_ROBOT_MODE = isReal() ? Constants.RobotMode.REAL : JAVA_SIM_MODE;
-    public static final boolean IS_COMPETITION = true;
-
+    public static final boolean IS_COMPETITION = false;
 
     private Command autonomousCommand;
     private RobotContainer robotContainer;

@@ -17,27 +17,27 @@
     {
       "anchor": {
         "x": 3.9190168838397157,
-        "y": 6.319729668395012
+        "y": 6.32
       },
       "prevControl": {
-        "x": 3.0464735962575062,
-        "y": 6.319729668395012
+        "x": 3.0490168838397156,
+        "y": 6.32
       },
       "nextControl": {
-        "x": 5.407262138510385,
-        "y": 6.319729668395012
+        "x": 4.619016883839715,
+        "y": 6.32
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.007325338494093,
-        "y": 7.459455583205354
+        "x": 8.63056966920577,
+        "y": 7.478931968540094
       },
       "prevControl": {
-        "x": 6.605025594392826,
-        "y": 7.401026427201135
+        "x": 6.9069095670812946,
+        "y": 7.167309803184256
       },
       "nextControl": null,
       "isLocked": false,
@@ -54,15 +54,31 @@
       "waypointRelativePos": 0.25,
       "rotationDegrees": 180.0,
       "rotateFast": true
+    },
+    {
+      "waypointRelativePos": 1.9,
+      "rotationDegrees": -171.25383773744474,
+      "rotateFast": true
     }
   ],
   "constraintZones": [
     {
       "name": "slow down to turn",
       "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 0.15,
+      "maxWaypointRelativePos": 0.35,
       "constraints": {
         "maxVelocity": 1.4,
+        "maxAcceleration": 7.5,
+        "maxAngularVelocity": 670.0,
+        "maxAngularAcceleration": 1080.0
+      }
+    },
+    {
+      "name": "slow down to grab",
+      "minWaypointRelativePos": 1.85,
+      "maxWaypointRelativePos": 2.0,
+      "constraints": {
+        "maxVelocity": 3.0,
         "maxAcceleration": 7.5,
         "maxAngularVelocity": 670.0,
         "maxAngularAcceleration": 1080.0
@@ -72,13 +88,13 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.2,
-    "maxAcceleration": 7.5,
+    "maxAcceleration": 7.0,
     "maxAngularVelocity": 670.0,
     "maxAngularAcceleration": 1080.0
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": 180.0,
+    "rotation": -170.5376777919743,
     "rotateFast": false
   },
   "reversed": false,

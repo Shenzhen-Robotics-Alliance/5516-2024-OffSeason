@@ -72,7 +72,7 @@ public final class Constants {
         public static final double DRIVE_TRANSLATIONAL_SENSITIVITY = 1;
         public static final double DRIVE_ROTATIONAL_SENSITIVITY = 1;
 
-        public static final double nonUsageTimeResetWheels = 1;
+        public static final double nonUsageTimeResetWheels = 5;
 
         public static final double deadBandWhenOtherAxisEmpty = 0.02;
         public static final double deadBandWhenOtherAxisFull = 0.1;
@@ -103,10 +103,10 @@ public final class Constants {
 
         public static final MaplePIDController.MaplePIDConfig chassisRotationalPIDConfig = new MaplePIDController.MaplePIDConfig(
                 Math.toRadians(360),
-                Math.toRadians(75),
-                0.03,
+                Math.toRadians(40),
+                0.02,
                 Math.toRadians(3),
-                0.12,
+                0.03,
                 true,
                 0
         );
@@ -226,13 +226,13 @@ public final class Constants {
         public static final double PITCH_HIGHER_LIMIT_RAD = Math.toRadians(94);
 
         public static final double PITCH_KS = 0.03;
-        public static final double PITCH_KG = 0.15;
-        public static final double PITCH_KV = 2.7;
+        public static final double PITCH_KG = 0.12;
+        public static final double PITCH_KV = 3.5;
         public static final double PITCH_KA = 0.01;
 
         public static final MaplePIDController.MaplePIDConfig PITCH_PID = new MaplePIDController.MaplePIDConfig(
                 7.5,
-                Math.toRadians(40),
+                Math.toRadians(26),
                 0,
                 Math.toRadians(2),
                 0.05,
@@ -255,7 +255,7 @@ public final class Constants {
                 6000/0.8, 6000/0.2
         );
 
-        public static final double TOLERANCE_RPM = 100;
+        public static final double TOLERANCE_RPM = 40;
         public static final MaplePIDController.MaplePIDConfig FLYWHEEL_PID_CONFIG = new MaplePIDController.MaplePIDConfig(
                 7,
                 25.526,
