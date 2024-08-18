@@ -19,20 +19,20 @@ public class TestBuilder {
         testsChooser.addOption("Shooter Test", ShooterTest::new);
 
         testsChooser.addOption(
-                "FlyWheel0 SysId Dynamic (Forward)",
-                () -> robotContainer.flyWheels.sysIdRoutines[0].dynamic(SysIdRoutine.Direction.kForward)
+                "FlyWheel1 SysId Dynamic (Forward)",
+                () -> robotContainer.flyWheels.sysIdRoutines[1].dynamic(SysIdRoutine.Direction.kForward)
         );
         testsChooser.addOption(
-                "FlyWheel0 SysId Dynamic (Reverse)",
-                () -> robotContainer.flyWheels.sysIdRoutines[0].dynamic(SysIdRoutine.Direction.kReverse)
+                "FlyWheel1 SysId Dynamic (Reverse)",
+                () -> robotContainer.flyWheels.sysIdRoutines[1].dynamic(SysIdRoutine.Direction.kReverse)
         );
         testsChooser.addOption(
-                "FlyWheel0 SysId Quasi Static (Forward)",
-                () -> robotContainer.flyWheels.sysIdRoutines[0].quasistatic(SysIdRoutine.Direction.kForward)
+                "FlyWheel1 SysId Quasi Static (Forward)",
+                () -> robotContainer.flyWheels.sysIdRoutines[1].quasistatic(SysIdRoutine.Direction.kForward)
         );
         testsChooser.addOption(
-                "FlyWheel0 SysId Quasi Static (Reverse)",
-                () -> robotContainer.flyWheels.sysIdRoutines[0].quasistatic(SysIdRoutine.Direction.kReverse)
+                "FlyWheel1 SysId Quasi Static (Reverse)",
+                () -> robotContainer.flyWheels.sysIdRoutines[1].quasistatic(SysIdRoutine.Direction.kReverse)
         );
         return testsChooser;
     }

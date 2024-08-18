@@ -22,7 +22,7 @@ public class AimAtSpeakerFactory {
                 chassisAimAtSpeaker::isFinished
         );
         final Command waitUntilAimSuccessFullAndShoot = Commands.waitUntil(() -> chassisAimAtSpeaker.isFinished() && aimAtSpeaker.readyToShoot())
-                .withTimeout(1.5)
+                .withTimeout(2)
                 .andThen(intake.executeLaunch());
 
         final Command aimAtSpeakerStill = waitUntilAimSuccessFullAndShoot.deadlineWith(chassisAimAtSpeaker.alongWith(aimAtSpeaker));

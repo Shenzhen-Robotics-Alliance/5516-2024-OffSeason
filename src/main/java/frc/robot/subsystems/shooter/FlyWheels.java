@@ -20,6 +20,7 @@ import org.littletonrobotics.junction.Logger;
 import java.util.function.Consumer;
 
 import static frc.robot.Constants.ShooterConfigs.*;
+import static frc.robot.Constants.ShooterConfigs.kv;
 
 public class FlyWheels extends MapleSubsystem {
     private final FlyWheelIO[] IOs;
@@ -29,7 +30,7 @@ public class FlyWheels extends MapleSubsystem {
 
     /* velocity RPM of the shooter is the position of the trapezoid profile */
     private final TrapezoidProfile speedRPMProfile;
-    private final SimpleMotorFeedforward feedForwardRevPerSec;
+    private final SimpleMotorFeedforward[] feedForwardRevPerSec;
     private final PIDController feedBackRevPerSec;
     private TrapezoidProfile.State currentStateRPM;
     private double goalRPM;
@@ -37,10 +38,14 @@ public class FlyWheels extends MapleSubsystem {
         super("FlyWheels");
         this.IOs = IOs;
 
-        final double kv = Robot.CURRENT_ROBOT_MODE == Constants.RobotMode.SIM
-                ? kv_sim : Constants.ShooterConfigs.kv;
-        this.feedForwardRevPerSec = new SimpleMotorFeedforward(ks, kv, ka);
-        this.feedBackRevPerSec = new MaplePIDController(FLYWHEEL_PID_CONFIG);
+        this.feedBackRevPerSec =  new MaplePIDController(FLYWHEEL_PID_CONFIG_REV_PER_SEC);
+        this.feedForwardRevPerSec = new SimpleMotorFeedforward[IOs.length];
+        for (int i = 0; i < IOs.length; i++) {
+            final double kv = Robot.CURRENT_ROBOT_MODE == Constants.RobotMode.SIM
+                    ? kv_sim : Constants.ShooterConfigs.kv[i];
+            this.feedForwardRevPerSec[i] = new SimpleMotorFeedforward(ks[i], kv, ka[i]);
+        }
+
         this.inputs = new FlyWheelsInputsAutoLogged[IOs.length];
         this.sysIdRoutines = new SysIdRoutine[IOs.length];
         for (int i = 0; i < inputs.length; i++) {
@@ -113,14 +118,14 @@ public class FlyWheels extends MapleSubsystem {
 
     private void runControlLoops() {
         Logger.recordOutput("Shooter/Control Loop Setpoint (RPM)", currentStateRPM.position);
-        final double flyWheelVelocityRevPerSec = currentStateRPM.position / 60,
-                flyWheelAccelerationRevPerSec = currentStateRPM.velocity / 60,
-                feedForwardVoltage = feedForwardRevPerSec.calculate(
-                        flyWheelVelocityRevPerSec,
-                        flyWheelAccelerationRevPerSec
-                );
 
         for (int i = 0; i < IOs.length; i++) {
+            final double flyWheelVelocityRevPerSec = currentStateRPM.position / 60,
+                    flyWheelAccelerationRevPerSec = currentStateRPM.velocity / 60,
+                    feedForwardVoltage = feedForwardRevPerSec[i].calculate(
+                            flyWheelVelocityRevPerSec,
+                            flyWheelAccelerationRevPerSec
+                    );
             final double feedBackVoltage = feedBackRevPerSec.calculate(
                     inputs[i].flyWheelVelocityRevsPerSec,
                     flyWheelVelocityRevPerSec

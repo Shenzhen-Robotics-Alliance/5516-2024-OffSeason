@@ -17,7 +17,6 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.utils.MechanismControl.MaplePIDController;
-import org.photonvision.PhotonPoseEstimator;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -63,7 +62,7 @@ public final class Constants {
         public static final double FIELD_WIDTH = 16.54;
         public static final double FIELD_HEIGHT = 8.21;
 
-        public static final Translation3d SPEAKER_POSE_BLUE = new Translation3d(0, 5.55, 2.2);
+        public static final Translation3d SPEAKER_POSE_BLUE = new Translation3d(0.1, 5.55, 2.2);
 
         public static final Supplier<Translation2d> SPEAKER_POSITION_SUPPLIER = () -> toCurrentAllianceTranslation(SPEAKER_POSE_BLUE.toTranslation2d());
     }
@@ -106,7 +105,7 @@ public final class Constants {
                 Math.toRadians(40),
                 0.02,
                 Math.toRadians(3),
-                0.03,
+                0,
                 true,
                 0
         );
@@ -246,17 +245,17 @@ public final class Constants {
     }
 
     public static final class ShooterConfigs {
-        public static final double ks = 0.05;
-        public static final double kv = 0.11856;
+        public static final double[] ks = new double[] {0.05, 0.05};
+        public static final double[] kv = new double[] {0.11613, 0.1145};
         public static final double kv_sim = 0.17;
-        public static final double ka = 0.021026;
+        public static final double[] ka = new double[] {0.026625, 0.028551};
 
         public static final TrapezoidProfile.Constraints SPEED_RPM_CONSTRAINS = new TrapezoidProfile.Constraints(
                 6000/0.8, 6000/0.2
         );
 
         public static final double TOLERANCE_RPM = 60;
-        public static final MaplePIDController.MaplePIDConfig FLYWHEEL_PID_CONFIG = new MaplePIDController.MaplePIDConfig(
+        public static final MaplePIDController.MaplePIDConfig FLYWHEEL_PID_CONFIG_REV_PER_SEC = new MaplePIDController.MaplePIDConfig(
                 7,
                 25.526,
                 0,

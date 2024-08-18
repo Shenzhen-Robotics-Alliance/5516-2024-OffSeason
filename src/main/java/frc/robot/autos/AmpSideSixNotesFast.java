@@ -43,7 +43,7 @@ public class AmpSideSixNotesFast extends Auto {
         /* move and shoot second */
         super.addCommands(new FollowPathGrabAndShootStill(
                 PathPlannerPath.fromPathFile("shoot second fast"),
-                1.2,
+                2,
                 robot.drive, robot.intake, robot.pitch, robot.flyWheels, robot.shooterOptimization, robot.ledStatusLight
         ));
         super.addCommands(AutoUtils.setIdleForSuperStructureCommand(robot));
@@ -53,7 +53,7 @@ public class AmpSideSixNotesFast extends Auto {
         final Command moveToThirdNormal = AutoBuilder.followPath(PathPlannerPath.fromPathFile("move to third fast"));
         final Command moveToThirdAlter = AutoBuilder.followPath(PathPlannerPath.fromPathFile("move to third fast alter"));
         final Command moveToThirdDecisive = new CommandOnFly(() -> noteFightFailed[0] ? moveToThirdAlter : moveToThirdNormal)
-                .alongWith(robot.pitch.getPitchDefaultCommand());
+                .deadlineWith(robot.pitch.getPitchDefaultCommand());
         final Command intakeThird = Commands.waitSeconds(1)
                 .andThen(robot.intake.suckNoteUntilTouching());
         super.addCommands(intakeThird.raceWith(moveToThirdDecisive));
@@ -61,28 +61,28 @@ public class AmpSideSixNotesFast extends Auto {
         /* shoot third */
         super.addCommands(new FollowPathGrabAndShootStill(
                 PathPlannerPath.fromPathFile("move to shoot third fast"),
-                1.5,
+                1.2,
                 robot.drive, robot.intake, robot.pitch, robot.flyWheels, robot.shooterOptimization, robot.ledStatusLight
         ));
 
         /* grab fourth and shoot */
         super.addCommands(new FollowPathGrabAndShootStill(
                 PathPlannerPath.fromPathFile("grab fourth and shoot fast"),
-                0,
+                0.8,
                 robot.drive, robot.intake, robot.pitch, robot.flyWheels, robot.shooterOptimization, robot.ledStatusLight
         ));
 
         /* grab fifth and shoot */
         super.addCommands(new FollowPathGrabAndShootStill(
                 PathPlannerPath.fromPathFile("grab fifth and shoot fast"),
-                0.6,
+                0.8,
                 robot.drive, robot.intake, robot.pitch, robot.flyWheels, robot.shooterOptimization, robot.ledStatusLight
         ));
 
         /* grab sixth and shoot */
         super.addCommands(new FollowPathGrabAndShootStill(
                 PathPlannerPath.fromPathFile("grab sixth and shoot fast"),
-                0.6,
+                0.8,
                 robot.drive, robot.intake, robot.pitch, robot.flyWheels, robot.shooterOptimization, robot.ledStatusLight
         ));
     }

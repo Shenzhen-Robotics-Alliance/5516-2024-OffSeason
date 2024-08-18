@@ -17,17 +17,22 @@ import frc.robot.utils.MapleShooterOptimization;
 import static frc.robot.Constants.CrescendoField2024Constants.SPEAKER_POSITION_SUPPLIER;
 
 public class FollowPathGrabAndShootStill extends SequentialCommandGroup {
-    public FollowPathGrabAndShootStill(PathPlannerPath pathAtBlueAlliance, double delaySecondsUntilStartAiming, HolonomicDriveSubsystem driveSubsystem, Intake intake, Pitch pitch, FlyWheels flyWheels, MapleShooterOptimization shooterOptimization, LEDStatusLight statusLight) {
-        final Command followPath = AutoBuilder.followPath(pathAtBlueAlliance);
+    public FollowPathGrabAndShootStill(PathPlannerPath pathAtBlueAlliance, double distanceToTargetMetersStartPreparing, HolonomicDriveSubsystem driveSubsystem, Intake intake, Pitch pitch, FlyWheels flyWheels, MapleShooterOptimization shooterOptimization, LEDStatusLight statusLight) {
+        final Command followPath = AutoBuilder.followPath(pathAtBlueAlliance)
+                .andThen(Commands.runOnce(driveSubsystem::stop, driveSubsystem))
+                .andThen(Commands.waitSeconds(0.8));
         final Command intakeDuringFollowPath = intake.executeIntakeNote();
-        final Command prepareToShootDuringFollowPath = Commands.waitSeconds(delaySecondsUntilStartAiming)
+        final Command prepareToShootDuringFollowPath = Commands.waitUntil(
+                () -> MaplePathPlannerLoader.getEndingRobotPoseInCurrentAllianceSupplier(pathAtBlueAlliance).get().getTranslation()
+                        .getDistance(driveSubsystem.getPose().getTranslation()) < distanceToTargetMetersStartPreparing
+                )
                 .andThen(new PrepareToAim(
                         flyWheels, pitch, shooterOptimization, statusLight,
                         () -> MaplePathPlannerLoader.getEndingRobotPoseInCurrentAllianceSupplier(pathAtBlueAlliance).get().getTranslation(),
                         SPEAKER_POSITION_SUPPLIER)
                 );
 
-        super.addCommands(followPath.deadlineWith(intakeDuringFollowPath.alongWith(prepareToShootDuringFollowPath)));
+        super.addCommands(followPath.raceWith(intakeDuringFollowPath.alongWith(prepareToShootDuringFollowPath)));
 
         super.addCommands(AimAtSpeakerFactory.shootAtSpeakerStill(driveSubsystem, intake, pitch, flyWheels, shooterOptimization, statusLight));
     }

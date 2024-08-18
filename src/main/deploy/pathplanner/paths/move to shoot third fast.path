@@ -65,6 +65,11 @@
       "waypointRelativePos": 2.0,
       "rotationDegrees": 180.0,
       "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 2.8,
+      "rotationDegrees": 180.0,
+      "rotateFast": false
     }
   ],
   "constraintZones": [
@@ -89,8 +94,8 @@
   },
   "goalEndState": {
     "velocity": 1.5,
-    "rotation": 179.78541006887068,
-    "rotateFast": false
+    "rotation": -157.1521759318685,
+    "rotateFast": true
   },
   "reversed": false,
   "folder": "Amp Side Six Note",
