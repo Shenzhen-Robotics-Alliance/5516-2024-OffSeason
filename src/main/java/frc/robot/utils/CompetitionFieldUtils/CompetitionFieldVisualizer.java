@@ -11,11 +11,10 @@ import org.littletonrobotics.junction.Logger;
 import java.util.*;
 
 /**
- * this class stores and displays a competition field
- * that includes the robot, the opponent robots and game pieces on field
- * notice that this class only stores and displays the field information to dashboard/advantage scope
- * it does not update the field status
- * the field should be updated either by the vision system during a real competition or by the Maple Physics Simulation during a simulated competition
+ * visualizes a competition field on dashboard & Advantage Scope
+ * displays robots, opponent robots and game pieces on field
+ * the source of these information should either be captured from a vision system during a real competition
+ * or by the Maple Physics Simulation during a simulated competition
  * */
 public class CompetitionFieldVisualizer {
     public interface ObjectOnFieldDisplay {

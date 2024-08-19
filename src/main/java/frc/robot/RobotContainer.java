@@ -306,19 +306,6 @@ public class RobotContainer {
                 drive
                 ).ignoringDisable(true)
         );
-//        driverController.y().whileTrue(new AutoAlignment(
-//                drive,
-//                () -> Constants.toCurrentAlliancePose(new Pose2d(
-//                        1.85, 7,
-//                        Rotation2d.fromDegrees(-90)
-//                )),
-//                () -> Constants.toCurrentAlliancePose(new Pose2d(
-//                        1.85, 7.7,
-//                        Rotation2d.fromDegrees(-90)
-//                )),
-//                new Pose2d(0.1, 0.1, Rotation2d.fromDegrees(3)),
-//                0.75
-//        ));
 
         /* intake commands */
         driverXBox.leftTrigger(0.5).whileTrue(intake.executeIntakeNote(
@@ -350,18 +337,12 @@ public class RobotContainer {
         );
         driverXBox.rightTrigger(0.5).whileTrue(faceTargetWhileDrivingLowSpeed.raceWith(semiAutoAimAndShoot));
 
-//        driverXBox.rightBumper().whileTrue(new PathFindToPoseAndShootSequence(
-//                intake, pitch, flyWheels, shooterOptimization, drive,
-//                () -> Constants.toCurrentAllianceTranslation(new Translation2d(4.37, 4.98)),
-//                () -> Constants.toCurrentAllianceTranslation(new Translation2d(3.39, 5.94)),
-//                Constants.CrescendoField2024Constants.SPEAKER_POSITION_SUPPLIER,
-//                ledStatusLight
-//        ));
-
-        driverXBox.rightBumper().whileTrue(AutoStageShootingCommandsFactory.followPathGrabAndShoot(
-                PathPlannerPath.fromPathFile("test shoot"),
-                drive, intake, pitch, flyWheels, shooterOptimization, ledStatusLight,
-                false
+        driverXBox.rightBumper().whileTrue(new PathFindToPoseAndShootSequence(
+                intake, pitch, flyWheels, shooterOptimization, drive,
+                () -> Constants.toCurrentAllianceTranslation(new Translation2d(4.37, 4.98)),
+                () -> Constants.toCurrentAllianceTranslation(new Translation2d(3.39, 5.94)),
+                Constants.CrescendoField2024Constants.SPEAKER_POSITION_SUPPLIER,
+                ledStatusLight
         ));
 
         // simulation testing commands
