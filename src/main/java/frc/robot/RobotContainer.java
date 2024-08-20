@@ -325,7 +325,7 @@ public class RobotContainer {
 
         /* feed shot */
         driverXBox.b()
-                .onTrue(FeedShot.prepareToFeedForever(pitch, flyWheels, intake))
+                .onTrue(FeedShot.prepareToFeedForever(pitch, flyWheels))
                 .onFalse(FeedShot.shootFeed(pitch, flyWheels, intake));
 
         /* aim and shoot command */

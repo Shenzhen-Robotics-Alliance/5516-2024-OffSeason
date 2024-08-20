@@ -8,26 +8,25 @@ import frc.robot.subsystems.shooter.FlyWheels;
 import frc.robot.subsystems.shooter.Pitch;
 
 public class FeedShot {
-    public static Command prepareToFeedForever(Pitch pitch, FlyWheels flyWheels, Intake intake) {
+    public static Command prepareToFeedForever(Pitch pitch, FlyWheels flyWheels) {
         final Command preparePitch = Commands.run(() -> pitch.runSetPointProfiled(Constants.PitchConfigs.PITCH_LOWEST_ROTATION_RAD), pitch),
-                prepareFlyWheels = Commands.run(() -> flyWheels.runRPMProfiled(2500), flyWheels),
-                runIntakeIdle = Commands.run(intake::runIdle, intake);
+                prepareFlyWheels = Commands.run(() -> flyWheels.runRPMProfiled(2500), flyWheels);
 
 
-        return preparePitch.alongWith(prepareFlyWheels).alongWith(runIntakeIdle);
+        return preparePitch.alongWith(prepareFlyWheels);
     }
 
-    public static Command prepareToFeedUntilReady(Pitch pitch, FlyWheels flyWheels, Intake intake) {
-        return prepareToFeedForever(pitch, flyWheels, intake).until(
+    public static Command prepareToFeedUntilReady(Pitch pitch, FlyWheels flyWheels) {
+        return prepareToFeedForever(pitch, flyWheels).until(
                 () -> pitch.inPosition()
                 && flyWheels.flyWheelsReady()
         );
     }
 
     public static Command shootFeed(Pitch pitch, FlyWheels flyWheels, Intake intake) {
-        return prepareToFeedUntilReady(pitch, flyWheels, intake).andThen(
+        return prepareToFeedUntilReady(pitch, flyWheels).andThen(
                 intake.executeIntakeNote()
-                        .deadlineWith(prepareToFeedForever(pitch, flyWheels, intake))
+                        .deadlineWith(prepareToFeedForever(pitch, flyWheels))
         );
     }
 }

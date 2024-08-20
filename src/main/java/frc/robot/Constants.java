@@ -251,7 +251,7 @@ public final class Constants {
         public static final double[] ka = new double[] {0.026625, 0.028551};
 
         public static final TrapezoidProfile.Constraints SPEED_RPM_CONSTRAINS = new TrapezoidProfile.Constraints(
-                6000/0.6, 6000/0.3
+                6000/0.5, 6000/0.3
         );
 
         public static final double TOLERANCE_RPM = 60;

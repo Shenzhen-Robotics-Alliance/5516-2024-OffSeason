@@ -66,6 +66,7 @@ public class FlyWheels extends MapleSubsystem {
         for (int i = 0; i < IOs.length; i++)
             flyWheelPeriodic(i);
 
+        Logger.recordOutput("Shooter/FlyWheelsGoalRPM", goalRPM);
         SmartDashboard.putBoolean("FlyWheels Ready", flyWheelsReady());
         SmartDashboard.putNumber("FlyWheels Actual RPM", inputs[0].flyWheelVelocityRevsPerSec * 60);
     }
@@ -92,6 +93,7 @@ public class FlyWheels extends MapleSubsystem {
 
     public void runIdle() {
         for (FlyWheelIO io : IOs) io.runVoltage(0);
+        goalRPM = 0;
     }
 
     private void runVolts(int index, double volts) {
