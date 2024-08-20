@@ -4,15 +4,11 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.util.function.BooleanConsumer;
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -243,6 +239,7 @@ public class RobotContainer {
     private boolean isDSPresentedAsRed = Constants.isSidePresentedAsRed();
     private boolean isLeftHanded = true;
     private Command autonomousCommand = Commands.none();
+    private Pose2d autonomousStartingPoseBlueAlliance = new Pose2d();
     private Supplier<Auto> autoChooserSelected = null;
     /**
      * reconfigures button bindings if alliance station has changed
@@ -261,6 +258,7 @@ public class RobotContainer {
             this.autonomousCommand = auto
                     .beforeStarting(() -> resetFieldAndOdometryForAuto(auto))
                     .finallyDo(MapleSubsystem::disableSubsystems);
+            autonomousStartingPoseBlueAlliance = auto.getStartingPoseAtBlueAlliance();
         }
         autoChooserSelected = autoChooserNewSelected;
     }
@@ -269,7 +267,6 @@ public class RobotContainer {
         final Pose2d startingPose = Constants.toCurrentAlliancePose(
                 auto.getStartingPoseAtBlueAlliance()
         );
-        drive.setPose(startingPose);
 
         if (fieldSimulation == null) return;
         fieldSimulation.getMainRobot().setSimulationWorldPose(startingPose);
@@ -302,7 +299,10 @@ public class RobotContainer {
                 2
         ));
         driverXBox.start().onTrue(Commands.runOnce(
-                () -> drive.setPose(new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
+                () -> drive.setPose(DriverStation.isEnabled() ?
+                        new Pose2d(drive.getPose().getTranslation(), Constants.getDriverStationFacing())
+                        : Constants.toCurrentAlliancePose(autonomousStartingPoseBlueAlliance)
+                ),
                 drive
                 ).ignoringDisable(true)
         );

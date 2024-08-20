@@ -46,7 +46,7 @@ public class ChassisFaceToRotation extends Command {
 
     @Override
     public boolean isFinished() {
-        return driveSubsystem.getFacing().minus(targetRotationSupplier.get()).getRadians() < tolerance.getRadians();
+        return Math.abs(driveSubsystem.getFacing().minus(targetRotationSupplier.get()).getRadians()) < tolerance.getRadians();
     }
 
     public static ChassisFaceToRotation faceToTarget(HolonomicDriveSubsystem driveSubsystem, Supplier<Translation2d> targetPositionSupplier) {

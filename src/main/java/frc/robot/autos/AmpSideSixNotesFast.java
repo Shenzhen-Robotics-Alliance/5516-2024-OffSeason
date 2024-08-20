@@ -88,6 +88,6 @@ public class AmpSideSixNotesFast extends Auto {
     }
     @Override
     public Pose2d getStartingPoseAtBlueAlliance() {
-        return new Pose2d(1.47, 6.32, Rotation2d.fromDegrees(180));
+        return new Pose2d(1.47, 6.32, Rotation2d.fromDegrees(-150));
     }
 }

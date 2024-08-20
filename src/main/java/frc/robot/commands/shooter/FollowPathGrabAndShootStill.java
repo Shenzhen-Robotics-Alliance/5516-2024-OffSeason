@@ -20,7 +20,7 @@ public class FollowPathGrabAndShootStill extends SequentialCommandGroup {
     public FollowPathGrabAndShootStill(PathPlannerPath pathAtBlueAlliance, double distanceToTargetMetersStartPreparing, HolonomicDriveSubsystem driveSubsystem, Intake intake, Pitch pitch, FlyWheels flyWheels, MapleShooterOptimization shooterOptimization, LEDStatusLight statusLight) {
         final Command followPath = AutoBuilder.followPath(pathAtBlueAlliance)
                 .andThen(Commands.runOnce(driveSubsystem::stop, driveSubsystem))
-                .andThen(Commands.waitSeconds(1));
+                .andThen(Commands.waitUntil(intake::isNotePresent).raceWith(Commands.waitSeconds(1)));
         final Command intakeDuringFollowPath = intake.executeIntakeNote();
         final Command prepareToShootDuringFollowPath = Commands.waitUntil(
                 () -> MaplePathPlannerLoader.getEndingRobotPoseInCurrentAllianceSupplier(pathAtBlueAlliance).get().getTranslation()
@@ -32,7 +32,9 @@ public class FollowPathGrabAndShootStill extends SequentialCommandGroup {
                         SPEAKER_POSITION_SUPPLIER)
                 );
 
-        super.addCommands(followPath.raceWith(intakeDuringFollowPath).deadlineWith(prepareToShootDuringFollowPath));
+        super.addCommands(followPath.deadlineWith(
+                intakeDuringFollowPath.alongWith(prepareToShootDuringFollowPath)
+        ));
 
         super.addCommands(AimAtSpeakerFactory.shootAtSpeakerStill(driveSubsystem, intake, pitch, flyWheels, shooterOptimization, statusLight));
     }

@@ -1,13 +1,13 @@
 {
   "hubs": [
     {
-      "x": -348,
-      "y": -864,
-      "width": 1038,
-      "height": 823,
+      "x": 542,
+      "y": 250,
+      "width": 1106,
+      "height": 651,
       "state": {
         "sidebar": {
-          "width": 277,
+          "width": 306,
           "expanded": [
             "/robot pos/rotation",
             "/robot pos/translation",
@@ -45,12 +45,10 @@
             "/Shuffleboard/led",
             "/match-simulation",
             "/Log0/NT/SmartDashboard/PDP",
-            "/ReplayOutputs/Odometry",
             "/ReplayOutputs/Odometry/Robot/rotation",
             "/AdvantageKit/Sensors",
             "/AdvantageKit/Sensors/DigitalSwitches",
             "/AdvantageKit/Sensors/DigitalSwitches/test switch 1",
-            "/ReplayOutputs",
             "/AdvantageKit/RawInputs/DigitalSwitchtest switch 1",
             "/RawInputs/DigitalSwitchtest switch 1",
             "/Robot",
@@ -162,8 +160,6 @@
             "/AdvantageKit/RealOutputs/MaplePhysicsSimulation/Chassis",
             "/AdvantageKit/RealOutputs/TestPitch",
             "/AdvantageKit/RealOutputs/Test Path distance",
-            "/RealOutputs/Odometry/RobotPosition/rotation",
-            "/RealOutputs/SwerveStates/Measured",
             "/RealOutputs/SwerveStates/Measured/0",
             "/AdvantageKit/RealOutputs/DummyIntake",
             "/AdvantageKit/RealOutputs/TestPitch/lower gate",
@@ -176,95 +172,60 @@
             "/AdvantageKit/RealOutputs/Vision/Filtering/RobotPose3dsResults/0/rotation",
             "/AdvantageKit/RealOutputs/Vision/Filtering/RobotPose3dsResults/0/rotation/q",
             "/AdvantageKit/RealOutputs/Vision/AprilTags",
-            "/AdvantageKit/RealOutputs/Vision/AprilTags/Filtering",
             "/AdvantageKit/RealOutputs/Vision/AprilTags/Results/Estimated Pose/translation",
             "/AdvantageKit/RealOutputs/Test",
             "/AdvantageKit/RealOutputs/Test/pose estimation",
             "/AdvantageKit/RealOutputs/Test/pose estimation/translation",
             "/RealOutputs/Vision/AprilTags/Filtering",
-            "/RealOutputs/Vision/AprilTags",
             "/RealOutputs/Vision/AprilTags/Filtering/RobotPose3dsResults",
             "/RealOutputs/Vision/AprilTags/Filtering/RobotPose3dsResults/0",
-            "/ReplayOutputs/Vision",
             "/ReplayOutputs/Vision/AprilTags",
             "/ReplayOutputs/Vision/AprilTags/Filtering",
             "/AdvantageKit/RealOutputs/TestShooter",
-            "/AdvantageKit",
             "/AdvantageKit/RealOutputs/Vision/AprilTags/Results/Estimated Pose",
-            "/RealOutputs",
             "/ReplayOutputs/Vision/AprilTags/Results",
-            "/ReplayOutputs/Vision/AprilTags/Filtering/AprilTagsObservedPositions",
             "/RealOutputs/Vision/AprilTags/Results/Estimated Pose",
             "/RealOutputs/Vision/AprilTags/Results/Estimated Pose/translation",
             "/ReplayOutputs/Vision/AprilTags/Filtering/RobotPose3dsResults/0",
             "/ReplayOutputs/Vision/AprilTags/Filtering/RobotPose3dsResults/0/translation",
             "/AdvantageKit/RealOutputs/Intake",
             "/AdvantageKit/Intake",
-            "/SmartDashboard/Status Light",
-            "/RealOutputs/SystemPerformance",
-            "/RealOutputs/Odometry",
             "/Vision/AprilTags",
-            "/RealOutputs/Vision",
-            "/SmartDashboard/Field",
             "/AdvantageKit/RealOutputs/ShooterStateOptimization",
             "/AdvantageKit/RealOutputs/ShooterStateOptimization/ShooterFacing",
-            "/SmartDashboard/Alerts",
             "/SmartDashboard/Alerts/warnings",
-            "/AdvantageKit/RealOutputs",
-            "/AdvantageKit/RealOutputs/Shooter",
-            "/SmartDashboard/InterpolationTables",
             "/SmartDashboard/InterpolationTables/MainShooter",
             "/AdvantageKit/Shooter/Pitch",
-            "/photonvision/FrontCam",
             "/AdvantageKit/Drive/Module-BackLeft/OdometrySteerPositions/0",
             "/AdvantageKit/Drive/Module-BackLeft/OdometrySteerPositions/1",
-            "/AdvantageKit/PowerDistribution",
-            "/AdvantageKit/Vision",
             "/AdvantageKit/Vision/AprilTags",
             "/AdvantageKit/RealOutputs/Test/Mechanism",
             "/AdvantageKit/RealOutputs/Field/Note/20",
+            "/AdvantageKit/RealOutputs",
+            "/RealOutputs/Vision/AprilTags/Results",
+            "/photonvision/FrontRightCam",
+            "/AdvantageKit/RealOutputs/Odometry",
+            "/AdvantageKit/RealOutputs/DriveToPoseCMD",
+            "/AdvantageKit/RealOutputs/AutoShooting",
+            "/AdvantageKit/RealOutputs/Field/Robot",
+            "/FlyWheels",
             "/AdvantageKit/RealOutputs/Field",
-            "/AdvantageKit/RealOutputs/Vision"
+            "/AdvantageKit",
+            "/AdvantageKit/RealOutputs/Vision",
+            "/RealOutputs",
+            "/RealOutputs/Odometry/RobotPosition",
+            "/ReplayOutputs",
+            "/DriverStation",
+            "/AdvantageKit/RealOutputs/Shooter",
+            "/AdvantageKit/RealOutputs/SwerveStates"
           ]
         },
         "tabs": {
-          "selected": 5,
+          "selected": 4,
           "tabs": [
             {
               "type": 0,
               "path": "../docs/INDEX.md"
-            },
-            {
-              "type": 1,
-              "legendHeight": 0.2980561555075594,
-              "legends": {
-                "left": {
-                  "lockedRange": null,
-                  "unitConversion": {
-                    "type": null,
-                    "factor": 1
-                  },
-                  "fields": [
-                    {
-                      "key": "NT:/AdvantageKit/RealOutputs/LoggedRobot/FullCycleMS",
-                      "color": "#2b66a2",
-                      "show": true
-                    }
-                  ]
-                },
-                "discrete": {
-                  "fields": []
-                },
-                "right": {
-                  "lockedRange": null,
-                  "unitConversion": {
-                    "type": null,
-                    "factor": 1
-                  },
-                  "fields": []
-                }
-              },
-              "title": "Line Graph"
             },
             {
               "type": 1,
@@ -278,19 +239,25 @@
                   },
                   "fields": [
                     {
-                      "key": "NT:/AdvantageKit/RealOutputs/Shooter/Pitch Actual Position (Deg)",
+                      "key": "/RealOutputs/Shooter/FlyWheel0 Measured RPM",
                       "color": "#2b66a2",
                       "show": true
                     },
                     {
-                      "key": "NT:/AdvantageKit/RealOutputs/Shooter/Pitch Control Loop SetPoint (Deg)",
+                      "key": "/RealOutputs/Shooter/FlyWheel1 Measured RPM",
                       "color": "#e5b31b",
                       "show": true
                     }
                   ]
                 },
                 "discrete": {
-                  "fields": []
+                  "fields": [
+                    {
+                      "key": "/DriverStation/Enabled",
+                      "color": "#af2437",
+                      "show": true
+                    }
+                  ]
                 },
                 "right": {
                   "lockedRange": null,
@@ -298,13 +265,7 @@
                     "type": null,
                     "factor": 1
                   },
-                  "fields": [
-                    {
-                      "key": "NT:/AdvantageKit/RealOutputs/Shooter/Pitch Control Voltage",
-                      "color": "#af2437",
-                      "show": true
-                    }
-                  ]
+                  "fields": []
                 }
               },
               "title": "Line Graph"
@@ -312,7 +273,7 @@
             {
               "type": 4,
               "fields": [
-                "NT:/AdvantageKit/RealOutputs/LoggedRobot/FullCycleMS",
+                "/RealOutputs/LoggedRobot/FullCycleMS",
                 null,
                 null
               ],
@@ -336,8 +297,16 @@
                   "sourceTypeIndex": 1,
                   "sourceType": "SwerveModuleState[]"
                 },
-                null,
-                null
+                {
+                  "key": "NT:/AdvantageKit/RealOutputs/SwerveStates/SetpointsOptimized",
+                  "sourceTypeIndex": 1,
+                  "sourceType": "SwerveModuleState[]"
+                },
+                {
+                  "key": "NT:/AdvantageKit/RealOutputs//Field/Robot/rotation",
+                  "sourceTypeIndex": 1,
+                  "sourceType": "Rotation2d"
+                }
               ],
               "listFields": [],
               "options": {
@@ -359,13 +328,19 @@
               "listFields": [
                 [
                   {
-                    "type": "Game Piece 0",
-                    "key": "NT:/AdvantageKit/RealOutputs//Field/Note",
+                    "type": "Vision Target",
+                    "key": "NT:/AdvantageKit/RealOutputs/Vision/AprilTags/Filtering/VisibleFieldTargets",
                     "sourceTypeIndex": 2,
                     "sourceType": "Pose3d[]"
                   },
                   {
                     "type": "Component (Robot)",
+                    "key": "NT:/AdvantageKit/RealOutputs/Shooter/MechanismPose",
+                    "sourceTypeIndex": 1,
+                    "sourceType": "Pose3d"
+                  },
+                  {
+                    "type": "Component (Ghost)",
                     "key": "NT:/AdvantageKit/RealOutputs/Shooter/MechanismPose",
                     "sourceTypeIndex": 1,
                     "sourceType": "Pose3d"
@@ -377,14 +352,14 @@
                     "sourceType": "Pose3d"
                   },
                   {
-                    "type": "AprilTag 36h11",
-                    "key": "NT:/AdvantageKit/RealOutputs/Vision/AprilTags/Filtering/AprilTagsObservedPositions/",
+                    "type": "Game Piece 0",
+                    "key": "NT:/AdvantageKit/RealOutputs//Field/Note",
                     "sourceTypeIndex": 2,
                     "sourceType": "Pose3d[]"
                   },
                   {
-                    "type": "Vision Target",
-                    "key": "NT:/AdvantageKit/RealOutputs/Vision/AprilTags/Filtering/VisibleFieldTargets",
+                    "type": "AprilTag 36h11",
+                    "key": "NT:/AdvantageKit/RealOutputs/Vision/AprilTags/Filtering/AprilTagsObservedPositions/",
                     "sourceTypeIndex": 2,
                     "sourceType": "Pose3d[]"
                   }
@@ -393,6 +368,12 @@
                   {
                     "type": "Robot",
                     "key": "NT:/AdvantageKit/RealOutputs//Field/Robot",
+                    "sourceTypeIndex": 1,
+                    "sourceType": "Pose2d"
+                  },
+                  {
+                    "type": "Blue Ghost",
+                    "key": "NT:/AdvantageKit/RealOutputs/Odometry/RobotPosition",
                     "sourceTypeIndex": 1,
                     "sourceType": "Pose2d"
                   },
@@ -413,20 +394,54 @@
               },
               "configHidden": false,
               "visualizer": {
-                "cameraIndex": -1,
+                "cameraIndex": -2,
                 "orbitFov": 50,
                 "cameraPosition": [
-                  -12.762359774598426,
-                  9.663903994255952,
-                  -1.049588138396124
+                  -0.9236389870219154,
+                  5.36467495255633,
+                  0.7396750325579904
                 ],
                 "cameraTarget": [
-                  1.1948939798174762,
-                  -1.631171342050277,
-                  -0.7554903381262129
+                  -0.9236298347002121,
+                  -3.7878792372944576,
+                  0.7396750977932326
                 ]
               },
               "title": "3D Field"
+            },
+            {
+              "type": 5,
+              "uuid": "b8csdcnkbuu99kabqsgt7rgw0q86yx3z",
+              "fields": [],
+              "listFields": [
+                [
+                  {
+                    "type": "Robot",
+                    "key": "NT:/AdvantageKit/RealOutputs//Field/Robot",
+                    "sourceTypeIndex": 1,
+                    "sourceType": "Pose2d"
+                  },
+                  {
+                    "type": "Trajectory",
+                    "key": "NT:/AdvantageKit/RealOutputs/Odometry/Trajectory",
+                    "sourceTypeIndex": 2,
+                    "sourceType": "Pose2d[]"
+                  }
+                ]
+              ],
+              "options": {
+                "game": "2024 Field",
+                "unitDistance": "meters",
+                "unitRotation": "radians",
+                "origin": "right",
+                "size": 0.75,
+                "allianceBumpers": "auto",
+                "allianceOrigin": "blue",
+                "orientation": "blue left, red right"
+              },
+              "configHidden": false,
+              "visualizer": null,
+              "title": "Odometry"
             },
             {
               "type": 8,
@@ -454,103 +469,6 @@
       }
     }
   ],
-  "satellites": [
-    {
-      "x": 675,
-      "y": -860,
-      "width": 476,
-      "height": 357,
-      "state": {
-        "type": 6,
-        "visualizer": {
-          "cameraIndex": 1,
-          "orbitFov": 50,
-          "cameraPosition": [
-            -4.418674090818925,
-            0.20000000000000095,
-            2.151137455571344
-          ],
-          "cameraTarget": [
-            0,
-            0.5,
-            0
-          ]
-        }
-      },
-      "uuid": "3jgcb77605yuam6hhn1qlcgydiu5cklf"
-    },
-    {
-      "x": 1241,
-      "y": -860,
-      "width": 408,
-      "height": 306,
-      "state": {
-        "type": 6,
-        "visualizer": {
-          "cameraIndex": 3,
-          "orbitFov": 50,
-          "cameraPosition": [
-            -4.184322749595476,
-            0.20000000000000093,
-            2.064077425323415
-          ],
-          "cameraTarget": [
-            0,
-            0.5,
-            0
-          ]
-        }
-      },
-      "uuid": "3jgcb77605yuam6hhn1qlcgydiu5cklf"
-    },
-    {
-      "x": 787,
-      "y": -547,
-      "width": 484,
-      "height": 363,
-      "state": {
-        "type": 6,
-        "visualizer": {
-          "cameraIndex": 0,
-          "orbitFov": 50,
-          "cameraPosition": [
-            -4.1548644874003715,
-            0.2000000000000009,
-            1.9997951510291392
-          ],
-          "cameraTarget": [
-            0,
-            0.5,
-            0
-          ]
-        }
-      },
-      "uuid": "3jgcb77605yuam6hhn1qlcgydiu5cklf"
-    },
-    {
-      "x": 1186,
-      "y": -489,
-      "width": 526,
-      "height": 395,
-      "state": {
-        "type": 6,
-        "visualizer": {
-          "cameraIndex": 2,
-          "orbitFov": 50,
-          "cameraPosition": [
-            -3.8562308718826466,
-            0.20000000000000087,
-            1.942193382976314
-          ],
-          "cameraTarget": [
-            0,
-            0.5,
-            0
-          ]
-        }
-      },
-      "uuid": "3jgcb77605yuam6hhn1qlcgydiu5cklf"
-    }
-  ],
+  "satellites": [],
   "version": "3.2.1"
 }
