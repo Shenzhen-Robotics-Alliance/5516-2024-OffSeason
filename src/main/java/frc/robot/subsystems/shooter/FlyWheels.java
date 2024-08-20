@@ -20,7 +20,6 @@ import org.littletonrobotics.junction.Logger;
 import java.util.function.Consumer;
 
 import static frc.robot.Constants.ShooterConfigs.*;
-import static frc.robot.Constants.ShooterConfigs.kv;
 
 public class FlyWheels extends MapleSubsystem {
     private final FlyWheelIO[] IOs;

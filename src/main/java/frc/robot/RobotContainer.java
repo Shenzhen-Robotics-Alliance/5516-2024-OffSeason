@@ -323,6 +323,12 @@ public class RobotContainer {
 //                )))
                 .onFalse(new ScoreAmp(intake, pitch, flyWheels, ledStatusLight));
 
+        /* feed shot */
+        driverXBox.b()
+                .onTrue(FeedShot.prepareToFeedForever(pitch, flyWheels, intake))
+                .onFalse(FeedShot.shootFeed(pitch, flyWheels, intake));
+
+        /* aim and shoot command */
         final JoystickDriveAndAimAtTarget faceTargetWhileDrivingLowSpeed = new JoystickDriveAndAimAtTarget(
                 driveInput, drive,
                 Constants.CrescendoField2024Constants.SPEAKER_POSITION_SUPPLIER,

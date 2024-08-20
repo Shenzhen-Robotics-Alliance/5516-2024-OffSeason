@@ -251,15 +251,15 @@ public final class Constants {
         public static final double[] ka = new double[] {0.026625, 0.028551};
 
         public static final TrapezoidProfile.Constraints SPEED_RPM_CONSTRAINS = new TrapezoidProfile.Constraints(
-                6000/0.8, 6000/0.2
+                6000/0.6, 6000/0.3
         );
 
         public static final double TOLERANCE_RPM = 60;
         public static final MaplePIDController.MaplePIDConfig FLYWHEEL_PID_CONFIG_REV_PER_SEC = new MaplePIDController.MaplePIDConfig(
                 7,
-                18,
+                24,
                 0,
-                5,
+                2,
                 0, false, 0
         );
     }
