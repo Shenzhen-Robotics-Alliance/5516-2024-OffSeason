@@ -229,7 +229,7 @@ public class RobotContainer {
         this.shooterOptimization = new MapleShooterOptimization(
                 "MainShooter",
                 new double[] {1.4, 2, 3, 3.5, 4, 4.5, 4.8},
-                new double[] {54, 49, 37, 33.5, 30.5, 25, 25},
+                new double[] {54, 46, 34.5, 33, 30.5, 25, 25},
                 new double[] {3000, 3000, 3500, 3700, 4000, 4300, 4500},
                 new double[] {0.1, 0.1, 0.1, 0.12, 0.12, 0.15, 0.15}
         );
@@ -322,7 +322,12 @@ public class RobotContainer {
                 ledStatusLight,
                 driverXBox.getHID()
         ));
-        driverXBox.a().whileTrue(Commands.run(intake::runInvertVoltage));
+        driverXBox.a().whileTrue(Commands.run(
+                () -> {
+                    intake.runInvertVoltage();
+                    flyWheels.forceMaxRevert();
+                }
+        ));
 
         /* amp command */
         driverXBox.y()

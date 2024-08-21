@@ -25,7 +25,8 @@ public class FeedShot {
 
     public static Command shootFeed(Pitch pitch, FlyWheels flyWheels, Intake intake) {
         return prepareToFeedUntilReady(pitch, flyWheels).andThen(
-                intake.executeIntakeNote()
+                intake.executeLaunch()
+                        .withTimeout(0.5)
                         .deadlineWith(prepareToFeedForever(pitch, flyWheels))
         );
     }

@@ -29,8 +29,8 @@ public class PrepareToAmp extends Command {
     @Override
     public void execute() {
         running = true;
-        pitch.runSetPointProfiled(Math.toRadians(50));
-        flyWheels.runRPMProfiled(500);
+        pitch.runSetPointProfiled(Math.toRadians(60));
+        flyWheels.runRPMProfiled(1000);
 
         statusLight.setAnimation(isReady() ? READY_TO_AMP : PREPARING_AMP);
     }

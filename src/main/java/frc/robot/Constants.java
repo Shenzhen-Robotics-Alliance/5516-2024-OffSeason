@@ -222,7 +222,7 @@ public final class Constants {
     public static final class PitchConfigs {
         public static final double GEAR_RATIO = 166.66;
         public static final double PITCH_LOWEST_ROTATION_RAD = Math.toRadians(24);
-        public static final double PITCH_HIGHER_LIMIT_RAD = Math.toRadians(94);
+        public static final double PITCH_HIGHER_LIMIT_RAD = Math.toRadians(100);
 
         public static final double PITCH_KS = 0.03;
         public static final double PITCH_KG = 0.1;
@@ -254,7 +254,7 @@ public final class Constants {
                 6000/0.5, 6000/0.3
         );
 
-        public static final double TOLERANCE_RPM = 50;
+        public static final double TOLERANCE_RPM = 65;
         public static final MaplePIDController.MaplePIDConfig FLYWHEEL_PID_CONFIG_REV_PER_SEC = new MaplePIDController.MaplePIDConfig(
                 7,
                 30,

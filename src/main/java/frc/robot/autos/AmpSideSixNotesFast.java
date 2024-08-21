@@ -25,7 +25,8 @@ public class AmpSideSixNotesFast extends Auto {
         final Command chassisMoveToSecond = AutoBuilder.followPath(PathPlannerPath.fromPathFile("move to second and grab fast"))
                 .andThen(Commands.runOnce(robot.drive::stop, robot.drive));
         final Command grabSecondWhenClose = Commands.waitSeconds(1.5).andThen(
-                robot.intake.suckNoteUntilTouching().withTimeout(2).finallyDo((interrupted) -> noteFightFailed[0] = interrupted)
+                robot.intake.suckNoteUntilTouching().withTimeout(2)
+                        .finallyDo(() -> noteFightFailed[0] = !robot.intake.isNotePresent())
         );
         super.addCommands(grabSecondWhenClose.deadlineWith(
                 chassisMoveToSecond.alongWith(robot.pitch.getPitchDefaultCommand())

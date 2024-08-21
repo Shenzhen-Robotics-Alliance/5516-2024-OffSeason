@@ -96,6 +96,11 @@ public class FlyWheels extends MapleSubsystem {
         goalRPM = 0;
     }
 
+    public void forceMaxRevert() {
+        for (FlyWheelIO io : IOs) io.runVoltage(-12);
+        goalRPM = 0;
+    }
+
     private void runVolts(int index, double volts) {
         Logger.recordOutput("Shooter/FlyWheel" + index + "AppliedVolts", volts);
         IOs[index].runVoltage(volts);
