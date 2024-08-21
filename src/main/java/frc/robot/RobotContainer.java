@@ -301,12 +301,6 @@ public class RobotContainer {
         );
         drive.setDefaultCommand(joystickDrive);
         driverXBox.x().whileTrue(Commands.run(drive::lockChassisWithXFormation, drive));
-        driverXBox.b().whileTrue(new DriveToPose(
-                drive,
-                () -> Constants.toCurrentAlliancePose(new Pose2d(4.4, 7, Rotation2d.fromDegrees(0))),
-                new Pose2d(0.1, 0.1, Rotation2d.fromDegrees(3)),
-                2
-        ));
         driverXBox.start().onTrue(Commands.runOnce(
                 () -> drive.setPose(DriverStation.isEnabled() ?
                         new Pose2d(drive.getPose().getTranslation(), Constants.getDriverStationFacing())
@@ -330,16 +324,19 @@ public class RobotContainer {
         ));
 
         /* amp command */
-        driverXBox.y()
-                .onTrue(new PrepareToAmp(pitch, flyWheels, ledStatusLight))
+//        driverXBox.y()
+//                .onTrue(new PrepareToAmp(pitch, flyWheels, ledStatusLight))
 //                .whileTrue(Commands.run(() -> joystickDrive.setCurrentRotationalMaintenance(
 //                        Constants.toCurrentAllianceRotation(Rotation2d.fromDegrees(-90))
 //                )))
-                .onFalse(new ScoreAmp(intake, pitch, flyWheels, ledStatusLight));
+//                .onFalse(new ScoreAmp(intake, pitch, flyWheels, ledStatusLight));
 
         /* feed shot */
         driverXBox.b()
                 .onTrue(FeedShot.prepareToFeedForever(pitch, flyWheels))
+                .whileTrue(Commands.run(() -> joystickDrive.setCurrentRotationalMaintenance(
+                        Constants.toCurrentAllianceRotation(Rotation2d.fromDegrees(180))
+                )))
                 .onFalse(FeedShot.shootFeed(pitch, flyWheels, intake));
 
         /* aim and shoot command */
