@@ -20,24 +20,24 @@
         "y": 6.32
       },
       "prevControl": {
-        "x": 3.0490168838397156,
-        "y": 6.32
+        "x": 3.0490651064680803,
+        "y": 6.310840030134598
       },
       "nextControl": {
-        "x": 4.619016883839715,
-        "y": 6.32
+        "x": 4.852150914266242,
+        "y": 6.329825233790444
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.63056966920577,
-        "y": 7.478931968540094
+        "x": 8.611093283871028,
+        "y": 7.508146546542204
       },
       "prevControl": {
-        "x": 6.9069095670812946,
-        "y": 7.167309803184256
+        "x": 5.650682712990575,
+        "y": 6.982284142504229
       },
       "nextControl": null,
       "isLocked": false,
@@ -87,7 +87,7 @@
   ],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.5,
+    "maxVelocity": 4.2,
     "maxAcceleration": 7.0,
     "maxAngularVelocity": 670.0,
     "maxAngularAcceleration": 1080.0
@@ -98,7 +98,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Amp Side Six Note",
   "previewStartingState": {
     "rotation": -151.29115678153866,
     "velocity": 0

@@ -8,9 +8,8 @@ import java.util.function.Supplier;
 public class AutoChooserBuilder {
     public static LoggedDashboardChooser<Supplier<Auto>> buildAutoChooser(RobotContainer robotContainer) {
         final LoggedDashboardChooser<Supplier<Auto>> autoSendableChooser = new LoggedDashboardChooser<>("Select Auto");
-        autoSendableChooser.addDefaultOption("None", Auto::none);
-        autoSendableChooser.addOption("Amp Side 6 notes", () -> new AmpSideSixNotesFast(robotContainer));
-        autoSendableChooser.addOption("Stage Side 7 Notes", () -> new StageSideSevenNotes(robotContainer));
+        autoSendableChooser.addDefaultOption("Amp Side 6 notes", () -> new AmpSideSixNotesFast(robotContainer));
+        autoSendableChooser.addOption("None", Auto::none);
 
         return autoSendableChooser;
     }

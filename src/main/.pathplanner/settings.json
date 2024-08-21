@@ -3,12 +3,11 @@
   "robotLength": 0.85,
   "holonomicMode": true,
   "pathFolders": [
-    "Cycle Path",
     "Amp Side Six Note",
-    "Stage Side Seven Note"
+    "Cycle Path"
   ],
   "autoFolders": [],
-  "defaultMaxVel": 4.5,
+  "defaultMaxVel": 4.2,
   "defaultMaxAccel": 7.0,
   "defaultMaxAngVel": 670.0,
   "defaultMaxAngAccel": 1080.0,

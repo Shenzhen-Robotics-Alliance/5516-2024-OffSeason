@@ -15,7 +15,7 @@ public class ScoreAmp extends Command {
     private final LEDStatusLight statusLight;
 
     private static final LEDAnimation SCORING_AMP = new LEDAnimation.Breathe(0, 255, 0, 2);
-    private static final double START_PITCH_DELAY = 0.15;
+    private static final double START_PITCH_DELAY = 0.1;
     public ScoreAmp(Intake intake, Pitch pitch, FlyWheels flyWheels, LEDStatusLight statusLight) {
         super();
         this.intake = intake;

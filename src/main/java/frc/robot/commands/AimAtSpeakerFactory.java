@@ -27,6 +27,6 @@ public class AimAtSpeakerFactory {
 
         final Command aimAtSpeakerStill = waitUntilAimSuccessFullAndShoot.deadlineWith(chassisAimAtSpeaker.alongWith(aimAtSpeaker));
         aimAtSpeakerStill.addRequirements(driveSubsystem, pitch, flyWheels);
-        return aimAtSpeakerStill;
+        return aimAtSpeakerStill.onlyIf(intake::isNotePresent);
     }
 }

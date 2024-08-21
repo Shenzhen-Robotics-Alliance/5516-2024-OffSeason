@@ -20,7 +20,7 @@ public class FollowPathGrabAndShootStill extends SequentialCommandGroup {
     public FollowPathGrabAndShootStill(PathPlannerPath pathAtBlueAlliance, double distanceToTargetMetersStartPreparing, HolonomicDriveSubsystem driveSubsystem, Intake intake, Pitch pitch, FlyWheels flyWheels, MapleShooterOptimization shooterOptimization, LEDStatusLight statusLight) {
         final Command followPath = AutoBuilder.followPath(pathAtBlueAlliance)
                 .andThen(Commands.runOnce(driveSubsystem::stop, driveSubsystem))
-                .andThen(Commands.waitUntil(intake::isNotePresent).raceWith(Commands.waitSeconds(1)));
+                .andThen(Commands.waitUntil(intake::isNotePresent).raceWith(Commands.waitSeconds(1))); // after the robot has stopped, wait for up to 1 sec
         final Command intakeDuringFollowPath = intake.executeIntakeNote();
         final Command prepareToShootDuringFollowPath = Commands.waitUntil(
                 () -> MaplePathPlannerLoader.getEndingRobotPoseInCurrentAllianceSupplier(pathAtBlueAlliance).get().getTranslation()

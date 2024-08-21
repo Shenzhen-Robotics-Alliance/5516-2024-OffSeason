@@ -22,41 +22,44 @@ public class AmpSideSixNotesFast extends Auto {
         super.addCommands(AutoUtils.setIdleForSuperStructureCommand(robot));
 
         /* grab second */
-        final Command chassisMoveToSecond = AutoBuilder.followPath(PathPlannerPath.fromPathFile("move to second and grab fast"));
+        final Command chassisMoveToSecond = AutoBuilder.followPath(PathPlannerPath.fromPathFile("move to second and grab fast"))
+                .andThen(Commands.runOnce(robot.drive::stop, robot.drive));
         final Command grabSecondWhenClose = Commands.waitSeconds(1.5).andThen(
                 robot.intake.suckNoteUntilTouching().withTimeout(2).finallyDo((interrupted) -> noteFightFailed[0] = interrupted)
         );
-        super.addCommands(chassisMoveToSecond
-                .raceWith(grabSecondWhenClose)
-                .deadlineWith(robot.pitch.getPitchDefaultCommand())
-        );
+        super.addCommands(grabSecondWhenClose.deadlineWith(
+                chassisMoveToSecond.alongWith(robot.pitch.getPitchDefaultCommand())
+        ));
 
         /* retry grab second */
-        final Command chassisMoveToRetrySecond = AutoBuilder.followPath(PathPlannerPath.fromPathFile("retry grab second fast"));
+        final Command chassisMoveToRetrySecond = AutoBuilder.followPath(PathPlannerPath.fromPathFile("retry grab second fast"))
+                .andThen(Commands.runOnce(robot.drive::stop, robot.drive));
         final Command retryGrabSecond = Commands.waitSeconds(0.5).onlyIf(() -> noteFightFailed[0]).andThen(
                 robot.intake.suckNoteUntilTouching().withTimeout(2)
         );
         super.addCommands(retryGrabSecond
-                .raceWith(chassisMoveToRetrySecond)
+                .deadlineWith(chassisMoveToRetrySecond)
         );
 
         /* move and shoot second */
         super.addCommands(new FollowPathGrabAndShootStill(
                 PathPlannerPath.fromPathFile("shoot second fast"),
-                2,
+                1.5,
                 robot.drive, robot.intake, robot.pitch, robot.flyWheels, robot.shooterOptimization, robot.ledStatusLight
         ));
         super.addCommands(AutoUtils.setIdleForSuperStructureCommand(robot));
 
 
         /* move to third and grab */
-        final Command moveToThirdNormal = AutoBuilder.followPath(PathPlannerPath.fromPathFile("move to third fast"));
-        final Command moveToThirdAlter = AutoBuilder.followPath(PathPlannerPath.fromPathFile("move to third fast alter"));
+        final Command moveToThirdNormal = AutoBuilder.followPath(PathPlannerPath.fromPathFile("move to third fast"))
+                .andThen(Commands.runOnce(robot.drive::stop, robot.drive));
+        final Command moveToThirdAlter = AutoBuilder.followPath(PathPlannerPath.fromPathFile("move to third fast alter"))
+                .andThen(Commands.runOnce(robot.drive::stop, robot.drive));
         final Command moveToThirdDecisive = new CommandOnFly(() -> noteFightFailed[0] ? moveToThirdAlter : moveToThirdNormal)
                 .deadlineWith(robot.pitch.getPitchDefaultCommand());
         final Command intakeThird = Commands.waitSeconds(1)
-                .andThen(robot.intake.suckNoteUntilTouching());
-        super.addCommands(intakeThird.raceWith(moveToThirdDecisive));
+                .andThen(robot.intake.suckNoteUntilTouching().withTimeout(4));
+        super.addCommands(intakeThird.deadlineWith(moveToThirdDecisive));
 
         /* shoot third */
         super.addCommands(new FollowPathGrabAndShootStill(
