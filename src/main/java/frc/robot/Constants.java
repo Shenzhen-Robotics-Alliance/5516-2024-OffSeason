@@ -62,7 +62,7 @@ public final class Constants {
         public static final double FIELD_WIDTH = 16.54;
         public static final double FIELD_HEIGHT = 8.21;
 
-        public static final Translation3d SPEAKER_POSE_BLUE = new Translation3d(0.1, 5.55, 2.2);
+        public static final Translation3d SPEAKER_POSE_BLUE = new Translation3d(0, 5.55, 2.2);
 
         public static final Supplier<Translation2d> SPEAKER_POSITION_SUPPLIER = () -> toCurrentAllianceTranslation(SPEAKER_POSE_BLUE.toTranslation2d());
     }
@@ -102,7 +102,7 @@ public final class Constants {
 
         public static final MaplePIDController.MaplePIDConfig chassisRotationalPIDConfig = new MaplePIDController.MaplePIDConfig(
                 Math.toRadians(360),
-                Math.toRadians(40),
+                Math.toRadians(50),
                 0.02,
                 Math.toRadians(3),
                 0,
@@ -161,7 +161,7 @@ public final class Constants {
         public static final double DRIVING_CURRENT_LIMIT = 40;
         public static final double WHEEL_RADIUS = Units.inchesToMeters(2.0);
 
-        public static final SimpleMotorFeedforward DRIVE_OPEN_LOOP = new SimpleMotorFeedforward(0.01, 2.03);
+        public static final SimpleMotorFeedforward DRIVE_OPEN_LOOP = new SimpleMotorFeedforward(0.05, 2.5);
     }
 
     public static final class RobotPhysicsSimulationConfigs {
@@ -225,8 +225,8 @@ public final class Constants {
         public static final double PITCH_HIGHER_LIMIT_RAD = Math.toRadians(94);
 
         public static final double PITCH_KS = 0.03;
-        public static final double PITCH_KG = 0.12;
-        public static final double PITCH_KV = 3.5;
+        public static final double PITCH_KG = 0.1;
+        public static final double PITCH_KV = 3.2;
         public static final double PITCH_KA = 0.01;
 
         public static final MaplePIDController.MaplePIDConfig PITCH_PID = new MaplePIDController.MaplePIDConfig(
@@ -257,7 +257,7 @@ public final class Constants {
         public static final double TOLERANCE_RPM = 60;
         public static final MaplePIDController.MaplePIDConfig FLYWHEEL_PID_CONFIG_REV_PER_SEC = new MaplePIDController.MaplePIDConfig(
                 7,
-                24,
+                30,
                 0,
                 2,
                 0, false, 0
