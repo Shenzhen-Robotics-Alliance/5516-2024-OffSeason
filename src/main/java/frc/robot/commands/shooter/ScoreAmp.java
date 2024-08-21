@@ -38,7 +38,7 @@ public class ScoreAmp extends Command {
             pitch.runSetPointProfiled(Math.toRadians(92));
         else
             pitch.runSetPointProfiled(45);
-        flyWheels.runRPMProfiled(550);
+        flyWheels.runRPMProfiled(500);
         statusLight.setAnimation(SCORING_AMP);
     }
 

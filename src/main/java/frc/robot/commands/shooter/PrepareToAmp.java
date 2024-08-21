@@ -30,7 +30,7 @@ public class PrepareToAmp extends Command {
     public void execute() {
         running = true;
         pitch.runSetPointProfiled(Math.toRadians(50));
-        flyWheels.runRPMProfiled(550);
+        flyWheels.runRPMProfiled(500);
 
         statusLight.setAnimation(isReady() ? READY_TO_AMP : PREPARING_AMP);
     }

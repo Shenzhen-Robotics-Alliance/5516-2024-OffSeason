@@ -40,6 +40,7 @@ import frc.robot.utils.Config.MapleConfigFile;
 import frc.robot.utils.Config.PhotonCameraProperties;
 import frc.robot.utils.MapleJoystickDriveInput;
 import frc.robot.utils.MapleShooterOptimization;
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import java.io.IOException;
@@ -77,6 +78,7 @@ public class RobotContainer {
     private final LoggedDashboardChooser<DriverMode> driverModeChooser;
     private final LoggedDashboardChooser<Supplier<Auto>> autoChooser;
     private final SendableChooser<Supplier<Command>> testChooser;
+    private final LoggedDashboardChooser<Double> shootingDistanceChooser;
 
     // Simulation
     private final CompetitionFieldVisualizer competitionFieldVisualizer;
@@ -232,6 +234,13 @@ public class RobotContainer {
                 new double[] {0.1, 0.1, 0.1, 0.12, 0.12, 0.15, 0.15}
         );
 
+        this.shootingDistanceChooser = new LoggedDashboardChooser<>("Select Shooting Distance");
+        this.shootingDistanceChooser.addDefaultOption("1.4", 1.4);
+        this.shootingDistanceChooser.addOption("2", 2.0);
+        this.shootingDistanceChooser.addOption("3", 3.0);
+        this.shootingDistanceChooser.addOption("3.5", 3.5);
+        this.shootingDistanceChooser.addOption("4", 4.0);
+
 
         configureButtonBindings();
     }
@@ -345,8 +354,8 @@ public class RobotContainer {
 
         driverXBox.rightBumper().whileTrue(new PathFindToPoseAndShootSequence(
                 intake, pitch, flyWheels, shooterOptimization, drive,
-                () -> Constants.toCurrentAllianceTranslation(new Translation2d(4.37, 4.98)),
-                () -> Constants.toCurrentAllianceTranslation(new Translation2d(3.39, 5.94)),
+                () -> Constants.toCurrentAllianceTranslation(new Translation2d(shootingDistanceChooser.get() + 0.1, 5.55)),
+                () -> Constants.toCurrentAllianceTranslation(new Translation2d(shootingDistanceChooser.get(), 5.55)),
                 Constants.CrescendoField2024Constants.SPEAKER_POSITION_SUPPLIER,
                 ledStatusLight
         ));
