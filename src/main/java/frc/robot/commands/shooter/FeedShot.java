@@ -10,9 +10,7 @@ import frc.robot.subsystems.shooter.Pitch;
 public class FeedShot {
     public static Command prepareToFeedForever(Pitch pitch, FlyWheels flyWheels) {
         final Command preparePitch = Commands.run(() -> pitch.runSetPointProfiled(Constants.PitchConfigs.PITCH_LOWEST_ROTATION_RAD), pitch),
-                prepareFlyWheels = Commands.run(() -> flyWheels.runRPMProfiled(2500), flyWheels);
-
-
+                prepareFlyWheels = Commands.run(() -> flyWheels.runRPMProfiled(3500), flyWheels);
         return preparePitch.alongWith(prepareFlyWheels);
     }
 

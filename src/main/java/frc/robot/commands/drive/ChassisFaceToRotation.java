@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.drive.HolonomicDriveSubsystem;
 import frc.robot.utils.MechanismControl.MaplePIDController;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.function.Supplier;
 
@@ -46,7 +47,11 @@ public class ChassisFaceToRotation extends Command {
 
     @Override
     public boolean isFinished() {
-        return Math.abs(driveSubsystem.getFacing().minus(targetRotationSupplier.get()).getRadians()) < tolerance.getRadians();
+        final double chassisAimingErrorDeg = driveSubsystem.getFacing().minus(targetRotationSupplier.get()).getDegrees();
+        Logger.recordOutput("Shooter/chassisAimingErrorDeg", chassisAimingErrorDeg);
+        final boolean ready = Math.abs(chassisAimingErrorDeg) < tolerance.getDegrees();
+        Logger.recordOutput("Shooter/chassisAimingReady", ready);
+        return ready;
     }
 
     public static ChassisFaceToRotation faceToTarget(HolonomicDriveSubsystem driveSubsystem, Supplier<Translation2d> targetPositionSupplier) {

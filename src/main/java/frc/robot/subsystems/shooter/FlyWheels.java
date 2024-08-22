@@ -143,7 +143,7 @@ public class FlyWheels extends MapleSubsystem {
     @AutoLogOutput(key = "Shooter/FlyWheelsReady")
     public boolean flyWheelsReady() {
         for (FlyWheelIO.FlyWheelsInputs input:inputs)
-            if (Math.abs(input.flyWheelVelocityRevsPerSec *60 - goalRPM) > TOLERANCE_RPM)
+            if (Math.abs(input.flyWheelVelocityRevsPerSec * 60 - goalRPM) > TOLERANCE_RPM)
                 return false;
         return true;
     }

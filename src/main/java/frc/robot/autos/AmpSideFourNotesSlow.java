@@ -28,7 +28,7 @@ public class AmpSideFourNotesSlow extends Auto {
         ));
 
         /* grab third */
-        final Command chassisMoveToSecond = AutoBuilder.followPath(PathPlannerPath.fromPathFile("move to second and grab fast"))
+        final Command chassisMoveToSecond = AutoBuilder.followPath(PathPlannerPath.fromPathFile("move to third and grab slow"))
                 .andThen(Commands.runOnce(robot.drive::stop, robot.drive));
         final Command grabSecondWhenClose = Commands.waitSeconds(1.5).andThen(
                 robot.intake.suckNoteUntilTouching().withTimeout(2)
@@ -70,10 +70,12 @@ public class AmpSideFourNotesSlow extends Auto {
 
         /* shoot fourth */
         super.addCommands(new FollowPathGrabAndShootStill(
-                PathPlannerPath.fromPathFile("move to shoot third fast"),
+                PathPlannerPath.fromPathFile("move to shoot fourth slow"),
                 1.2,
                 robot.drive, robot.intake, robot.pitch, robot.flyWheels, robot.shooterOptimization, robot.ledStatusLight
         ));
+
+        super.addCommands(AutoBuilder.followPath(PathPlannerPath.fromPathFile("park slow")));
     }
     @Override
     public Pose2d getStartingPoseAtBlueAlliance() {

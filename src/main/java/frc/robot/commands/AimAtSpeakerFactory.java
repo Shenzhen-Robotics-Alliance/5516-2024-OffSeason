@@ -21,7 +21,9 @@ public class AimAtSpeakerFactory {
                 SPEAKER_POSITION_SUPPLIER,
                 chassisAimAtSpeaker::isFinished
         );
-        final Command waitUntilAimSuccessFullAndShoot = Commands.waitUntil(() -> chassisAimAtSpeaker.isFinished() && aimAtSpeaker.readyToShoot())
+        final Command waitUntilAimSuccessFullAndShoot = Commands.waitSeconds(0.2)
+                .andThen(
+                        Commands.waitUntil(() -> chassisAimAtSpeaker.isFinished() && aimAtSpeaker.readyToShoot()))
                 .withTimeout(2)
                 .andThen(intake.executeLaunch());
 
