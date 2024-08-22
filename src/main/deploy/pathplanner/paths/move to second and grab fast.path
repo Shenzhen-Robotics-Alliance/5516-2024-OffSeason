@@ -16,15 +16,15 @@
     },
     {
       "anchor": {
-        "x": 3.9190168838397157,
+        "x": 3.5,
         "y": 6.32
       },
       "prevControl": {
-        "x": 3.0490651064680803,
+        "x": 2.6300482226283646,
         "y": 6.310840030134598
       },
       "nextControl": {
-        "x": 4.852150914266242,
+        "x": 4.433134030426526,
         "y": 6.329825233790444
       },
       "isLocked": false,
@@ -81,9 +81,9 @@
     {
       "name": "slow down to turn",
       "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 0.35,
+      "maxWaypointRelativePos": 0.85,
       "constraints": {
-        "maxVelocity": 1.4,
+        "maxVelocity": 1.6,
         "maxAcceleration": 7.5,
         "maxAngularVelocity": 670.0,
         "maxAngularAcceleration": 1080.0
