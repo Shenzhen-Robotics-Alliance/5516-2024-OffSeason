@@ -98,11 +98,11 @@ public final class Constants {
 
         public static final int ODOMETRY_CACHE_CAPACITY = 10;
         public static final double ODOMETRY_FREQUENCY = 250;
-        public static final double ODOMETRY_WAIT_TIMEOUT_SECONDS = 0.02;
+        public static final double ODOMETRY_WAIT_TIMEOUT_SECONDS = 0.05;
 
         public static final MaplePIDController.MaplePIDConfig chassisRotationalPIDConfig = new MaplePIDController.MaplePIDConfig(
                 Math.toRadians(360),
-                Math.toRadians(50),
+                Math.toRadians(65),
                 0.02,
                 Math.toRadians(3),
                 0,
@@ -149,8 +149,8 @@ public final class Constants {
 
     public static final class SwerveModuleConfigs {
         public static final MaplePIDController.MaplePIDConfig steerHeadingCloseLoopConfig = new MaplePIDController.MaplePIDConfig(
-                0.5,
-                Math.toRadians(90),
+                0.8,
+                Math.toRadians(60),
                 0.02,
                 Math.toRadians(1.5),
                 0,

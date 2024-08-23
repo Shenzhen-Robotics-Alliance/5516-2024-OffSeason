@@ -22,10 +22,10 @@ public class FeedShot {
     }
 
     public static Command shootFeed(Pitch pitch, FlyWheels flyWheels, Intake intake) {
-        return prepareToFeedUntilReady(pitch, flyWheels).andThen(
-                intake.executeLaunch()
-                        .withTimeout(0.5)
-                        .deadlineWith(prepareToFeedForever(pitch, flyWheels))
-        );
+        return prepareToFeedUntilReady(pitch, flyWheels).withTimeout(1).
+                andThen(
+                        intake.executeLaunch().withTimeout(1)
+                                .deadlineWith(prepareToFeedForever(pitch, flyWheels))
+                );
     }
 }
