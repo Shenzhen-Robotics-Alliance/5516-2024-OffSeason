@@ -14,7 +14,6 @@ import frc.robot.utils.MapleShooterOptimization;
 import frc.robot.utils.MechanismControl.MaplePIDController;
 import org.littletonrobotics.junction.Logger;
 
-import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class JoystickDriveAndAimAtTarget extends Command {

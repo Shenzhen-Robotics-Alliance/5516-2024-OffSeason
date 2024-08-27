@@ -21,6 +21,8 @@ import frc.robot.utils.CompetitionFieldUtils.CompetitionFieldVisualizer;
 import frc.robot.utils.LocalADStarAK;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.OptionalDouble;
+
 public interface HolonomicDriveSubsystem extends Subsystem {
     /**
      * runs a ChassisSpeeds without doing any pre-processing
@@ -143,6 +145,14 @@ public interface HolonomicDriveSubsystem extends Subsystem {
     static boolean isZero(ChassisSpeeds chassisSpeeds) {
         return Math.abs(chassisSpeeds.omegaRadiansPerSecond) < Math.toRadians(5) && Math.abs(chassisSpeeds.vxMetersPerSecond) < 0.05 && Math.abs(chassisSpeeds.vyMetersPerSecond) < 0.05;
     }
+
+   static OptionalDouble getNonZeroChassisSpeeds(ChassisSpeeds chassisSpeeds) {
+        final double speedMagnitude = Math.hypot(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond);
+        if (speedMagnitude > 0.5)
+            return OptionalDouble.of(speedMagnitude);
+        return OptionalDouble.empty();
+    }
+
 
     default ChassisSpeeds constrainAcceleration(
             ChassisSpeeds currentSpeeds, ChassisSpeeds desiredSpeeds,
